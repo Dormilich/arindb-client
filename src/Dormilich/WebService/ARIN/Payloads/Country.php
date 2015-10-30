@@ -6,6 +6,15 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 
+/**
+ * The Country Payload identifies a country using two-digit, three-digit, 
+ * and/or e164 codes.
+ * 
+ * The name and e164 (ITU-T E.164 international calling codes) fields are 
+ * not required. Either the two-digit (code2) or three-digit (code3) code 
+ * fields must be specified. If you specify both,they must match the same 
+ * country.
+ */
 class Country extends Payload implements ElementInterface
 {
 	public function __construct()
@@ -24,18 +33,15 @@ class Country extends Payload implements ElementInterface
 
 	public function isDefined()
 	{
-		return $this->elements['code2']->isDefined() or $this->elements['code3']->isDefined();
+		return $this->getElement('code2')->isDefined() or 
+			$this->getElement('code3')->isDefined();
 	}
 
 	public function getValue()
 	{
-		if ($this->getElement('code2')->isDefined()) {
-			return $this->getElement('code2')->getValue();
-		}
-		if ($this->getElement('code3')->isDefined()) {
-			return $this->getElement('code3')->getValue();
-		}
-		return $this->getElement('name')->getValue();
+		return array_map(function ($e) {
+			return $e->getValue();
+		}, $this->elements);
 	}
 
 	public function setValue($value)

@@ -7,6 +7,17 @@ use Dormilich\WebService\ARIN\Elements\FixedElement;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
 use Dormilich\WebService\ARIN\Elements\MultilineElement;
 
+/**
+ * This payload allows the sending of additional information to an existing 
+ * Ticket and to enable users to get a specific message and any accompanying 
+ * attachment(s). The body of the payload will vary depending on the action 
+ * requested.
+ * 
+ * The following fields are automatically completed by Reg-RWS, and should be 
+ * left blank:
+ *  - messageId
+ *  - createdDate
+ */
 class Message extends Payload
 {
 	public function __construct()

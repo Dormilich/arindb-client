@@ -5,6 +5,10 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
 
+/**
+ * The Error Payload is returned when any call encounters errors and it 
+ * contains the reason for the error.  
+ */
 class Error extends Payload
 {
 	public function __construct()

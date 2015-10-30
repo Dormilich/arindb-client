@@ -6,6 +6,25 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\BoolElement;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
 
+/**
+ * The Ticket Payload contains details about a submitted Ticket. Some calls 
+ * using this payload will be automatically processed. Others may require 
+ * manual intervention by ARIN staff, in which case this payload will provide 
+ * details regarding your request.
+ * 
+ * The following fields are automatically completed by Reg-RWS, and should be 
+ * left blank:
+ *  - ticketNo
+ *  - createdDate
+ *  - resolvedDate
+ *  - closedDate
+ *  - updatedDate
+ *  - webTicketType
+ *  - webTicketResolution
+ * 
+ * If you alter, modify, or omit these fields when performing a Ticket Modify, 
+ * you will receive an error.
+ */
 class Ticket extends Payload
 {
 	public function __construct()

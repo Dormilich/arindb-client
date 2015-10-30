@@ -2,6 +2,13 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+/**
+ * Defines a multi-line field, such as public comments or address. 
+ * ---
+ * Although ARIN defines it as a separate Payload, the Payload’s root element 
+ * name (multiline) is replaced by the respective element names (comment, 
+ * streetAddress). 
+ */
 class MultilineElement extends ArrayElement
 {
 	protected $value = [];

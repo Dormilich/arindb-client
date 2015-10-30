@@ -6,6 +6,15 @@ use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 
+/**
+ * This payload is a nested object within ORG and NET Payloads, explaining the 
+ * POC Handle(s) associated with that object and the function it is serving.
+ * 
+ * The description field will be completed automatically based on the 
+ * information provided in the function field, and should be left blank.
+ * 
+ *     Note:Admin ("AD") POCs may not be added to NETs. 
+ */
 class PocLinkRef extends Payload implements DOMSerializable
 {
 	public function __construct()

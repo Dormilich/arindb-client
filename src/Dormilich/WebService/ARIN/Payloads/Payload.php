@@ -38,22 +38,22 @@ abstract class Payload implements \ArrayAccess
 			return $this->elements[$name];
 		}
 
-		$attr = array_filter($this->elements, function ($item) use ($name) {
+		$elem = array_filter($this->elements, function ($item) use ($name) {
 			return $item->getName() === $name;
 		});
 
-		if (count($attr) === 0) {
+		if (count($elem) === 0) {
 			throw new \Exception('Element '.$name.' not found.');
 		}
 
-		return reset($attr);
+		return reset($elem);
 	}
 
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)
 	{
-		foreach ($this->elements as $attr) {
-			if ($attr->isDefined()) {
-				$node->appendChild($attr->toDOM($doc));
+		foreach ($this->elements as $elem) {
+			if ($elem->isDefined()) {
+				$node->appendChild($elem->toDOM($doc));
 			}
 		}
 

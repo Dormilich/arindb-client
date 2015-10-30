@@ -5,6 +5,12 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 
+/**
+ * This payload allows you to add attachments to an existing Ticket as part of 
+ * an Add Message call. 
+ * 
+ * This Attachment Payload should not be submitted by itself.
+ */
 class Attachment extends Payload implements DOMSerializable
 {
 	public function __construct()

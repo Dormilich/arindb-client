@@ -5,6 +5,9 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 
+/**
+ * Component Error Payloads represent individual component errors in the Error Payload. 
+ */
 class Component extends Payload implements DOMSerializable
 {
 	public function __construct()

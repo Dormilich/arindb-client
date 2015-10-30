@@ -6,6 +6,19 @@ use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 
+/**
+ * The NET Block Payload contains details on the NET Block of the Network 
+ * specified. The NET Block Payload is a nested element of a NET Payload. 
+ * See NET Payload for additional details.
+ * 
+ * When submitting a NET Block Payload as part of the NET Payload, the IP 
+ * addresses provided in the startAddress and endAddress elements can be 
+ * non-zero-padded (i.e. 10.0.0.255) or zero-padded (i.e. 010.000.000.255). 
+ * The payload returned will always express IP addresses as zero-padded.
+ * 
+ * The description field will be determined by the type you specify, and may 
+ * be left blank.
+ */
 class NetBlock extends Payload implements DOMSerializable
 {
 	public function __construct()

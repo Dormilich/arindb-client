@@ -6,6 +6,14 @@ use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 
+/**
+ * The Delegation Key Payload is the portion of the Delegation Payload that 
+ * contains algorithm name and digest type information.
+ * 
+ * The algorithm name and digest type name will be determined by the values 
+ * you enter. You do not need to set the name on the payload. If you do, it 
+ * will be discarded.
+ */
 class DelegationKey extends Payload implements DOMSerializable
 {
 	public function __construct()
