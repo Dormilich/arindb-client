@@ -1,0 +1,28 @@
+{
+    "name": "dormilich/arin-client",
+    "description": "A PHP library to communicate with the ARIN database.",
+    "type": "library",
+    "license": "LGPL-2.1",
+    "homepage": "https://github.com/Dormilich/arin-client",
+    "authors": [
+        {
+            "name": "Bertold von Dormilich",
+            "email": "Dormilich@netscape.net",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Dormilich/arin-client/issues",
+        "source": "https://github.com/Dormilich/arin-client.git"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dormilich\\": "src/Dormilich/",
+            "Test\\": "tests/Test/"
+        }
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "~6.0",
+        "phpunit/phpunit": "~4.7"
+    }
+}
