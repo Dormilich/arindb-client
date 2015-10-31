@@ -99,6 +99,13 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		return reset($elem);
 	}
 
+	/**
+	 * Transform the child element and append them to the given node.
+	 * 
+	 * @param DOMDocument $doc 
+	 * @param DOMElement $node Node to append elements to and return.
+	 * @return DOMElement The node with the appended elements.
+	 */
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)
 	{
 		foreach ($this->elements as $elem) {
@@ -110,6 +117,12 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		return $node;
 	}
 
+	/**
+	 * Create the Payload’s base element and append child elements.
+	 * 
+	 * @param DOMDocument $doc 
+	 * @return DOMElement The Payload’s base DOM element.
+	 */
 	public function toDOM(\DOMDocument $doc)
 	{
 		$node = $doc->createElement($this->name);
@@ -117,6 +130,11 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		return $this->addXMLElements($doc, $node);
 	}
 
+	/**
+	 * Create a new XML document and serialise the payload’s contents.
+	 * 
+	 * @return DOMDocument The Payload’s XML document.
+	 */
 	public function toXML()
 	{
 		$doc = \DOMImplementation::createDocument(self::XMLNS, $this->name);
@@ -126,6 +144,14 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		return $doc;
 	}
 
+	/**
+	 * Check if a named or aliased element exists.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param string $offset Element name or alias.
+	 * @return boolean
+	 */
 	public function offsetExists($offset)
 	{
 		try {
@@ -137,16 +163,41 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		}
 	}
 
+	/**
+	 * Get a named or aliased element.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param string $offset Element name or alias.
+	 * @return ElementInterface
+	 */
 	public function offsetGet($offset)
 	{
 		return $this->getElement($offset);
 	}
 
+	/**
+	 * Set a named or aliased element’s vaue.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param string $offset Element name or alias.
+	 * @param mixed $value 
+	 * @return void
+	 */
 	public function offsetSet($offset, $value)
 	{
 		$this->getElement($offset)->addValue($value);
 	}
 
+	/**
+	 * Unset the value of a named or aliased element.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param string $offset Element name or alias.
+	 * @return void
+	 */
 	public function offsetUnset($offset)
 	{
 		$this->getElement($offset)->setValue(NULL);
@@ -168,6 +219,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
     
     /**
      * Reset the elements array pointer to the beginning.
+	 * 
+	 * @see http://php.net/Iterator
      * 
      * @return void
      */
@@ -178,6 +231,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
     
     /**
      * Get the current element.
+	 * 
+	 * @see http://php.net/Iterator
      * 
      * @return ElementInterface
      */
@@ -189,6 +244,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
     /**
      * Get the current element’s name (not its alias).
      * 
+	 * @see http://php.net/Iterator
+     * 
      * @return string
      */
     public function key()
@@ -198,6 +255,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
     
     /**
      * Forward the elements array pointer.
+	 * 
+	 * @see http://php.net/Iterator
      * 
      * @return void
      */
@@ -208,6 +267,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
     
     /**
      * Returns FALSE if the elements array pointer is at the last item.
+	 * 
+	 * @see http://php.net/Iterator
      * 
      * @return boolean
      */
