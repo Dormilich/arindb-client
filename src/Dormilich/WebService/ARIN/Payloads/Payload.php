@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\DOMSerializable;
+use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\ElementInterface;
 
 abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
@@ -36,6 +37,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 * @param $alias An alias for the element's name should the element have 
 	 *          an inconvenient or duplicate name.
 	 * @return void
+	 * @throws LogicException name or alias already exists.
 	 */
 	protected function create(ElementInterface $elem, $alias = NULL)
 	{
@@ -43,7 +45,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 			$alias = $elem->getName();
 		}
 
-		if (isset($this->elements[$alias])) {
+		if (array_key_exists($alias, $this->elements)) {
 			throw new \LogicException('Duplicate attribute alias '.$alias);
 		}
 
@@ -187,7 +189,15 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 */
 	public function offsetSet($offset, $value)
 	{
-		$this->getElement($offset)->addValue($value);
+		$elem = $this->offsetGet($offset);
+
+		if ($value instanceof $elem) {
+			$key = array_search($elem, $this->elements, true);
+			$this->elements[$key] = $value;
+		}
+		else {
+			$elem->addValue($value);
+		}
 	}
 
 	/**
@@ -200,7 +210,15 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 */
 	public function offsetUnset($offset)
 	{
-		$this->getElement($offset)->setValue(NULL);
+		$elem = $this->offsetGet($offset);
+
+		if ($elem instanceof Payload) {
+			$key = array_search($elem, $this->elements, true);
+			$this->elements[$key] = new get_class($elem);
+		}
+		else {
+			$elem->setValue(NULL);
+		}
 	}
 
 	/**
