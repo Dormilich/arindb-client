@@ -24,7 +24,10 @@ class TicketedRequest extends Payload
 
 	protected function init()
 	{
-		$this->create(new Ticket);
-		$this->create(new Net);
+		$ticket = new Ticket;
+		$net    = new Net;
+
+		$this->elements[$ticket->getName()] = $ticket;
+		$this->elements[$net->getName()]    = $net;
 	}
 }
