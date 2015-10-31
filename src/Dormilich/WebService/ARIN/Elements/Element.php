@@ -2,30 +2,54 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+/**
+ * An Element represents a single XML tag without nested XML tags.
+ */
 class Element implements ElementInterface
 {
+	/**
+	 * @var string $name The element’s tag name.
+	 */
 	protected $name;
 
+	/**
+	 * @var string $prefix XML namespace prefix.
+	 */
 	protected $prefix;
 
+	/**
+	 * @var string $namespace XML namespace URI.
+	 */
 	protected $namespace;
 
+	/**
+	 * @var string $value The textContent of the element.
+	 */
 	protected $value = '';
 
+	/**
+	 * @var array $attributes XML attibute definitions.
+	 */
 	protected $attributes = [];
 
+	/**
+	 * Setting up the basic XML definition. The name may be either a tag name
+	 * —or if a namespace is given—a qualified name.
+	 * 
+	 * @param string $name Tag name.
+	 * @param string $ns Namespace URI.
+	 * @return self
+	 */
 	public function __construct($name, $ns = NULL)
 	{
 		if ($ns === NULL) {
-			$this->name = $name;
+			$this->name = end(explode(':', $name));
 		}
 		elseif (filter_var($ns, \FILTER_VALIDATE_URL)) {
 			if (strpos($name, ':') === false) {
 				throw new \LogicException('Namespace prefix missing.');
 			}
-			$parts = explode(':', $name);
-			$this->prefix = $parts[0];
-			$this->name = $parts[1];
+			list($this->prefix, $this->name) = explode(':', $name);
 
 			$this->namespace = $ns;
 		}
@@ -34,6 +58,12 @@ class Element implements ElementInterface
 		}
 	}
 
+	/**
+	 * Getter for an attribute.
+	 * 
+	 * @param string $name XML attribute name.
+	 * @return string|NULL Attribute value.
+	 */
 	public function __get($name)
 	{
 		if (isset($this->attributes[$name])) {
@@ -42,16 +72,36 @@ class Element implements ElementInterface
 		return NULL;
 	}
 
+	/**
+	 * Setter for an attribute. If the attribute does not exist yet, it is 
+	 * created.
+	 * 
+	 * @param string $name Attribute name.
+	 * @param string $value New attribute value.
+	 * @return type
+	 */
 	public function __set($name, $value)
 	{
 		$this->attributes[$name] = (string) $value;
 	}
 
+	/**
+	 * Get the text content of the element.
+	 * 
+	 * @return string
+	 */
 	public function getValue()
 	{
 		return $this->value;
 	}
 
+	/**
+	 * Set the text content of the element. The value may be any type that 
+	 * can be stringified.
+	 * 
+	 * @param string $value New element text content.
+	 * @return self
+	 */
 	public function setValue($value)
 	{
 		$this->value = (string) $value;
@@ -59,28 +109,48 @@ class Element implements ElementInterface
 		return $this;
 	}
 
+	/**
+	 * Set the text content of the element. The value may be any type that 
+	 * can be stringified.
+	 * 
+	 * @param string $value New element text content.
+	 * @return self
+	 */
 	public function addValue($value)
 	{
 		return $this->setValue($value);
 	}
 
+	/**
+	 * Get the element’s tag name (local name).
+	 * 
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Returns TRUE if the element’s text content is not empty.
+	 * 
+	 * @return boolean
+	 */
 	public function isDefined()
 	{
 		return strlen($this->value) > 0;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function toDOM(\DOMDocument $doc)
 	{
 		$elem = $this->createElement($doc);
 
 		// technically, attributes would also be dependent 
 		// on the namespace, but in ARIN payloads all 
-		// attributes belong to the default namespace
+		// attributes belong to the parent namespace
 		foreach ($this->attributes as $name => $value) {
 			$elem->setAttribute($name, $value);
 		}
@@ -88,6 +158,12 @@ class Element implements ElementInterface
 		return $elem;
 	}
 
+	/**
+	 * Create the base XML element (without attributes).
+	 * 
+	 * @param DOMDocument $doc 
+	 * @return DOMElement
+	 */
 	protected function createElement(\DOMDocument $doc)
 	{
 		if (!$this->namespace) {

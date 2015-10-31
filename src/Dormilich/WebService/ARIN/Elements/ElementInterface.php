@@ -31,8 +31,7 @@ interface ElementInterface extends DOMSerializable
 	/**
 	 * Add a value to the element. If the element is an array type, append the 
 	 * value to the existing data. If the element is a Payload or single-valued 
-	 * element then it should  conform to the behaviour of 
-	 * ElementInterface::setValue(). 
+	 * element then it should set the value instead. 
 	 * 
 	 * @param mixed $value Element value.
 	 * @return void|self
