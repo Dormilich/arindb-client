@@ -2,7 +2,6 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 
 /**
@@ -11,7 +10,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
  * 
  * This Attachment Payload should not be submitted by itself.
  */
-class Attachment extends Payload implements DOMSerializable
+class Attachment extends Payload
 {
 	public function __construct()
 	{
@@ -31,5 +30,10 @@ class Attachment extends Payload implements DOMSerializable
 		$file = $this->getAttribute('filename')->isDefined();
 
 		return $data or $file;
+	}
+
+	public function toXML()
+	{
+		throw new \Exception('This Attachment Payload should not be submitted by itself.');
 	}
 }

@@ -4,16 +4,42 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\DOMSerializable;
 
-abstract class Payload implements \ArrayAccess
+abstract class Payload implements \ArrayAccess, DOMSerializable
 {
+	/**
+	 * @var string REG-RWS XML namespace.
+	 */
 	const XMLNS = 'http://www.arin.net/regrws/core/v1';
 
+	/**
+	 * @var string Name of the Payload’s XML base element.
+	 */
 	protected $name;
 
+	/**
+	 * @var array(DOMSerializable) Child elements of the Payload.
+	 */
 	protected $elements = [];
 
+	/**
+	 * Set up the definition of the Payload’s child elements.
+	 * 
+	 * @return void
+	 */
 	abstract protected function init();
 
+	/**
+	 * Add a serialisable Element to the element list.
+	 * 
+	 * Note: I may choose to change the requirement to ElementInterface 
+	 * depending on the XML deserialisation process. Elements to be set 
+	 * directly (set()/ArrayAccess) do require that interface.
+	 * 
+	 * @param DOMSerializable $elem 
+	 * @param $alias An alias for the element's name should the element have 
+	 *          an inconvenient or duplicate name.
+	 * @return void
+	 */
 	protected function create(DOMSerializable $elem, $alias = NULL)
 	{
 		if (!$alias) {
@@ -27,11 +53,38 @@ abstract class Payload implements \ArrayAccess
 		$this->elements[$alias] = $elem;
 	}
 
+	/**
+	 * By default, Payloads are always subject to serialisation.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		return true;
+	}
+
+	/**
+	 * Get the name of the Payload’s base XML element.
+	 * 
+	 * @return string Base XML element’s tag name.
+	 */
 	public function getName()
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Get a child element by name or alias. First the name is looked up in 
+	 * the element array’s keys. If it is not found, get all elements of that 
+	 * name and return the first one. There is no recursion.
+	 * 
+	 * Note: the return type is the same as the input type of create().
+	 * Note: the exception should be more specific.
+	 * 
+	 * @param string $name Element name or alias.
+	 * @return DOMSerializable Element.
+	 * @throws Exception Element not found.
+	 */
 	public function getElement($name)
 	{
 		if (isset($this->elements[$name])) {
@@ -102,6 +155,13 @@ abstract class Payload implements \ArrayAccess
 		$this->getElement($offset)->setValue(NULL);
 	}
 
+	/**
+	 * Chainable version of offsetSet().
+	 * 
+	 * @param string $name Element name or alias.
+	 * @param mixed $value Element value.
+	 * @return self
+	 */
 	public function set($name, $value)
 	{
 		$this->offsetSet($name, $value);

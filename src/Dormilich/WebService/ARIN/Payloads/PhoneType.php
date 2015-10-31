@@ -55,4 +55,9 @@ class PhoneType extends Payload implements ElementInterface
 	{
 		return $this->setValue($value);
 	}
+
+	public function toXML()
+	{
+		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+	}
 }

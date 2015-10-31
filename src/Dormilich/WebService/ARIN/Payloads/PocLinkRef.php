@@ -15,7 +15,7 @@ use Dormilich\WebService\ARIN\Elements\FixedElement;
  * 
  *     Note:Admin ("AD") POCs may not be added to NETs. 
  */
-class PocLinkRef extends Payload implements DOMSerializable
+class PocLinkRef extends Payload
 {
 	public function __construct()
 	{

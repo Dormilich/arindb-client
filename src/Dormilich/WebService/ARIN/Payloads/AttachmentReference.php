@@ -12,7 +12,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
  * 
  * This AttachmentReference Payload should not be submitted by itself.
  */
-class AttachmentReference extends Payload implements DOMSerializable
+class AttachmentReference extends Payload
 {
 	public function __construct()
 	{
@@ -31,5 +31,10 @@ class AttachmentReference extends Payload implements DOMSerializable
 		return  $this->elements['attachmentFilename']->isDefined()
 			and $this->elements['attachmentId']->isDefined()
 		;
+	}
+
+	public function toXML()
+	{
+		throw new \Exception('This Attachment Payload should not be submitted by itself.');
 	}
 }

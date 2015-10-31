@@ -14,7 +14,7 @@ use Dormilich\WebService\ARIN\Elements\FixedElement;
  * you enter. You do not need to set the name on the payload. If you do, it 
  * will be discarded.
  */
-class DelegationKey extends Payload implements DOMSerializable
+class DelegationKey extends Payload
 {
 	public function __construct()
 	{

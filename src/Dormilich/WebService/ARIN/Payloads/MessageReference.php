@@ -24,4 +24,9 @@ class MessageReference extends Payload
 	{
 		$this->create(new GroupElement('attachmentReferences'));
 	}
+
+	public function toXML()
+	{
+		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+	}
 }

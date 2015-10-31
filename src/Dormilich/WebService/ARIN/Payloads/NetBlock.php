@@ -19,7 +19,7 @@ use Dormilich\WebService\ARIN\Elements\FixedElement;
  * The description field will be determined by the type you specify, and may 
  * be left blank.
  */
-class NetBlock extends Payload implements DOMSerializable
+class NetBlock extends Payload
 {
 	public function __construct()
 	{

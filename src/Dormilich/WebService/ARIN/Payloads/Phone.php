@@ -13,7 +13,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
  * field is optional and can be left blank or not included in the payload you 
  * submit.
  */
-class Phone extends Payload implements DOMSerializable
+class Phone extends Payload
 {
 	public function __construct()
 	{
