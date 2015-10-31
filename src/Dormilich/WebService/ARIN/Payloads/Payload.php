@@ -3,8 +3,9 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\DOMSerializable;
+use Dormilich\WebService\ARIN\Elements\ElementInterface;
 
-abstract class Payload implements \ArrayAccess, DOMSerializable
+abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 {
 	/**
 	 * @var string REG-RWS XML namespace.
@@ -31,16 +32,12 @@ abstract class Payload implements \ArrayAccess, DOMSerializable
 	/**
 	 * Add a serialisable Element to the element list.
 	 * 
-	 * Note: I may choose to change the requirement to ElementInterface 
-	 * depending on the XML deserialisation process. Elements to be set 
-	 * directly (set()/ArrayAccess) do require that interface.
-	 * 
-	 * @param DOMSerializable $elem 
+	 * @param ElementInterface $elem 
 	 * @param $alias An alias for the element's name should the element have 
 	 *          an inconvenient or duplicate name.
 	 * @return void
 	 */
-	protected function create(DOMSerializable $elem, $alias = NULL)
+	protected function create(ElementInterface $elem, $alias = NULL)
 	{
 		if (!$alias) {
 			$alias = $elem->getName();
@@ -168,4 +165,55 @@ abstract class Payload implements \ArrayAccess, DOMSerializable
 
 		return $this;
 	}
+    
+    /**
+     * Reset the elements array pointer to the beginning.
+     * 
+     * @return void
+     */
+    public function rewind()
+    {
+        reset($this->elements);
+    }
+    
+    /**
+     * Get the current element.
+     * 
+     * @return ElementInterface
+     */
+    public function current()
+    {
+        return current($this->elements);
+    }
+    
+    /**
+     * Get the current element’s name (not its alias).
+     * 
+     * @return string
+     */
+    public function key()
+    {
+        return current($this->elements)->getName();
+    }
+    
+    /**
+     * Forward the elements array pointer.
+     * 
+     * @return void
+     */
+    public function next()
+    {
+        next($this->elements);
+    }
+    
+    /**
+     * Returns FALSE if the elements array pointer is at the last item.
+     * 
+     * @return boolean
+     */
+    public function valid()
+    {
+    	// elements are always objects
+        return false !== current($this->elements);
+    }
 }
