@@ -8,6 +8,16 @@ namespace Dormilich\WebService\ARIN\Elements;
 class BoolElement extends Element
 {
 	/**
+	 * Get the boolean content of the element.
+	 * 
+	 * @return boolean
+	 */
+	public function getValue()
+	{
+		return $this->value === 'true';
+	}
+
+	/**
 	 * Convert input into boolean text.
 	 * 
 	 * @param mixed $value 
