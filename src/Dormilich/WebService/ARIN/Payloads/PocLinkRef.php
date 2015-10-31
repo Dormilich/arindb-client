@@ -2,7 +2,6 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 
@@ -32,14 +31,14 @@ class PocLinkRef extends Payload
 
 	public function isDefined()
 	{
-		return $this->getAttribute('function')->isDefined();
+		return $this->getElement('function')->isDefined();
 	}
 
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)
 	{
-		foreach ($this->attributes as $attr) {
-			if ($attr->isDefined()) {
-				$node->setAttribute($attr->getName(), $attr->getValue());
+		foreach ($this as $name => $elem) {
+			if ($elem->isDefined()) {
+				$node->setAttribute($name, $elem->getValue());
 			}
 		}
 

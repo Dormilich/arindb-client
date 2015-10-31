@@ -2,7 +2,6 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 
 /**
