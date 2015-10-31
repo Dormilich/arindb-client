@@ -7,7 +7,7 @@ namespace Dormilich\WebService\ARIN\Elements;
  * elements, but no text itself. This class’ decendents need to re-implement 
  * the toDOM() method.
  */
-abstract class ArrayElement extends Element
+class ArrayElement extends Element
 {
 	/**
 	 * @var array $value Collection of the nested data.
@@ -61,11 +61,13 @@ abstract class ArrayElement extends Element
 	}
 
 	/**
-	 * Validate a data item according to the class’ requirements.
+	 * This class cannot represent a concrete XML element.
 	 * 
-	 * @abstract
-	 * @param type $value 
-	 * @return type
+	 * @param DOMDocument $doc 
+	 * @throws Exception
 	 */
-	abstract protected function convert($value);
+	public function toDOM(\DOMDocument $doc)
+	{
+		throw new \Exception('Invalid data class.');
+	}
 }

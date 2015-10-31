@@ -2,15 +2,22 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+/**
+ * This class represents an XML element that represents a boolean value.
+ */
 class BoolElement extends Element
 {
-	public function setValue($value)
+	/**
+	 * Convert input into boolean text.
+	 * 
+	 * @param mixed $value 
+	 * @return boolean
+	 */
+	protected function convert($value)
 	{
 		if (filter_var($value, \FILTER_VALIDATE_BOOLEAN)) {
-			$this->value = 'true';
+			return 'true';
 		}
-		else {
-			$this->value = 'false';
-		}
+		return 'false';
 	}
 }

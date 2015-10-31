@@ -104,9 +104,7 @@ class Element implements ElementInterface
 	 */
 	public function setValue($value)
 	{
-		$this->value = (string) $value;
-
-		return $this;
+		return $this->addValue($value);
 	}
 
 	/**
@@ -118,7 +116,25 @@ class Element implements ElementInterface
 	 */
 	public function addValue($value)
 	{
-		return $this->setValue($value);
+		$this->value = $this->convert($value);
+
+		return $this;
+	}
+
+	/**
+	 * Convert the data item into a string.
+	 * 
+	 * @param mixed $value 
+	 * @return string
+	 * @throws Exception Value not stringifiable.
+	 */
+	protected function convert($value)
+	{
+		if (is_scalar($value) or (is_object($value) and method_exists($value, '__toString'))) {
+			return (string) $value;
+		}
+		$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
+		throw new \Exception(sprintf($msg, gettype($value), $this->name));
 	}
 
 	/**

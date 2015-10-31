@@ -11,13 +11,12 @@ namespace Dormilich\WebService\ARIN\Elements;
  */
 class MultilineElement extends ArrayElement
 {
-	protected $value = [];
-
-	protected function convert($value)
-	{
-		return (string) $value;
-	}
-
+	/**
+	 * Createa multi-line payload using the defined tag name.
+	 * 
+	 * @param DOMDocument $doc 
+	 * @return DOMElement
+	 */
 	public function toDOM(\DOMDocument $doc)
 	{
 		$node = $doc->createElement($this->name);

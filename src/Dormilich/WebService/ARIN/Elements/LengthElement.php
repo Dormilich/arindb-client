@@ -2,10 +2,24 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+/**
+ * This class represents an XML element that may only contain a string of a 
+ * predefined length.
+ */
 class LengthElement extends Element
 {
+	/**
+	 * @var integer $length Required string length.
+	 */
 	protected $length = 1;
 
+	/**
+	 * Set up the element defining the required content length.
+	 * 
+	 * @param string $name Tag name.
+	 * @param integer $length Required content length.
+	 * @return self
+	 */
 	public function __construct($name, $length)
 	{
 		parent::__construct($name);
@@ -15,13 +29,22 @@ class LengthElement extends Element
 		]);
 	}
 
-	public function setValue($value)
+	/**
+	 * Check if the value conforms to the required string length.
+	 * 
+	 * Note: need to figure out if UTF is an issue here.
+	 * 
+	 * @param mixed $value 
+	 * @return string
+	 * @throws Exception Invalid string length found.
+	 */
+	protected function convert($value)
 	{
-		if (strlen((string) $value) !== $this->length) {
-			$msg = 'Value "%s" does not match the expected length of %d for the [%s] attribute.';
-			throw new \Exception(sprintf($msg, $value, $this->length, $this->name));
+		$value = parent::convert($value);
+		if (strlen($value) === $this->length) {
+			return $value;
 		}
-
-		parent::setValue($value);
+		$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
+		throw new \Exception(sprintf($msg, $value, $this->length, $this->name));
 	}
 }
