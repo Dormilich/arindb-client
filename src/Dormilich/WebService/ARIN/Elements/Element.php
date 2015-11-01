@@ -86,6 +86,17 @@ class Element implements ElementInterface
 	}
 
 	/**
+	 * Remove an attribute.
+	 * 
+	 * @param string $name 
+	 * @return void
+	 */
+	public function __unset($name)
+	{
+		unset($this->attributes[$name]);
+	}
+
+	/**
 	 * Get the text content of the element.
 	 * 
 	 * @return string
@@ -116,7 +127,12 @@ class Element implements ElementInterface
 	 */
 	public function addValue($value)
 	{
-		$this->value = $this->convert($value);
+		if (NULL === $value) {
+			$this->value = '';
+		}
+		else {
+			$this->value = $this->convert($value);
+		}
 
 		return $this;
 	}
