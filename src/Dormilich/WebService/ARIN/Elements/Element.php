@@ -2,6 +2,8 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+
 /**
  * An Element represents a single XML tag without nested XML tags.
  */
@@ -150,7 +152,7 @@ class Element implements ElementInterface
 			return (string) $value;
 		}
 		$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
-		throw new \Exception(sprintf($msg, gettype($value), $this->name));
+		throw new DataTypeException(sprintf($msg, gettype($value), $this->name));
 	}
 
 	/**

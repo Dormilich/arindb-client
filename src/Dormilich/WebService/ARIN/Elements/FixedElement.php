@@ -2,6 +2,8 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+
 /**
  * This class represents an XML element that may only contain previously 
  * specified string values.
@@ -44,6 +46,6 @@ class FixedElement extends Element
 			return $value;
 		}
 		$msg = 'Value "%s" is not allowed for the [%s] element.';
-		throw new \Exception(sprintf($msg, $value, $this->name));
+		throw new DataTypeException(sprintf($msg, $value, $this->name));
 	}
 }

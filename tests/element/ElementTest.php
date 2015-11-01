@@ -73,6 +73,15 @@ class ElementTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('foo', $elem->getValue());
 	}
 
+	/**
+	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
+	 */
+	public function testElementThrowsExceptionOnNonStringifiableObject()
+	{
+		$elem = new Element('test');
+		$elem->setValue(new stdClass);
+	}
+
 	public function testElementSetValueVariants()
 	{
 		$elem = new Element('test');
