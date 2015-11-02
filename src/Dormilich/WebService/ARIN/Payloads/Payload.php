@@ -234,65 +234,65 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 
 		return $this;
 	}
-    
-    /**
-     * Reset the elements array pointer to the beginning.
+	
+	/**
+	 * Reset the elements array pointer to the beginning.
 	 * 
 	 * @see http://php.net/Iterator
-     * 
-     * @return void
-     */
-    public function rewind()
-    {
-        reset($this->elements);
-    }
-    
-    /**
-     * Get the current element.
+	 * 
+	 * @return void
+	 */
+	public function rewind()
+	{
+		reset($this->elements);
+	}
+	
+	/**
+	 * Get the current element.
 	 * 
 	 * @see http://php.net/Iterator
-     * 
-     * @return ElementInterface
-     */
-    public function current()
-    {
-        return current($this->elements);
-    }
-    
-    /**
-     * Get the current element’s name (not its alias).
-     * 
-	 * @see http://php.net/Iterator
-     * 
-     * @return string
-     */
-    public function key()
-    {
-        return current($this->elements)->getName();
-    }
-    
-    /**
-     * Forward the elements array pointer.
+	 * 
+	 * @return ElementInterface
+	 */
+	public function current()
+	{
+		return current($this->elements);
+	}
+	
+	/**
+	 * Get the current element’s name (not its alias).
 	 * 
 	 * @see http://php.net/Iterator
-     * 
-     * @return void
-     */
-    public function next()
-    {
-        next($this->elements);
-    }
-    
-    /**
-     * Returns FALSE if the elements array pointer is at the last item.
+	 * 
+	 * @return string
+	 */
+	public function key()
+	{
+		return current($this->elements)->getName();
+	}
+	
+	/**
+	 * Forward the elements array pointer.
 	 * 
 	 * @see http://php.net/Iterator
-     * 
-     * @return boolean
-     */
-    public function valid()
-    {
-    	// elements are always objects
-        return false !== current($this->elements);
-    }
+	 * 
+	 * @return void
+	 */
+	public function next()
+	{
+		next($this->elements);
+	}
+	
+	/**
+	 * Returns FALSE if the elements array pointer is at the last item.
+	 * 
+	 * @see http://php.net/Iterator
+	 * 
+	 * @return boolean
+	 */
+	public function valid()
+	{
+		// elements are always objects
+		return false !== current($this->elements);
+	}
 }
