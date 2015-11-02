@@ -1,6 +1,7 @@
 <?php
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\ArrayElement;
 use Dormilich\WebService\ARIN\Elements\BoolElement;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
@@ -165,6 +166,9 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame($string, $xml);
     }
 
+    /**
+     * @expectedException LogicException
+     */
     public function testSerialiseArrayElementFails()
     {
         $doc = new DOMDocument;

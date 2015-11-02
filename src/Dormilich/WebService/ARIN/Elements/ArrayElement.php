@@ -64,10 +64,10 @@ class ArrayElement extends Element
 	 * This class cannot represent a concrete XML element.
 	 * 
 	 * @param DOMDocument $doc 
-	 * @throws Exception
+	 * @throws LogicException
 	 */
 	public function toDOM(\DOMDocument $doc)
 	{
-		throw new \Exception('Invalid data class.');
+		throw new \LogicException('Invalid data class.');
 	}
 }
