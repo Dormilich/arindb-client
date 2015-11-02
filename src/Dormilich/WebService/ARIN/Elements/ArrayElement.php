@@ -35,6 +35,10 @@ class ArrayElement extends Element
 	{
 		$this->value = [];
 
+		if (NULL === $value) {
+			return $this;
+		}
+
 		if (is_array($value)) {
 			foreach ($value as $item) {
 				$this->addValue($item);

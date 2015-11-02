@@ -5,6 +5,8 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\ElementInterface;
+use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
 
 abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 {
@@ -31,7 +33,9 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	abstract protected function init();
 
 	/**
-	 * Add a serialisable Element to the element list.
+	 * Add a serialisable Element to the element list. The alias can be used 
+	 * to shorten overly long XML element names or avoid access issues if 
+	 * there are multiple XML elements with the same tag name.
 	 * 
 	 * @param ElementInterface $elem 
 	 * @param $alias An alias for the element's name should the element have 
@@ -50,6 +54,18 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		}
 
 		$this->elements[$alias] = $elem;
+	}
+
+	/**
+	 * Reset the payload’s elements on cloning.
+	 * 
+	 * @return void
+	 */
+	public function __clone()
+	{
+		$this->elements = array_map(function ($elem) {
+			return clone $elem;
+		}, $this->elements);
 	}
 
 	/**
@@ -95,7 +111,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		});
 
 		if (count($elem) === 0) {
-			throw new \Exception('Element '.$name.' not found.');
+			throw new NotFoundException('Element '.$name.' not found.');
 		}
 
 		return reset($elem);
@@ -179,7 +195,9 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * Set a named or aliased element’s vaue.
+	 * Set a named or aliased element’s value. If an Payload object is passed 
+	 * it replaces the previous object if it is from the same class. This is 
+	 * intended for easy assignment of sub-payloads.
 	 * 
 	 * @see http://php.net/ArrayAccess
 	 * 
@@ -191,17 +209,17 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	{
 		$elem = $this->offsetGet($offset);
 
-		if ($value instanceof $elem) {
+		if (($value instanceof Payload) and ($value instanceof $elem)) {
 			$key = array_search($elem, $this->elements, true);
 			$this->elements[$key] = $value;
 		}
 		else {
-			$elem->addValue($value);
+			$elem->setValue($value);
 		}
 	}
 
 	/**
-	 * Unset the value of a named or aliased element.
+	 * Unset the content of a named or aliased element.
 	 * 
 	 * @see http://php.net/ArrayAccess
 	 * 
@@ -211,14 +229,9 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	public function offsetUnset($offset)
 	{
 		$elem = $this->offsetGet($offset);
+		$key = array_search($elem, $this->elements, true);
 
-		if ($elem instanceof Payload) {
-			$key = array_search($elem, $this->elements, true);
-			$this->elements[$key] = new get_class($elem);
-		}
-		else {
-			$elem->setValue(NULL);
-		}
+		$this->elements[$key] = clone $elem;
 	}
 
 	/**
@@ -234,7 +247,21 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 
 		return $this;
 	}
-	
+
+	/**
+	 * Chainable method to add a value to an element.
+	 * 
+	 * @param string $name Element name or alias.
+	 * @param mixed $value Element value.
+	 * @return self
+	 */
+	public function add($name, $value)
+	{
+		$this->offsetGet($name)->addValue($value);
+
+		return $this;
+	}
+
 	/**
 	 * Reset the elements array pointer to the beginning.
 	 * 
