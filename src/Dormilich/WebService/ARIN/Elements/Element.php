@@ -6,6 +6,9 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 
 /**
  * An Element represents a single XML tag without nested XML tags.
+ * 
+ * Note: __toString() would be neat, but causes too much trouble for the 
+ *       inheriting collection elements.
  */
 class Element implements ElementInterface
 {
@@ -128,7 +131,13 @@ class Element implements ElementInterface
 	 */
 	public function setValue($value)
 	{
-		return $this->addValue($value);
+		$this->value = '';
+
+		if (NULL !== $value) {
+			$this->value = $this->convert($value);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -140,12 +149,7 @@ class Element implements ElementInterface
 	 */
 	public function addValue($value)
 	{
-		if (NULL === $value) {
-			$this->value = '';
-		}
-		else {
-			$this->value = $this->convert($value);
-		}
+		$this->setValue($value);
 
 		return $this;
 	}

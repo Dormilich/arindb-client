@@ -90,6 +90,19 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	}
 
 	/**
+	 * Default implementation for sub-payloads that need to implement 
+	 * ElementInterface.
+	 * 
+	 * @return array
+	 */
+	public function getValue()
+	{
+		return array_map(function ($e) {
+			return $e->getValue();
+		}, $this->elements);
+	}
+
+	/**
 	 * Get a child element by name or alias. First the name is looked up in 
 	 * the element array’s keys. If it is not found, get all elements of that 
 	 * name and return the first one. There is no recursion.
@@ -222,6 +235,8 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 
 	/**
 	 * Get a named or aliased element via array access.
+	 * Accessing nested elements via array access is worth more than getting a 
+	 * child element’s value directly.
 	 * 
 	 * @see http://php.net/ArrayAccess
 	 * 

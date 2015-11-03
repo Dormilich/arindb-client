@@ -31,13 +31,6 @@ class PhoneType extends Payload implements ElementInterface
 		return $this->get('code')->isDefined();
 	}
 
-	public function getValue()
-	{
-		return array_map(function ($e) {
-			return $e->getValue();
-		}, $this->elements);
-	}
-
 	public function setValue($value)
 	{
 		$value = (string) $value;

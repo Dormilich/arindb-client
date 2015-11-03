@@ -29,9 +29,9 @@ interface ElementInterface extends DOMSerializable
 	public function setValue($value);
 
 	/**
-	 * Add a value to the element. If the element is an array type, append the 
-	 * value to the existing data. If the element is a Payload or single-valued 
-	 * element then it should set the value instead. 
+	 * Add a value to the element. If the element is a collection type, append 
+	 * the value to the existing collection, otherwise the behaviour depends 
+	 * on the concrete element.
 	 * 
 	 * @param mixed $value Element value.
 	 * @return void|self

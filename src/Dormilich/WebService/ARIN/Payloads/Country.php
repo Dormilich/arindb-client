@@ -37,13 +37,6 @@ class Country extends Payload implements ElementInterface
 			$this->get('code3')->isDefined();
 	}
 
-	public function getValue()
-	{
-		return array_map(function ($e) {
-			return $e->getValue();
-		}, $this->elements);
-	}
-
 	public function setValue($value)
 	{
 		$value = strtoupper((string) $value);
