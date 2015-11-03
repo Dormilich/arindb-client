@@ -76,7 +76,7 @@ class Net extends Payload
 		$this->create(new Element('customerHandle'), 'customer');
 		$this->create(new Element('parentNetHandle'), 'parentNet');
 		$this->create(new Element('netName'));
-		$this->create(new GroupElement('originASes'), 'AS');
+		$this->create(new GroupElement('originASes'), 'ASN');
 		$this->create(new GroupElement('pocLinks'), 'poc');
 	}
 }
