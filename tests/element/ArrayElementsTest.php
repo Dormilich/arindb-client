@@ -98,6 +98,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
         $m[] = 'c';
 
         $this->assertSame(['a', 'b', 'c'], $m->getValue());
+        $this->assertCount(3, $m);
     }
 
     public function testMultilineArrayUnset()

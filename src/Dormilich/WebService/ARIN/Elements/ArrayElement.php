@@ -7,7 +7,7 @@ namespace Dormilich\WebService\ARIN\Elements;
  * elements, but no text itself. This class’ decendents need to re-implement 
  * the toDOM() method.
  */
-class ArrayElement extends Element implements \ArrayAccess
+class ArrayElement extends Element implements \ArrayAccess, \Countable
 {
 	/**
 	 * @var array $value Collection of the nested data.
@@ -139,5 +139,15 @@ class ArrayElement extends Element implements \ArrayAccess
 		if ($this->offsetExists($offset)) {
 			array_splice($this->value, $offset, 1);
 		}
+	}
+
+	/**
+	 * Count the number of elements in the collection. 
+	 * 
+	 * @return integer
+	 */
+	public function count()
+	{
+		return count($this->value);
 	}
 }
