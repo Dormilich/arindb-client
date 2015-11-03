@@ -58,6 +58,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
 	 */
 	public function testFixedElementRejectsUndefinedValue()
 	{
@@ -104,6 +105,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
 	 * @dataProvider invalidLengthInputProvider
 	 */
 	public function testLengthElementRejectsInvalidInput($value)

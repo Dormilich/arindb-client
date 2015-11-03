@@ -6,7 +6,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
 use Dormilich\WebService\ARIN\Payloads\Payload;
 
-class Dummy extends Payload
+class SetPayloadDummy extends Payload
 {
     public function __construct()
     {
@@ -16,12 +16,7 @@ class Dummy extends Payload
 
     protected function init()
     {
-        $this->create(new Element('bar'), 'foo');
-        $this->create(new GroupElement('list'));
-    }
-
-    public function setValue($value)
-    {
-        throw new \UnexpectedValueException('This is not an Element.');
+        $dummy = new Dummy;
+        $this->elements[$dummy->getName()] = $dummy;
     }
 }

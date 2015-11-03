@@ -2,6 +2,7 @@
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Test\Dummy;
+use Test\SetPayloadDummy;
 
 class PayloadTest extends PHPUnit_Framework_TestCase
 {
@@ -31,6 +32,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
      */
     public function testGetNonExistingElementFails()
     {
@@ -46,10 +48,32 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertSame('123', $x['foo']->getValue());
     }
 
-    #public function testSetExistingPayload()
+    public function testSetExistingPayload()
+    {
+        $p = new SetPayloadDummy;
+        $p['dummy']['foo'] = 1;
+
+        $this->assertSame('1', $p['dummy']['foo']->getValue());
+
+        $d = new Dummy;
+        $d['foo'] = 2;
+        $p['dummy'] = $d;
+
+        $this->assertSame('2', $p['dummy']['foo']->getValue());
+    }
+
+    /**
+     * @expectedException UnexpectedValueException
+     */
+    public function testReplaceExistingPayloadWithElementFails()
+    {
+        $p = new SetPayloadDummy;
+        $p['dummy'] = new Element('abc');
+    }
 
     /**
      * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
      */
     public function testSetNonExistingElementFails()
     {
@@ -76,6 +100,16 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         // unset state = default state
         $this->assertFalse($x['foo']->isDefined());
         $this->assertSame('', $x['foo']->getValue());
+    }
+
+    public function testUnsetNonexistingElementsIsIgnored()
+    {
+        $x = new Dummy;
+        $x['foo'] = 123;
+
+        unset($x['quux']);
+
+        $this->assertSame('123', $x['foo']->getValue());
     }
 
     public function testForeachGetsNameAndElement()
