@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Elements;
 
 use Dormilich\WebService\ARIN\DOMSerializable;
+use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 
 /**
  * This class accepts any serialisable object(s) as its content.
@@ -10,6 +11,22 @@ use Dormilich\WebService\ARIN\DOMSerializable;
  */
 class GroupElement extends ArrayElement
 {
+	/**
+	 * Check if any member of the collection is defined.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		$bool = array_map(function ($item) {
+			return $item->isDefined();
+		}, $this->value);
+
+		return array_reduce($bool, function ($carry, $item) {
+			return $carry or $item;
+		}, false);
+	}
+
 	/**
 	 * Check if the value is a serialisable element.
 	 * 
@@ -22,8 +39,9 @@ class GroupElement extends ArrayElement
 		if ($value instanceof DOMSerializable) {
 			return $value;
 		}
-		$msg = 'Value is not a valid object for the [%s] element.';
-		throw new \Exception(sprintf($msg, $this->name));
+		$msg = 'Value of type %s is not a valid object for the [%s] element.';
+		$type = is_object($value) ? get_class($value) : gettype($value);
+		throw new DataTypeException(sprintf($msg, $type, $this->name));
 	}
 
 	/**
