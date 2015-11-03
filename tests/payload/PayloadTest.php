@@ -176,7 +176,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
         $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
-        $xml .=     '<bar>quux</bar>';
+        $xml .=   '<bar>quux</bar>';
         $xml .= '</dummy>' . \PHP_EOL;
 
         $this->assertSame($xml, $d->toXML()->saveXML());
@@ -193,11 +193,11 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
         $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
-        $xml .=     '<comment>';
-        $xml .=         '<line number="1">I hope</line>';
-        $xml .=         '<line number="2">this doesn’t</line>'; // this only works because of the encoding
-        $xml .=         '<line number="3">blow up!</line>';
-        $xml .=     '</comment>';
+        $xml .=   '<comment>';
+        $xml .=     '<line number="1">I hope</line>';
+        $xml .=     '<line number="2">this doesn’t</line>'; // this only works because of the encoding
+        $xml .=     '<line number="3">blow up!</line>';
+        $xml .=   '</comment>';
         $xml .= '</dummy>' . \PHP_EOL;
 
         $this->assertSame($xml, $d->toXML()->saveXML());
@@ -224,15 +224,15 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
         $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
-        $xml .=     '<bar>quux</bar>';
-        $xml .=     '<list>';
-        $xml .=         '<error>too late to be true.</error>';
-        $xml .=         '<warning>watch out!</warning>';
-        $xml .=     '</list>';
-        $xml .=     '<comment>';
-        $xml .=         '<line number="1">This is</line>';
-        $xml .=         '<line number="2">booooring</line>';
-        $xml .=     '</comment>';
+        $xml .=   '<bar>quux</bar>';
+        $xml .=   '<list>';
+        $xml .=     '<error>too late to be true.</error>';
+        $xml .=     '<warning>watch out!</warning>';
+        $xml .=   '</list>';
+        $xml .=   '<comment>';
+        $xml .=     '<line number="1">This is</line>';
+        $xml .=     '<line number="2">booooring</line>';
+        $xml .=   '</comment>';
         $xml .= '</dummy>' . \PHP_EOL;
 
         $this->assertSame($xml, $d->toXML()->saveXML());
