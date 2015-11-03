@@ -125,8 +125,8 @@ class PayloadTest extends PHPUnit_Framework_TestCase
             $values[] = $element;
         }
 
-        $this->assertEquals(['bar', 'list'], $names);
-        $this->assertEquals([$x['foo'], $x['list']], $values);
+        $this->assertEquals(['bar', 'list', 'comment'], $names);
+        $this->assertEquals([$x['foo'], $x['list'], $x['comment']], $values);
     }
 
     public function testResetPayload()
@@ -147,5 +147,94 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($y['foo']->isDefined());
         $this->assertFalse($y['list']->isDefined());
+    }
+
+    public function testSerialiseEmptyPayload()
+    {
+        $d = new Dummy;
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML()->saveXML());
+    }
+
+    public function testSerialisePayloadWithSpecifiedEncoding()
+    {
+        $d = new Dummy;
+
+        $xml  = '<?xml version="1.0" encoding="ISO-8859-1"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML("ISO-8859-1")->saveXML());
+    }
+
+    public function testSerialisePayloadWithSimpleElement()
+    {
+        $d = new Dummy;
+        $d['foo'] = 'quux';
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
+        $xml .=     '<bar>quux</bar>';
+        $xml .= '</dummy>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML()->saveXML());
+    }
+
+    public function testSerialisePayloadWithListElement()
+    {
+        $d = new Dummy;
+        $d['comment']
+            ->addValue('I hope')
+            ->addValue('this doesn’t')
+            ->addValue('blow up!')
+        ;
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
+        $xml .=     '<comment>';
+        $xml .=         '<line number="1">I hope</line>';
+        $xml .=         '<line number="2">this doesn’t</line>'; // this only works because of the encoding
+        $xml .=         '<line number="3">blow up!</line>';
+        $xml .=     '</comment>';
+        $xml .= '</dummy>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML()->saveXML());
+    }
+
+    public function testSerialiseFullPayload()
+    {
+        $d = new Dummy;
+
+        $d['foo'] = 'quux';
+
+        $d['comment']
+            ->addValue('This is')
+            ->addValue('booooring')
+        ;
+
+        $e  = new Element('error');
+        $e->setValue('too late to be true.');
+        $d['list'] = $e;
+
+        $f  = new Element('warning');
+        $f->setValue('watch out!');
+        $d['list']->addValue($f);
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1">';
+        $xml .=     '<bar>quux</bar>';
+        $xml .=     '<list>';
+        $xml .=         '<error>too late to be true.</error>';
+        $xml .=         '<warning>watch out!</warning>';
+        $xml .=     '</list>';
+        $xml .=     '<comment>';
+        $xml .=         '<line number="1">This is</line>';
+        $xml .=         '<line number="2">booooring</line>';
+        $xml .=     '</comment>';
+        $xml .= '</dummy>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML()->saveXML());
     }
 }

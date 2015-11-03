@@ -111,12 +111,6 @@ class ElementTest extends PHPUnit_Framework_TestCase
 
 		$elem->setValue(null);
 		$this->assertSame('', $elem->getValue());
-
-		$elem->addValue('foo');
-		$this->assertSame('foo', $elem->getValue());
-
-		$elem->addValue(null);
-		$this->assertSame('', $elem->getValue());
 	}
 
 	public function testElementValidity()

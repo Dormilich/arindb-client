@@ -4,6 +4,7 @@ namespace Test;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Elements\MultilineElement;
 use Dormilich\WebService\ARIN\Payloads\Payload;
 
 class Dummy extends Payload
@@ -18,6 +19,7 @@ class Dummy extends Payload
     {
         $this->create(new Element('bar'), 'foo');
         $this->create(new GroupElement('list'));
+        $this->create(new MultilineElement('comment'));
     }
 
     public function setValue($value)

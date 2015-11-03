@@ -205,9 +205,11 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 * 
 	 * @return DOMDocument The Payload’s XML document.
 	 */
-	public function toXML()
+	public function toXML($encoding='UTF-8')
 	{
-		$doc = \DOMImplementation::createDocument(self::XMLNS, $this->name);
+		$doc = new \DOMDocument('1.0', $encoding);
+		$root = $doc->createElementNS(self::XMLNS, $this->name);
+		$doc->appendChild($root);
 
 		$this->addXMLElements($doc, $doc->documentElement);
 
