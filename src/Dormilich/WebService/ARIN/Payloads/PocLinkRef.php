@@ -31,7 +31,7 @@ class PocLinkRef extends Payload
 
 	public function isDefined()
 	{
-		return $this->getElement('function')->isDefined();
+		return $this->get('function')->isDefined();
 	}
 
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)

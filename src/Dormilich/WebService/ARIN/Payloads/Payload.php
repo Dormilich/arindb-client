@@ -5,6 +5,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\DOMSerializable;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\ElementInterface;
+use Dormilich\WebService\ARIN\Exceptions\ARINException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
 
@@ -100,7 +101,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 * @return DOMSerializable Element.
 	 * @throws Exception Element not found.
 	 */
-	public function getElement($name)
+	public function get($name)
 	{
 		if (isset($this->elements[$name])) {
 			return $this->elements[$name];
@@ -115,6 +116,44 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 		}
 
 		return reset($elem);
+	}
+
+	/**
+	 * Set a named or aliased element’s value. If an Payload object is passed 
+	 * it replaces the previous object if it is from the same class. This is 
+	 * intended for easy assignment of sub-payloads.
+	 * 
+	 * @param string $name Element name or alias.
+	 * @param mixed $value Element value.
+	 * @return self
+	 */
+	public function set($name, $value)
+	{
+		$elem = $this->get($name);
+
+		if (($value instanceof Payload) and ($value instanceof $elem)) {
+			$key = array_search($elem, $this->elements, true);
+			$this->elements[$key] = $value;
+		}
+		else {
+			$elem->setValue($value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Chainable method to add a value to an element.
+	 * 
+	 * @param string $name Element name or alias.
+	 * @param mixed $value Element value.
+	 * @return self
+	 */
+	public function add($name, $value)
+	{
+		$this->get($name)->addValue($value);
+
+		return $this;
 	}
 
 	/**
@@ -173,7 +212,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	public function offsetExists($offset)
 	{
 		try {
-			$this->getElement($offset);
+			$this->get($offset);
 			return true;
 		}
 		catch (\Exception $e) {
@@ -182,7 +221,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * Get a named or aliased element.
+	 * Get a named or aliased element via array access.
 	 * 
 	 * @see http://php.net/ArrayAccess
 	 * 
@@ -191,13 +230,11 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 */
 	public function offsetGet($offset)
 	{
-		return $this->getElement($offset);
+		return $this->get($offset);
 	}
 
 	/**
-	 * Set a named or aliased element’s value. If an Payload object is passed 
-	 * it replaces the previous object if it is from the same class. This is 
-	 * intended for easy assignment of sub-payloads.
+	 * Set the value of an element via array access.
 	 * 
 	 * @see http://php.net/ArrayAccess
 	 * 
@@ -207,15 +244,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 */
 	public function offsetSet($offset, $value)
 	{
-		$elem = $this->offsetGet($offset);
-
-		if (($value instanceof Payload) and ($value instanceof $elem)) {
-			$key = array_search($elem, $this->elements, true);
-			$this->elements[$key] = $value;
-		}
-		else {
-			$elem->setValue($value);
-		}
+		$this->set($offset, $value);
 	}
 
 	/**
@@ -228,38 +257,15 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 */
 	public function offsetUnset($offset)
 	{
-		$elem = $this->offsetGet($offset);
-		$key = array_search($elem, $this->elements, true);
+		try {
+			$elem = $this->get($offset);
+			$key = array_search($elem, $this->elements, true);
 
-		$this->elements[$key] = clone $elem;
-	}
-
-	/**
-	 * Chainable version of offsetSet().
-	 * 
-	 * @param string $name Element name or alias.
-	 * @param mixed $value Element value.
-	 * @return self
-	 */
-	public function set($name, $value)
-	{
-		$this->offsetSet($name, $value);
-
-		return $this;
-	}
-
-	/**
-	 * Chainable method to add a value to an element.
-	 * 
-	 * @param string $name Element name or alias.
-	 * @param mixed $value Element value.
-	 * @return self
-	 */
-	public function add($name, $value)
-	{
-		$this->offsetGet($name)->addValue($value);
-
-		return $this;
+			$this->elements[$key] = clone $elem;
+		}
+		catch (ARINException $e) {
+			# unsetting a non-existing element should do no harm
+		}
 	}
 
 	/**

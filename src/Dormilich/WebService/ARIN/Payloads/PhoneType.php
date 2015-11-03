@@ -28,7 +28,7 @@ class PhoneType extends Payload implements ElementInterface
 
 	public function isDefined()
 	{
-		return $this->getElement('code')->isDefined();
+		return $this->get('code')->isDefined();
 	}
 
 	public function getValue()
@@ -43,10 +43,10 @@ class PhoneType extends Payload implements ElementInterface
 		$value = (string) $value;
 
 		if (in_array($value, ['O', 'F', 'M'])) {
-			$this->getElement('code')->setValue($value);
+			$this->get('code')->setValue($value);
 		}
 
-		$this->getElement('description')->setValue($value);	
+		$this->get('description')->setValue($value);	
 
 		return $this;	
 	}

@@ -33,8 +33,8 @@ class Country extends Payload implements ElementInterface
 
 	public function isDefined()
 	{
-		return $this->getElement('code2')->isDefined() or 
-			$this->getElement('code3')->isDefined();
+		return $this->get('code2')->isDefined() or 
+			$this->get('code3')->isDefined();
 	}
 
 	public function getValue()
@@ -49,21 +49,21 @@ class Country extends Payload implements ElementInterface
 		$value = strtoupper((string) $value);
 
 		if (preg_match('~^[A-Z]{2}$~', $value)) {
-			return $this->getElement('code2')->setValue($value);
+			return $this->get('code2')->setValue($value);
 		}
 
 		if (preg_match('~^[A-Z]{3}$~', $value)) {
-			return $this->getElement('code3')->setValue($value);
+			return $this->get('code3')->setValue($value);
 		}
 
 		$int = filter_var(ltrim($value, '+0'), \FILTER_VALIDATE_INT, [
 			'options' => ['min_range' => 1, 'max_range' => 998]
 		]);
 		if ($int) {
-			return $this->getElement('e164')->setValue($int);
+			return $this->get('e164')->setValue($int);
 		}
 
-		$this->getElement('name')->setValue($value);	
+		$this->get('name')->setValue($value);	
 
 		return $this;	
 	}
