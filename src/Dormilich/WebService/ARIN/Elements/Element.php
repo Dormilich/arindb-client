@@ -5,6 +5,7 @@ namespace Dormilich\WebService\ARIN\Elements;
 use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
 /**
  * An Element represents a single XML tag without nested XML tags.
@@ -216,6 +217,22 @@ class Element implements ElementInterface, XMLHandler
 	public function isDefined()
 	{
 		return strlen($this->value) > 0;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function parse(\SimpleXMLElement $sxe)
+	{
+		if ($this->getName() !== $sxe->getName()) {
+			throw new ParserException('Tag name mismatch on reading XML.');
+		}
+		// set value
+		$this->setValue((string) $sxe);
+		// set attributes
+		foreach ($sxe->attributes() as $name => $value) {
+			$this->__set($name, $value);
+		}
 	}
 
 	/**

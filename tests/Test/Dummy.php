@@ -30,4 +30,7 @@ class Dummy extends Payload
     {
         return $this->get('foo')->isDefined();
     }
+
+    public function parse(\SimpleXMLElement $sxe)
+    {}
 }

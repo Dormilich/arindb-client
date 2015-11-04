@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Lists;
 
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
 /**
  * Defines a multi-line field, such as public comments or address. 
@@ -46,5 +47,19 @@ class MultiLine extends ArrayElement
 		}
 
 		return $node;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function parse(\SimpleXMLElement $sxe)
+	{
+		if ($this->getName() !== $sxe->getName()) {
+			throw new ParserException('Tag name mismatch on reading XML.');
+		}
+		
+		foreach ($sxe->children() as $line) {
+			$this->addValue($line);
+		}
 	}
 }

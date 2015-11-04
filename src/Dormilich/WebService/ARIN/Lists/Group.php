@@ -102,4 +102,50 @@ class Group extends ArrayElement implements FilterInterface
 		// first named
 		return $this->fetch($offset);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function parse(\SimpleXMLElement $sxe)
+	{
+		if ($this->getName() !== $sxe->getName()) {
+			throw new ParserException('Tag name mismatch on reading XML.');
+		}
+		$ns = substr_replace(__NAMESPACE__, '\\Payloads\\', strrpos(__NAMESPACE__, '\\'));
+
+		foreach ($sxe->children() as $name => $child) {
+			// quasi-leaf
+			$payload = $ns . ucfirst($name);
+			if (class_exists($payload)) {
+				$elem = new $payload;
+			}
+			// node
+			elseif ($child->hasChildren()) {
+				$elem = new Group($name);
+			}
+			// leaf
+			else {
+				$elem = $this->createElement($child);
+			}
+			$elem->parse($child);
+			$this->addValue($elem);
+		}
+	}
+
+    /**
+     * Read the namespace info from the XML object and configure the Element 
+     * object accordingly.
+     * 
+     * @param SimpleXMLElement $sxe 
+     * @return Element
+     */
+    protected function createElement(\SimpleXMLElement $sxe)
+    {
+        $ns = $sxe->getNamespaces();
+
+        if ($uri = current($ns)) {
+            return new Element(key($ns).':'.$sxe->getName(), $uri);
+        }
+        return new Element($sxe->getName());
+    }
 }

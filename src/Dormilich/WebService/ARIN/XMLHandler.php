@@ -37,5 +37,5 @@ interface XMLHandler
 	 * @param SimpleXMLElement $sxe 
 	 * @return void
 	 */
-	#public function parse(\SimpleXMLElement $sxe);
+	public function parse(\SimpleXMLElement $sxe);
 }

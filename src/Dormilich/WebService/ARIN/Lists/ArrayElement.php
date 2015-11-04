@@ -4,11 +4,11 @@ namespace Dormilich\WebService\ARIN\Lists;
 
 use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\Elements\Element;
 
 /**
  * An ArrayElement represents an XML element that only contains nested XML 
- * elements, but no text itself. This class’ decendents need to re-implement 
- * the toDOM() method.
+ * elements, but no text itself. 
  */
 abstract class ArrayElement implements ElementInterface, XMLHandler, \ArrayAccess, \Countable
 {
