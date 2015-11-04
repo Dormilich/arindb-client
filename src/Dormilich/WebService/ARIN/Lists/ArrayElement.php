@@ -18,16 +18,6 @@ abstract class ArrayElement implements ElementInterface, XMLHandler, \ArrayAcces
 	protected $name;
 
 	/**
-	 * @var string $prefix XML namespace prefix.
-	 */
-	protected $prefix;
-
-	/**
-	 * @var string $namespace XML namespace URI.
-	 */
-	protected $namespace;
-
-	/**
 	 * @var array $value Collection of the nested data.
 	 */
 	protected $value = [];
