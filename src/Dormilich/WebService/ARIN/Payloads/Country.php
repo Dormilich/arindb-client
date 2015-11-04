@@ -28,7 +28,7 @@ class Country extends Payload implements ElementInterface
 		$this->create(new Element('name'));
 		$this->create(new LengthElement('code2', 2));
 		$this->create(new LengthElement('code3', 3));
-		$this->create(new Element('e164'));
+		$this->create(new Integer('e164', 1, 999));
 	}
 
 	public function isDefined()

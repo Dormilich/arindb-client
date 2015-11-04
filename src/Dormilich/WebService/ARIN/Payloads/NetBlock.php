@@ -3,6 +3,8 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Integer;
+use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
@@ -34,9 +36,9 @@ class NetBlock extends Payload
 		];
 		$this->create(new Selection('type', $abbr));
 		$this->create(new Element('description'));
-		$this->create(new Element('startAddress'), 'start');
-		$this->create(new Element('endAddress'), 'end');
-		$this->create(new Element('cidrLength'), 'cidr');
+		$this->create(new IP('startAddress', IP::UNPADDED), 'start');
+		$this->create(new IP('endAddress', IP::UNPADDED), 'end');
+		$this->create(new Integer('cidrLength', 0, 128), 'cidr');
 	}
 
 	public function isDefined()
