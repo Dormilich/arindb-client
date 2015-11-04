@@ -3,9 +3,9 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 /**
  * The ORG Payload provides details about an organization, including their 
@@ -58,17 +58,17 @@ class Org extends Payload
 	protected function init()
 	{
 		$this->create(new Country, 'country');
-		$this->create(new MultilineElement('streetAddress'), 'address');
+		$this->create(new MultiLine('streetAddress'), 'address');
 		$this->create(new Element('city'));
 		$this->create(new LengthElement('iso3166-2', 2), 'state');
 		$this->create(new Element('postalCode'));
-		$this->create(new MultilineElement('comment'));
+		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('handle'));
 		$this->create(new Element('orgName'));
 		$this->create(new Element('dbaName'));
 		$this->create(new Element('taxId'));
 		$this->create(new Element('orgUrl'));
-		$this->create(new GroupElement('pocLinks'), 'poc');
+		$this->create(new Group('pocLinks'), 'poc');
 	}
 }

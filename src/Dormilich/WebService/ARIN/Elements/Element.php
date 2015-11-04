@@ -2,6 +2,8 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
+use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 
 /**
@@ -10,7 +12,7 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
  * Note: __toString() would be neat, but causes too much trouble for the 
  *       inheriting collection elements.
  */
-class Element implements ElementInterface
+class Element implements ElementInterface, XMLHandler
 {
 	/**
 	 * @var string $name The element’s tag name.
@@ -110,6 +112,16 @@ class Element implements ElementInterface
 	public function __unset($name)
 	{
 		unset($this->attributes[$name]);
+	}
+
+	/**
+	 * Make the element’s content accessible in string context.
+	 * 
+	 * @return string The element’s value.
+	 */
+	public function __toString()
+	{
+		return $this->getValue();
 	}
 
 	/**

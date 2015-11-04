@@ -4,9 +4,9 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 /**
  * The POC Payload provides information about a POC.
@@ -57,11 +57,11 @@ class Poc extends Payload
 	{
 		$this->create(new LengthElement('iso3166-2', 2), 'state');
 		$this->create(new Country, 'country');
-		$this->create(new GroupElement('emails'));
-		$this->create(new MultilineElement('streetAddress'), 'address');
+		$this->create(new Group('emails'));
+		$this->create(new MultiLine('streetAddress'), 'address');
 		$this->create(new Element('city'));
 		$this->create(new Element('postalCode'));
-		$this->create(new MultilineElement('comment'));
+		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('handle'));
 		$this->create(new FixedElement('contactType', ['PERSON', 'ROLE']));
@@ -69,6 +69,6 @@ class Poc extends Payload
 		$this->create(new Element('firstName'));
 		$this->create(new Element('middleName'));
 		$this->create(new Element('lastName'));
-		$this->create(new GroupElement('phones'));
+		$this->create(new Group('phones'));
 	}
 }

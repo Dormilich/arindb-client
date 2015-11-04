@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\ElementInterface;
+use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
 
 /**

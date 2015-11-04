@@ -4,8 +4,8 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 /**
  * This payload allows the sending of additional information to an existing 
@@ -32,9 +32,9 @@ class Message extends Payload
 		$this->create(new Element('ns2:messageId', $uri));
 		$this->create(new Element('ns2:createdDate', $uri));
 		$this->create(new Element('subject'));
-		$this->create(new MultilineElement('text'));
+		$this->create(new MultiLine('text'));
 		$types = ['NONE', 'JUSTIFICATION'];
 		$this->create(new FixedElement('category', $types));
-		$this->create(new GroupElement('attachments'));
+		$this->create(new Group('attachments'));
 	}
 }

@@ -1,27 +1,66 @@
 <?php
 
-namespace Dormilich\WebService\ARIN\Elements;
+namespace Dormilich\WebService\ARIN\Lists;
+
+use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * An ArrayElement represents an XML element that only contains nested XML 
  * elements, but no text itself. This class’ decendents need to re-implement 
  * the toDOM() method.
  */
-class ArrayElement extends Element implements \ArrayAccess, \Countable
+abstract class ArrayElement implements ElementInterface, XMLHandler, \ArrayAccess, \Countable
 {
+	/**
+	 * @var string $name The element’s tag name.
+	 */
+	protected $name;
+
+	/**
+	 * @var string $prefix XML namespace prefix.
+	 */
+	protected $prefix;
+
+	/**
+	 * @var string $namespace XML namespace URI.
+	 */
+	protected $namespace;
+
 	/**
 	 * @var array $value Collection of the nested data.
 	 */
 	protected $value = [];
 
 	/**
-	 * Returns TRUE if the element’s data collection is not empty.
+	 * Set the base name of the array element.
 	 * 
-	 * @return boolean
+	 * @param string $name Tag name.
+	 * @return self
 	 */
-	public function isDefined()
+	public function __construct($name)
 	{
-		return count($this->value) > 0;
+		$this->name = end(explode(':', $name));
+	}
+
+	/**
+	 * Reset the element’s contents on cloning.
+	 * 
+	 * @return void
+	 */
+	public function __clone()
+	{
+		$this->setValue(NULL);
+	}
+
+	/**
+	 * Get the collection elements of the array element.
+	 * 
+	 * @return array
+	 */
+	public function getValue()
+	{
+		return $this->value;
 	}
 
 	/**
@@ -65,14 +104,49 @@ class ArrayElement extends Element implements \ArrayAccess, \Countable
 	}
 
 	/**
-	 * This class cannot represent a concrete XML element.
+	 * Convert and/or validate the data item.
+	 * 
+	 * @param mixed $value 
+	 * @return mixed
+	 * @throws Exception Value constraint violation.
+	 */
+	abstract protected function convert($value);
+
+	/**
+	 * Get the element’s tag name (local name).
+	 * 
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * Returns TRUE if the element’s data collection is not empty.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		return count($this->value) > 0;
+	}
+
+	/**
+	 * Transform the element into its XML representation.
 	 * 
 	 * @param DOMDocument $doc 
-	 * @throws LogicException
+	 * @return DOMElement
 	 */
 	public function toDOM(\DOMDocument $doc)
 	{
-		throw new \LogicException('Invalid data class.');
+		$node = $doc->createElement($this->getName());
+
+		foreach ($this->value as $value) {
+			$node->appendChild($value->toDOM($doc));
+		}
+
+		return $node;
 	}
 
 	/**

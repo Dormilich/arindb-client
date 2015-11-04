@@ -3,7 +3,7 @@
 namespace Test;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Payloads\Payload;
 
 class SetPayloadDummy extends Payload

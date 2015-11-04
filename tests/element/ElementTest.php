@@ -10,9 +10,9 @@ class ElementTest extends PHPUnit_Framework_TestCase
 		$elem = new Element('test');
 
 		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\ElementInterface', $elem);
+			'Dormilich\WebService\ARIN\ElementInterface', $elem);
 		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\DOMSerializable', $elem);
+			'Dormilich\WebService\ARIN\XMLHandler', $elem);
 	}
 
 	public function testElementHasCorrectTagNameWithoutNamespace()

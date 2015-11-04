@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 
 /**
  * The Error Payload is returned when any call encounters errors and it 
@@ -23,7 +23,7 @@ class Error extends Payload
 		// though it’s originally restricted, it’s not
 		// an attribute that is set by the user
 		$this->create(new Element('code'));
-		$this->create(new GroupElement('components'));
-		$this->create(new GroupElement('additionalInfo'));
+		$this->create(new Group('components'));
+		$this->create(new Group('additionalInfo'));
 	}
 }

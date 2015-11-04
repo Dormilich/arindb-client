@@ -4,7 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\BoolElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 
 /**
  * The Ticket Payload contains details about a submitted Ticket. Some calls 
@@ -37,7 +37,7 @@ class Ticket extends Payload
 	{
 		$uri = 'http://www.arin.net/regrws/shared-ticket/v1';
 
-		$this->create(new GroupElement('messages'));
+		$this->create(new Group('messages'));
 		$this->create(new Element('ticketNo'));
 		$this->create(new BoolElement('ns4:shared', $uri));
 		$this->create(new Element('ns4:orgHandle', $uri));

@@ -4,8 +4,8 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 /**
  * The NET Payload contains details about an IPv4 or IPv6 network.
@@ -68,15 +68,15 @@ class Net extends Payload
 	protected function init()
 	{
 		$this->create(new FixedElement('version', [4, 6]));
-		$this->create(new MultilineElement('comment'));
+		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('orgHandle'), 'org');
 		$this->create(new Element('handle'));
-		$this->create(new GroupElement('netBlocks'), 'net');
+		$this->create(new Group('netBlocks'), 'net');
 		$this->create(new Element('customerHandle'), 'customer');
 		$this->create(new Element('parentNetHandle'), 'parentNet');
 		$this->create(new Element('netName'));
-		$this->create(new GroupElement('originASes'), 'ASN');
-		$this->create(new GroupElement('pocLinks'), 'poc');
+		$this->create(new Group('originASes'), 'ASN');
+		$this->create(new Group('pocLinks'), 'poc');
 	}
 }

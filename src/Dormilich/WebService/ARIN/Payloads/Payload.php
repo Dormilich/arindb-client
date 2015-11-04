@@ -2,14 +2,14 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\DOMSerializable;
+use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\ElementInterface;
+use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Exceptions\ARINException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
 
-abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
+abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 {
 	/**
 	 * @var string REG-RWS XML namespace.
@@ -22,7 +22,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	protected $name;
 
 	/**
-	 * @var array(DOMSerializable) Child elements of the Payload.
+	 * @var array(XMLHandler) Child elements of the Payload.
 	 */
 	protected $elements = [];
 
@@ -111,7 +111,7 @@ abstract class Payload implements DOMSerializable, \ArrayAccess, \Iterator
 	 * Note: the exception should be more specific.
 	 * 
 	 * @param string $name Element name or alias.
-	 * @return DOMSerializable Element.
+	 * @return XMLHandler Element.
 	 * @throws Exception Element not found.
 	 */
 	public function get($name)

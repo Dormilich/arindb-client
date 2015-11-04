@@ -2,30 +2,26 @@
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\ArrayElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 class ArrayElementsTest extends PHPUnit_Framework_TestCase
 {
     public function testElementsInheritElement()
     {
         // this class changes only the toDOM() method
-        $line = new MultilineElement('test');
+        $line = new MultiLine('test');
         $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Elements\Element', $line);
-        $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Elements\ArrayElement', $line);
+            'Dormilich\WebService\ARIN\Lists\ArrayElement', $line);
 
-        $group = new GroupElement('test');
+        $group = new Group('test');
         $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Elements\Element', $group);
-        $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Elements\ArrayElement', $group);
+            'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
     }
 
     public function testMultilineSetValues()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $m->setValue(1);
         $this->assertSame(['1'], $m->getValue());
@@ -36,7 +32,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineAddValues()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $m->addValue(1);
         $this->assertSame(['1'], $m->getValue());
@@ -47,7 +43,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineIsDefined()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $this->assertFalse($m->isDefined());
 
@@ -57,7 +53,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineArrayIsset()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $this->assertFalse(isset($m[0]));
 
@@ -69,7 +65,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineArrayGet()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $this->assertNull($m[0]);
 
@@ -79,7 +75,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineArraySet()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $m[0] = 1;
         $this->assertSame('1', $m[0]);
@@ -91,7 +87,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineArrayPush()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $m[] = 'a';
         $m[] = 'b';
@@ -103,7 +99,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testMultilineArrayUnset()
     {
-        $m = new MultilineElement('test');
+        $m = new MultiLine('test');
 
         $m[] = 'a';
         $m[] = 'b';
@@ -120,7 +116,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
     public function testGroupIsDefined()
     {
-        $g = new GroupElement('test');
+        $g = new Group('test');
 
         // empty => false
         $this->assertFalse($g->isDefined());
@@ -148,7 +144,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
      */
     public function testGroupDoesNotAcceptPrimitives($value)
     {
-        $g = new GroupElement('test');
+        $g = new Group('test');
         $g->addValue($value);
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\ArrayElement;
+use Dormilich\WebService\ARIN\Lists\ArrayElement;
 use Dormilich\WebService\ARIN\Elements\BoolElement;
 use Dormilich\WebService\ARIN\Elements\FixedElement;
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
-use Dormilich\WebService\ARIN\Elements\MultilineElement;
+use Dormilich\WebService\ARIN\Lists\MultiLine;
 use Test\Stringer;
 
 class SerialiseTest extends PHPUnit_Framework_TestCase
@@ -108,10 +108,10 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame('<foo>ORG</foo>', $xml);
     }
 
-    public function testSerialiseMultilineElement()
+    public function testSerialiseMultiLine()
     {
         $doc = new DOMDocument;
-        $elem = new MultilineElement('comment');
+        $elem = new MultiLine('comment');
         $elem
             ->addValue('foo')
             ->addValue('bar')
@@ -132,12 +132,12 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame($string, $xml);
     }
 
-    public function testSerialiseGroupElement()
+    public function testSerialiseGroup()
     {
         $doc = new DOMDocument;
         $item = new Element('item');
-        $test = new GroupElement('test');
-        $group = new GroupElement('list');
+        $test = new Group('test');
+        $group = new Group('list');
 
         $item->setValue(1);
         $group->addValue($item);
@@ -164,17 +164,5 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $string .= '</list>';
 
         $this->assertSame($string, $xml);
-    }
-
-    /**
-     * @expectedException LogicException
-     */
-    public function testSerialiseArrayElementFails()
-    {
-        $doc = new DOMDocument;
-        $test = new ArrayElement('test');
-        $test->setValue(1);
-
-        $node = $test->toDOM($doc);
     }
 }

@@ -6,7 +6,7 @@ namespace Dormilich\WebService\ARIN;
  * This interface shall guarantee that an element can be transformed into an 
  * XML element.
  */
-interface DOMSerializable
+interface XMLHandler
 {
 	/**
 	 * The tag name of the base XML element.
@@ -30,4 +30,12 @@ interface DOMSerializable
 	 * @return DOMElement
 	 */
 	public function toDOM(\DOMDocument $doc);
+
+	/**
+	 * Read the data from the xml node(s) into the object.
+	 * 
+	 * @param SimpleXMLElement $sxe 
+	 * @return void
+	 */
+	#public function parse(\SimpleXMLElement $sxe);
 }

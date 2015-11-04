@@ -2,7 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\Elements\GroupElement;
+use Dormilich\WebService\ARIN\Lists\Group;
 
 /**
  * This payload is a nested element of a Ticket Payload returned when a Get 
@@ -22,7 +22,7 @@ class MessageReference extends Payload
 
 	protected function init()
 	{
-		$this->create(new GroupElement('attachmentReferences'));
+		$this->create(new Group('attachmentReferences'));
 	}
 
 	public function toXML()

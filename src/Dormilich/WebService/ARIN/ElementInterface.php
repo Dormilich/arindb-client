@@ -1,14 +1,12 @@
 <?php
 
-namespace Dormilich\WebService\ARIN\Elements;
-
-use Dormilich\WebService\ARIN\DOMSerializable;
+namespace Dormilich\WebService\ARIN;
 
 /**
  * An Element refers to either a single XML element having a text value 
  * or a collection of other elements.
  */
-interface ElementInterface extends DOMSerializable
+interface ElementInterface
 {
 	/**
 	 * Get the data of the element. This may be a string or an array of 
