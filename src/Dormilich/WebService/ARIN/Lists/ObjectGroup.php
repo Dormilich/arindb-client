@@ -2,14 +2,13 @@
 
 namespace Dormilich\WebService\ARIN\Lists;
 
-use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 
 /**
- * This class accepts any serialisable object(s) as its content.
- * The main use of this class is to provide a container for nested payloads.
+ * This class accepts any serialisable object(s) as its content that match the 
+ * predefined classes. 
  */
-class FilterGroup extends Group
+class ObjectGroup extends Group
 {
 	/**
 	 * @var array $classes Allowed class names of the members.
@@ -95,7 +94,7 @@ class FilterGroup extends Group
 	 * @param object $value 
 	 * @return boolean
 	 */
-	protected function supports($value)
+	public function supports($value)
 	{
 		return array_reduce($this->classes, function ($carry, $class) use ($value) {
 			return $value instanceof $class ? true : ($carry or false);

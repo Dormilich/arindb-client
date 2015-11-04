@@ -30,9 +30,9 @@ class Group extends ArrayElement
 	/**
 	 * Check if the value is a serialisable element.
 	 * 
-	 * @param mixed $value 
+	 * @param object $value 
 	 * @return XMLHandler
-	 * @throws Exception Value is not serialisable.
+	 * @throws DataTypeException Value is not serialisable.
 	 */
 	protected function convert($value)
 	{

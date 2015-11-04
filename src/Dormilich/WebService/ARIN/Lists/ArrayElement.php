@@ -30,7 +30,7 @@ abstract class ArrayElement implements ElementInterface, XMLHandler, \ArrayAcces
 	 */
 	public function __construct($name)
 	{
-		$this->name = end(explode(':', $name));
+		$this->name = end(explode(':', (string) $name));
 	}
 
 	/**

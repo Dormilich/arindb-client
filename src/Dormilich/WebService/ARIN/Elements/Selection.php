@@ -24,6 +24,7 @@ class Selection extends Element
 	 * @return self
 	 * @throws DataTypeException An allowed value is not a string.
 	 * @throws LogicException Allowed value definition missing.
+	 * @throws LogicException Allowed value definition empty.
      * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns)
@@ -36,12 +37,16 @@ class Selection extends Element
 			array_shift($args);
 		}
 
-		if (!count($args)) {
+		if (count($args) === 0) {
 			throw new \LogicException('Allowed values are not defined.');
 		}
 
 		foreach ((array) end($args) as $value) {
 			$this->allowed[] = parent::convert($value);
+		}
+
+		if (count($this->allowed) === 0) {
+			throw new \LogicException('Allowed values list must not be empty.');
 		}
 	}
 

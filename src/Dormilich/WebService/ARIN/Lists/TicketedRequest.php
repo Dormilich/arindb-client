@@ -14,7 +14,7 @@ namespace Dormilich\WebService\ARIN\Lists;
  * an embedded Ticket Payload representing the Ticket that was created for 
  * your request. See NET Reassign and NET Reallocate for more details.
  */
-class TicketedRequest extends FilterGroup
+class TicketedRequest extends ObjectGroup
 {
 	public function __construct()
 	{
