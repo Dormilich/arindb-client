@@ -22,6 +22,7 @@ class LengthElement extends Element
 	 * @param string $ns (optional) Namespace URI.
 	 * @param integer $length Content length. Defaults to 1.
 	 * @return self
+     * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns)
 	{

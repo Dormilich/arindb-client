@@ -24,6 +24,7 @@ class Selection extends Element
 	 * @return self
 	 * @throws DataTypeException An allowed value is not a string.
 	 * @throws LogicException Allowed value definition missing.
+     * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns)
 	{

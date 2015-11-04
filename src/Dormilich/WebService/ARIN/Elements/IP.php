@@ -9,11 +9,31 @@ use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
  */
 class IP extends Element
 {
+	/**
+	 * @var UNPADDED Flag to convert IPv4 addresses to unpadded format.
+	 */
 	const UNPADDED = false;
+
+	/**
+	 * @var PADDED Flag to convert IPv4 addresses to padded format.
+	 */
 	const PADDED   = true;
 
+	/**
+	 * @var mixed $padding Value of the default padding conversion setting.
+	 */
 	protected $padding;
 
+	/**
+	 * Set up the element and optionally configure the default IPv4 padding 
+	 * conversion flag. The default setting is to not convert padding either way.
+	 * 
+	 * @param string $name Tag name.
+	 * @param string $ns (optional) Namespace URI.
+	 * @param mixed $flag Padding conversion flag.
+	 * @return self
+     * @throws LogicException Namespace prefix missing.
+	 */
 	public function __construct($name, $ns = NULL)
 	{
 		$this->setNamespace((string) $name, $ns);
@@ -32,6 +52,32 @@ class IP extends Element
 				$this->padding = false;
 			}
 		}
+	}
+
+	/**
+	 * Set IP value. If a padding flag is provided, convert the IP address 
+	 * according to that flag.
+	 * 
+	 * @param string $value New IP address.
+	 * @param mixed $flag Flag for applying padding to IPv4 addresses.
+	 * @return self
+	 */
+	public function setValue($value)
+	{
+		// save original value
+		$padding = $this->padding;
+
+		// use provided value
+		if (func_num_args() > 1) {
+			$this->padding = func_get_arg(1);
+		}
+
+		parent::setValue($value);
+
+		// restore original value
+		$this->padding = $padding;
+
+		return $this;
 	}
 
 	/**
