@@ -46,23 +46,39 @@ class Element implements ElementInterface, XMLHandler
 	 * @param string $name Tag name.
 	 * @param string $ns Namespace URI.
 	 * @return self
+	 * @throws LogicException Invalid namespace URI.
+	 * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns = NULL)
 	{
-		if ($ns === NULL) {
-			$this->name = end(explode(':', $name));
-		}
-		elseif (filter_var($ns, \FILTER_VALIDATE_URL)) {
-			if (strpos($name, ':') === false) {
-				throw new \LogicException('Namespace prefix missing.');
-			}
-			list($this->prefix, $this->name) = explode(':', $name);
+		$this->setNamespace((string) $name, $ns);
 
-			$this->namespace = $ns;
-		}
-		else {
+		if ($ns and !$this->namespace) {
 			throw new \LogicException('Invalid namespace.');
 		}
+	}
+
+	/**
+	 * Set namespace and prefix.
+	 * 
+	 * @param string $tag Prefixed tag name.
+	 * @param string $namespace Namespace URI.
+	 * @return void
+	 * @throws LogicException Namespace prefix missing.
+	 */
+	protected function setNamespace($tag, $namespace)
+	{
+        if (filter_var($ns, \FILTER_VALIDATE_URL)) {
+			if (strpos($tag, ':') === false) {
+				throw new \LogicException('Namespace prefix missing.');
+			}
+			list($this->prefix, $this->name) = explode(':', $tag);
+
+			$this->namespace = $namespace;
+        }
+        else {
+            $this->name = end(explode(':', $name));
+        }
 	}
 
 	/**
