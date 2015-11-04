@@ -19,15 +19,27 @@ class FixedElement extends Element
 	 * Set up the element defining the allowed values.
 	 * 
 	 * @param string $name Tag name.
+	 * @param string $ns (optional) Namespace URI.
 	 * @param array(string) $allowed Allowed values.
 	 * @return self
-	 * @throws Exception An allowed value is not a string.
+	 * @throws DataTypeException An allowed value is not a string.
+	 * @throws LogicException Allowed value definition missing.
 	 */
-	public function __construct($name, array $allowed)
+	public function __construct($name, $ns)
 	{
-		parent::__construct($name);
+        $this->setNamespace((string) $name, $ns);
 
-		foreach ($allowed as $value) {
+		$args = array_slice(func_get_args(), 1, 2);
+
+		if ($this->namespace) {
+			array_shift($args);
+		}
+
+		if (!count($args)) {
+			throw new \LogicException('Allowed values are not defined.');
+		}
+
+		foreach ((array) end($args) as $value) {
 			$this->allowed[] = parent::convert($value);
 		}
 	}

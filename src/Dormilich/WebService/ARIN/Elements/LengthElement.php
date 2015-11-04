@@ -19,14 +19,21 @@ class LengthElement extends Element
 	 * Set up the element defining the required content length.
 	 * 
 	 * @param string $name Tag name.
-	 * @param integer $length Required content length.
+	 * @param string $ns (optional) Namespace URI.
+	 * @param integer $length Content length. Defaults to 1.
 	 * @return self
 	 */
-	public function __construct($name, $length)
+	public function __construct($name, $ns)
 	{
-		parent::__construct($name);
+        $this->setNamespace((string) $name, $ns);
 
-		$this->length = filter_var($length, \FILTER_VALIDATE_INT, [
+		$args = array_slice(func_get_args(), 1, 2);
+
+		if ($this->namespace) {
+			array_shift($args);
+		}
+
+		$this->length = filter_var(end($args), \FILTER_VALIDATE_INT, [
 			'options' => ['min_range' => 1, 'default' => 1]
 		]);
 	}

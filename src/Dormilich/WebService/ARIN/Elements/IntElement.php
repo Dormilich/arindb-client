@@ -39,9 +39,9 @@ class IntElement extends Element
      */
     public function __construct($name, $ns = NULL)
     {
-        $args = array_slice(func_get_args(), 1, 3);
-
         $this->setNamespace((string) $name, $ns);
+
+        $args = array_slice(func_get_args(), 1, 3);
 
         if ($this->namespace) {
             array_shift($args);
