@@ -1,12 +1,11 @@
 <?php
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Lists\ArrayElement;
 use Dormilich\WebService\ARIN\Elements\Boolean;
-use Dormilich\WebService\ARIN\Elements\Selection;
-use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Elements\Integer;
+use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
-use Dormilich\WebService\ARIN\Lists\MultiLine;
+use Dormilich\WebService\ARIN\Elements\Selection;
 use Test\Stringer;
 
 class SerialiseTest extends PHPUnit_Framework_TestCase
@@ -108,61 +107,27 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame('<foo>ORG</foo>', $xml);
     }
 
-    public function testSerialiseMultiLine()
+    public function testSerialiseInteger()
     {
         $doc = new DOMDocument;
-        $elem = new MultiLine('comment');
-        $elem
-            ->addValue('foo')
-            ->addValue('bar')
-            ->addValue('baz')
-            ->addValue('quux')
-        ;
+        $elem = new Integer('foo');
+        $elem->setValue(4);
 
         $node = $elem->toDOM($doc);
         $xml = $doc->saveXML($node);
 
-        $string  = '<comment>';
-        $string .= '<line number="1">foo</line>';
-        $string .= '<line number="2">bar</line>';
-        $string .= '<line number="3">baz</line>';
-        $string .= '<line number="4">quux</line>';
-        $string .= '</comment>';
-
-        $this->assertSame($string, $xml);
+        $this->assertSame('<foo>4</foo>', $xml);
     }
 
-    public function testSerialiseGroup()
+    public function testSerialiseIP()
     {
         $doc = new DOMDocument;
-        $item = new Element('item');
-        $test = new Group('test');
-        $group = new Group('list');
+        $elem = new IP('foo');
+        $elem->setValue('192.168.17.5');
 
-        $item->setValue(1);
-        $group->addValue($item);
-
-        $item2 = clone $item;
-        $item2->setValue('abc');
-        $group->addValue($item2);
-
-        $item3 = clone $item;
-        $item3->name = 'bar';
-        $test->addValue($item3);
-        $group->addValue($test);
-
-        $node = $group->toDOM($doc);
+        $node = $elem->toDOM($doc);
         $xml = $doc->saveXML($node);
 
-        // indentation is for better readability
-        $string  = '<list>';
-        $string .=   '<item>1</item>';
-        $string .=   '<item>abc</item>';
-        $string .=   '<test>';
-        $string .=     '<item name="bar"/>';
-        $string .=   '</test>';
-        $string .= '</list>';
-
-        $this->assertSame($string, $xml);
+        $this->assertSame('<foo>192.168.17.5</foo>', $xml);
     }
 }
