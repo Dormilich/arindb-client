@@ -2,8 +2,8 @@
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Lists\ArrayElement;
-use Dormilich\WebService\ARIN\Elements\BoolElement;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Boolean;
+use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -64,10 +64,10 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame($string, $xml);
     }
 
-    public function testSerialiseBoolElement()
+    public function testSerialiseBoolean()
     {
         $doc = new DOMDocument;
-        $elem = new BoolElement('foo');
+        $elem = new Boolean('foo');
 
         $elem->setValue(1);
         $node = $elem->toDOM($doc);
@@ -84,10 +84,10 @@ class SerialiseTest extends PHPUnit_Framework_TestCase
         $this->assertSame('<foo>false</foo>', $xml);
     }
 
-    public function testSerialiseFixedElement()
+    public function testSerialiseSelection()
     {
         $doc = new DOMDocument;
-        $elem = new FixedElement('foo', [2,4,6]);
+        $elem = new Selection('foo', [2,4,6]);
         $elem->setValue(4);
 
         $node = $elem->toDOM($doc);

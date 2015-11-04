@@ -2,7 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
-use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
  * This class represents an XML element that may only contain previously 
@@ -77,7 +77,7 @@ class Integer extends Element
      * 
      * @param mixed $value 
      * @return string
-     * @throws Exception Value constraint violation.
+     * @throws ConstraintException Value constraint violation.
      */
     protected function convert($value)
     {
@@ -87,6 +87,6 @@ class Integer extends Element
             return (string) $int;
         }
         $msg = 'Value "%s" is not a valid integer in the [%s] element.';
-        throw new DataTypeException(sprintf($msg, $value, $this->name));
+        throw new ConstraintException(sprintf($msg, $value, $this->name));
     }
 }

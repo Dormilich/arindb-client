@@ -2,13 +2,38 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
-use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
  * This class represents an XML element that contains an IP address.
  */
 class IP extends Element
 {
+	const UNPADDED = false;
+	const PADDED   = true;
+
+	protected $padding;
+
+	public function __construct($name, $ns = NULL)
+	{
+		$this->setNamespace((string) $name, $ns);
+
+		$args = array_slice(func_get_args(), 1, 2);
+
+		if ($this->namespace) {
+			array_shift($args);
+		}
+
+		if (isset($args[0])) {
+			if (self::PADDED === $args[0]) {
+				$this->padding = self::PADDED;
+			}
+			elseif (self::UNPADDED === $args[0]) {
+				$this->padding = false;
+			}
+		}
+	}
+
 	/**
 	 * Validates input as IP address.
 	 * 
@@ -18,12 +43,20 @@ class IP extends Element
 	protected function convert($value)
 	{
 		$value = parent::convert($value);
+		$unpadded = $this->unpad($value);
 
-		if (filter_var($this->unpad($value), \FILTER_VALIDATE_IP)) {
-			return $value;
+		if (!filter_var($unpadded, \FILTER_VALIDATE_IP)) {
+			$msg = 'Value "%s" is not a valid IP address in the [%s] element.';
+			throw new ConstraintException(sprintf($msg, $value, $this->name));
 		}
-        $msg = 'Value "%s" is not a valid IP address in the [%s] element.';
-        throw new DataTypeException(sprintf($msg, $value, $this->name));
+
+		if ($this->padding === self::PADDED) {
+			return $this->pad($value);
+		}
+		if ($this->padding === self::UNPADDED) {
+			return $unpadded;
+		}
+		return $value;
 	}
 
 	/**
@@ -36,8 +69,28 @@ class IP extends Element
 	 */
 	protected function unpad($ip)
 	{
+		if (strpos($ip, '.') === false) {
+			return $ip;
+		}
 		$list = explode('.', $ip);
 		$tpl  = implode('.', array_fill(0, count($list), '%d'));
+
+		return vsprintf($tpl, $list);
+	}
+
+	/**
+	 * Convert unpadded IPv4 into padded IPv4.
+	 * 
+	 * @param string $ip Padded/unpadded IP address.
+	 * @return string Padded IP address.
+	 */
+	protected function pad($ip)
+	{
+		if (strpos($ip, '.') === false) {
+			return $ip;
+		}
+		$list = explode('.', $ip);
+		$tpl  = implode('.', array_fill(0, count($list), '%03d'));
 
 		return vsprintf($tpl, $list);
 	}
