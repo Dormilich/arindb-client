@@ -2,9 +2,10 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\FilterInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Exceptions\ARINException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
@@ -38,13 +39,13 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 * to shorten overly long XML element names or avoid access issues if 
 	 * there are multiple XML elements with the same tag name.
 	 * 
-	 * @param ElementInterface $elem 
+	 * @param XMLHandler $elem A serialisable element.
 	 * @param $alias An alias for the element's name should the element have 
 	 *          an inconvenient or duplicate name.
 	 * @return void
 	 * @throws LogicException name or alias already exists.
 	 */
-	protected function create(ElementInterface $elem, $alias = NULL)
+	protected function create(XMLHandler $elem, $alias = NULL)
 	{
 		if (!$alias) {
 			$alias = $elem->getName();
@@ -70,13 +71,24 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * By default, Payloads are always subject to serialisation.
+	 * Returns TRUE if the elements designated as required are defined.
+	 * Optional elements must always return true, required elemnts only when 
+	 * their (or their sub-elements’) validity requirement is fulfilled.
+	 * 
+	 * @return boolean
+	 */
+	abstract function isValid();
+
+	/**
+	 * Returns TRUE if at least one element is defined.
 	 * 
 	 * @return boolean
 	 */
 	public function isDefined()
 	{
-		return true;
+		return array_reduce($this->elements, function ($carry, $item) {
+			return $carry or $item->isDefined();
+		}, false);
 	}
 
 	/**
@@ -103,6 +115,31 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
+	 * Get all elements whose tag name matches the given value.
+	 * 
+	 * @param mixed $name Tag name.
+	 * @return array List of matching elements.
+	 */
+	public function filter($name)
+	{
+		return array_filter($this->elements, function ($item) use ($name) {
+			return $item->getName() === $name;
+		});
+	}
+
+	/**
+	 * Get the first element whose tag name matches the given value.
+	 * 
+	 * @param mixed $name Tag name.
+	 * @return object|NULL First matching element or NULL if no matching 
+	 *          element was found.
+	 */
+	public function fetch($name)
+	{
+		return reset($this->filter($name)) ?: NULL;
+	}
+
+	/**
 	 * Get a child element by name or alias. First the name is looked up in 
 	 * the element array’s keys. If it is not found, get all elements of that 
 	 * name and return the first one. There is no recursion.
@@ -112,7 +149,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 * 
 	 * @param string $name Element name or alias.
 	 * @return XMLHandler Element.
-	 * @throws Exception Element not found.
+	 * @throws NotFoundException Element not found.
 	 */
 	public function get($name)
 	{
@@ -120,21 +157,20 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 			return $this->elements[$name];
 		}
 
-		$elem = array_filter($this->elements, function ($item) use ($name) {
-			return $item->getName() === $name;
-		});
+		$elem = $this->fetch($name);
 
-		if (count($elem) === 0) {
+		if (!$elem) {
 			throw new NotFoundException('Element '.$name.' not found.');
 		}
 
-		return reset($elem);
+		return $elem;
 	}
 
 	/**
 	 * Set a named or aliased element’s value. If an Payload object is passed 
 	 * it replaces the previous object if it is from the same class. This is 
-	 * intended for easy assignment of sub-payloads.
+	 * intended for easy assignment of sub-payloads. If the value is not a 
+	 * matching payload, an notice is emitted.
 	 * 
 	 * @param string $name Element name or alias.
 	 * @param mixed $value Element value.
@@ -142,21 +178,30 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 */
 	public function set($name, $value)
 	{
+		// elements are either Payloads or Elements
 		$elem = $this->get($name);
 
-		if (($value instanceof Payload) and ($value instanceof $elem)) {
+		// if target is a payload
+		if (($elem instanceof Payload) and ($value instanceof $elem)) {
 			$key = array_search($elem, $this->elements, true);
 			$this->elements[$key] = $value;
 		}
-		else {
+		// if target is an element/group
+		elseif ($elem instanceof ElementInterface) {
 			$elem->setValue($value);
+		}
+		else {
+			$msg = 'Value of type [%s] cannot overwrite a <%s> Payload.';
+			$type = is_object($value) ? get_class($value) : gettype($value);
+			trigger_error(sprintf($msg, $type, $elem->getName()), \E_USER_NOTICE);
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Chainable method to add a value to an element.
+	 * Chainable method to add a value to an element. Emits a notice if the 
+	 * target is not an element.
 	 * 
 	 * @param string $name Element name or alias.
 	 * @param mixed $value Element value.
@@ -164,7 +209,16 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 */
 	public function add($name, $value)
 	{
-		$this->get($name)->addValue($value);
+		$elem = $this->get($name);
+
+		if ($elem instanceof ElementInterface) {
+			$elem->addValue($value);
+		}
+		else {
+			$msg = 'Value of type [%s] cannot overwrite a <%s> Payload.';
+			$type = is_object($value) ? get_class($value) : gettype($value);
+			trigger_error(sprintf($msg, $type, $elem->getName()), \E_USER_NOTICE);
+		}
 
 		return $this;
 	}

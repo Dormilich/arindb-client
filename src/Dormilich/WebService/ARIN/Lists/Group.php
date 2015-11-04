@@ -45,12 +45,12 @@ class Group extends ArrayElement implements FilterInterface
 		throw new DataTypeException(sprintf($msg, $type, $this->name));
 	}
 
-    /**
-     * Get all elements whose tag name matches the given value.
-     * 
-     * @param mixed $name Tag name.
-     * @return array List of matching elements.
-     */
+	/**
+	 * Get all elements whose tag name matches the given value.
+	 * 
+	 * @param mixed $name Tag name.
+	 * @return array List of matching elements.
+	 */
 	public function filter($name)
 	{
 		return array_filter($this->value, function ($item) use ($name) {
@@ -58,13 +58,13 @@ class Group extends ArrayElement implements FilterInterface
 		});
 	}
 
-    /**
-     * Get the first element whose tag name matches the given value.
-     * 
-     * @param mixed $name Tag name.
-     * @return object|NULL First matching element or NULL if no matching 
-     *          element was found.
-     */
+	/**
+	 * Get the first element whose tag name matches the given value.
+	 * 
+	 * @param mixed $name Tag name.
+	 * @return object|NULL First matching element or NULL if no matching 
+	 *          element was found.
+	 */
 	public function fetch($name)
 	{
 		return reset($this->filter($name)) ?: NULL;

@@ -4,6 +4,16 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Test\Dummy;
 use Test\SetPayloadDummy;
 
+/* Setup for Dummy:
+Dummy
+    bar [foo] (required)
+    list
+        error
+        warning
+        notice
+    comment (multi-line)
+*/
+
 class PayloadTest extends PHPUnit_Framework_TestCase
 {
     public function testIssetElement()
@@ -31,7 +41,6 @@ class PayloadTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
      * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
      */
     public function testGetNonExistingElementFails()
@@ -46,6 +55,17 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $x['foo'] = 123;
 
         $this->assertSame('123', $x['foo']->getValue());
+    }
+
+    public function testAppendTextToExistingElement()
+    {
+        $x = new Dummy;
+
+        $x['foo'] = 123;
+        $this->assertSame('123', $x['foo']->getValue());
+
+        $x['foo'] .= 456;
+        $this->assertSame('123456', $x['foo']->getValue());
     }
 
     public function testSetExistingPayload()
@@ -63,16 +83,15 @@ class PayloadTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException UnexpectedValueException
+     * @expectedException PHPUnit_Framework_Error
      */
-    public function testReplaceExistingPayloadWithElementFails()
+    public function testReplaceExistingPayloadWithElementFailsSilently()
     {
         $p = new SetPayloadDummy;
         $p['dummy'] = new Element('abc');
     }
 
     /**
-     * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
      * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
      */
     public function testSetNonExistingElementFails()
@@ -135,8 +154,8 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $x['foo'] = 1;
 
-        $q = new Element('quux');
-        $q->setValue(17);
+        $q = new Element('notice');
+        $q->setValue('look behind');
 
         $x['list'] = $q;
 
@@ -147,6 +166,24 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($y['foo']->isDefined());
         $this->assertFalse($y['list']->isDefined());
+    }
+
+    public function testPayloadValidity()
+    {
+        $d = new Dummy;
+
+        $p = new SetPayloadDummy;
+        $p['dummy'] = $d;
+
+        $d['comment'] = 'a comment line';
+        $this->assertTrue($d->isDefined());
+        $this->assertFalse($d->isValid());
+        $this->assertFalse($p->isValid());
+
+        $d['foo'] = 'bar';
+        $this->assertTrue($d->isDefined());
+        $this->assertTrue($d->isValid());
+        $this->assertTrue($p->isValid());
     }
 
     public function testSerialiseEmptyPayload()
