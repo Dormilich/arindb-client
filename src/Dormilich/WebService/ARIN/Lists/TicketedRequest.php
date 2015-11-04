@@ -1,6 +1,6 @@
 <?php
 
-namespace Dormilich\WebService\ARIN\Payloads;
+namespace Dormilich\WebService\ARIN\Lists;
 
 /**
  * The Ticketed Request Payload details about a Ticket and or NET affected by 
@@ -14,20 +14,10 @@ namespace Dormilich\WebService\ARIN\Payloads;
  * an embedded Ticket Payload representing the Ticket that was created for 
  * your request. See NET Reassign and NET Reallocate for more details.
  */
-class TicketedRequest extends Payload
+class TicketedRequest extends Group
 {
 	public function __construct()
 	{
 		$this->name = 'ticketedRequest';
-		$this->init();
-	}
-
-	protected function init()
-	{
-		$ticket = new Ticket;
-		$net    = new Net;
-
-		$this->elements[$ticket->getName()] = $ticket;
-		$this->elements[$net->getName()]    = $net;
 	}
 }
