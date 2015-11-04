@@ -2,7 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
-use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
  * This class represents an XML element that may only contain previously 
@@ -55,7 +55,7 @@ class Selection extends Element
 	 * 
 	 * @param mixed $value 
 	 * @return string
-	 * @throws Exception Value not allowed.
+	 * @throws ConstraintException Value not allowed.
 	 */
 	protected function convert($value)
 	{
@@ -64,6 +64,6 @@ class Selection extends Element
 			return $value;
 		}
 		$msg = 'Value "%s" is not allowed for the [%s] element.';
-		throw new DataTypeException(sprintf($msg, $value, $this->name));
+		throw new ConstraintException(sprintf($msg, $value, $this->name));
 	}
 }

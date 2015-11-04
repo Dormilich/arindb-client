@@ -74,7 +74,6 @@ class ElementTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
      * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
 	 */
 	public function testElementThrowsExceptionOnNonStringifiableObject()

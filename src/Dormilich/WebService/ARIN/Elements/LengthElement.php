@@ -2,7 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Elements;
 
-use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
  * This class represents an XML element that may only contain a string of a 
@@ -55,6 +55,6 @@ class LengthElement extends Element
 			return $value;
 		}
 		$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
-		throw new DataTypeException(sprintf($msg, $value, $this->length, $this->name));
+		throw new ConstraintException(sprintf($msg, $value, $this->length, $this->name));
 	}
 }

@@ -28,7 +28,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(
 			'Dormilich\WebService\ARIN\Elements\Element', $length);
 
-		$fixed = new Selection('test', []);
+		$fixed = new Selection('test', [1]);
 		$this->assertInstanceOf(
 			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
 	}
@@ -74,8 +74,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
-     * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
 	 */
 	public function testSelectionRejectsUndefinedValue()
 	{
@@ -149,8 +148,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
-     * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
 	 * @dataProvider invalidLengthInputProvider
 	 */
 	public function testLengthElementRejectsInvalidInput($value)
@@ -244,7 +242,6 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
      * @expectedException Dormilich\WebService\ARIN\Exceptions\DataTypeException
 	 * @dataProvider invalidIntegerInputProvider
 	 */
@@ -263,7 +260,6 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\ARINException
      * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
 	 * @dataProvider integerRangeAndInvalidValueProvider
 	 */
