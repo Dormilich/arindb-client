@@ -68,7 +68,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	protected function setNamespace($tag, $namespace)
 	{
-        if (filter_var($ns, \FILTER_VALIDATE_URL)) {
+        if (filter_var($namespace, \FILTER_VALIDATE_URL)) {
 			if (strpos($tag, ':') === false) {
 				throw new \LogicException('Namespace prefix missing.');
 			}
