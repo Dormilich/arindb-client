@@ -73,6 +73,16 @@ class Integer extends Element
     }
 
     /**
+     * Get the integer content of the element.
+     * 
+     * @return integer
+     */
+    public function getValue()
+    {
+        return (int) $this->value;
+    }
+
+    /**
      * Check if a value qualifies as integer and is converted to its numeric representation.
      * 
      * @param mixed $value 

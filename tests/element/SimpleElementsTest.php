@@ -38,11 +38,14 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	public function boolValueProvider()
 	{
 		return [
-			[true, true], [false, false], 
-			[1, true], [0, false], 
+			[true, true],   [false, false], 
+			[1, true],      [0, false], 
 			['true', true], ['false', false], 
+			['on', true],   ['off', false], 
 			['foo', false], ['', false], 
-			[new stdClass, false], [null, false], 
+			[new stdClass, false], 
+			// NULL resets the content!
+			[NULL, NULL], 
 		];
 	}
 
@@ -200,22 +203,22 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$int = new Integer('test');
 
 		$int->setValue(17);
-		$this->assertSame('17', $int->getValue());
+		$this->assertSame(17, $int->getValue());
 
 		$int->setValue(-18);
-		$this->assertSame('-18', $int->getValue());
+		$this->assertSame(-18, $int->getValue());
 
 		$int->setValue('9');
-		$this->assertSame('9', $int->getValue());
+		$this->assertSame(9, $int->getValue());
 
 		$int->setValue(' -5 ');
-		$this->assertSame('-5', $int->getValue());
+		$this->assertSame(-5, $int->getValue());
 
 		$int->setValue(new Stringer(13));
-		$this->assertSame('13', $int->getValue());
+		$this->assertSame(13, $int->getValue());
 
 		$int->setValue(true);
-		$this->assertSame('1', $int->getValue());
+		$this->assertSame(1, $int->getValue());
 	}
 
 	public function integerRangeAndValueProvider()

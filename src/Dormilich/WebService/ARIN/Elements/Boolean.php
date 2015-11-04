@@ -8,13 +8,20 @@ namespace Dormilich\WebService\ARIN\Elements;
 class Boolean extends Element
 {
 	/**
-	 * Get the boolean content of the element.
+	 * Get the boolean content of the element. Returns NULL if the value has 
+	 * not been set.
 	 * 
-	 * @return boolean
+	 * @return boolean|NULL
 	 */
 	public function getValue()
 	{
-		return $this->value === 'true';
+		if ($this->value === 'true') {
+			return true;
+		}
+		if ($this->value === 'false') {
+			return false;
+		}
+		return NULL;
 	}
 
 	/**
