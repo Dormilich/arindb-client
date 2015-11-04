@@ -14,10 +14,13 @@ namespace Dormilich\WebService\ARIN\Lists;
  * an embedded Ticket Payload representing the Ticket that was created for 
  * your request. See NET Reassign and NET Reallocate for more details.
  */
-class TicketedRequest extends Group
+class TicketedRequest extends FilterGroup
 {
 	public function __construct()
 	{
-		$this->name = 'ticketedRequest';
+        parent::__construct('ticketedRequest', [
+            'Payloads\\Ticket', 
+            'Payloads\\Net', 
+        ]);
 	}
 }
