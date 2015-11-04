@@ -1,6 +1,8 @@
 <?php
 
-namespace Dormilich\WebService\ARIN\Lists;
+namespace Dormilich\WebService\ARIN\Payloads;
+
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The Ticketed Request Payload details about a Ticket and or NET affected by 
