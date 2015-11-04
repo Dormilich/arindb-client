@@ -366,4 +366,12 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	{
 		$ip = new IP('test', 'http://example.org/ex');
 	}
+
+	public function testIPwithPaddingFlagOnSettingValue()
+	{
+		$ip = new IP('test', IP::PADDED);
+
+		$ip->setValue('192.168.17.2', IP::UNPADDED);
+		$this->assertSame('192.168.17.2', $ip->getValue());
+	}
 }
