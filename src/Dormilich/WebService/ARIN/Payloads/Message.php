@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 
@@ -34,7 +34,7 @@ class Message extends Payload
 		$this->create(new Element('subject'));
 		$this->create(new MultiLine('text'));
 		$types = ['NONE', 'JUSTIFICATION'];
-		$this->create(new FixedElement('category', $types));
+		$this->create(new Selection('category', $types));
 		$this->create(new Group('attachments'));
 	}
 }

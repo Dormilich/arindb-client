@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\BoolElement;
+use Dormilich\WebService\ARIN\Elements\Boolean;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 
@@ -54,6 +54,6 @@ class Customer extends Payload
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('parentOrgHandle'), 'org');
 		$this->create(new Element('registrationDate'), 'created');
-		$this->create(new BoolElement('privateCustomer'), 'private');
+		$this->create(new Boolean('privateCustomer'), 'private');
 	}
 }

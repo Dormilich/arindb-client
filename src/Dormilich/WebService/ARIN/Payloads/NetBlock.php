@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
  * The NET Block Payload contains details on the NET Block of the Network 
@@ -32,7 +32,7 @@ class NetBlock extends Payload
 			'A',  'AF', 'AP', 'AR', 'AV', 'DA', 'DS', 'FX', 'IR', 'IU', 
 			'LN', 'LX', 'PV', 'PX', 'RD', 'RN', 'RV', 'RX', 'S', 
 		];
-		$this->create(new FixedElement('type', $abbr));
+		$this->create(new Selection('type', $abbr));
 		$this->create(new Element('description'));
 		$this->create(new Element('startAddress'), 'start');
 		$this->create(new Element('endAddress'), 'end');

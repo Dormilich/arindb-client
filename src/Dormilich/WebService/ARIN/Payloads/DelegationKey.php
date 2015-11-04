@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
  * The Delegation Key Payload is the portion of the Delegation Payload that 
@@ -23,10 +23,10 @@ class DelegationKey extends Payload
 
 	protected function init()
 	{
-		$this->create(new FixedElement('algorithm', ['5', '7', '8']));
+		$this->create(new Selection('algorithm', ['5', '7', '8']));
 		$this->create(new Element('digest'));
 		$this->create(new Element('ttl'));
-		$this->create(new FixedElement('digestType', ['1', '2']));
+		$this->create(new Selection('digestType', ['1', '2']));
 		$this->create(new Element('keyTag'));
 	}
 

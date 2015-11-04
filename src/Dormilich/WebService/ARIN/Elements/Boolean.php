@@ -5,7 +5,7 @@ namespace Dormilich\WebService\ARIN\Elements;
 /**
  * This class represents an XML element that represents a boolean value.
  */
-class BoolElement extends Element
+class Boolean extends Element
 {
 	/**
 	 * Get the boolean content of the element.

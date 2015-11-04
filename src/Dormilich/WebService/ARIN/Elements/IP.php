@@ -7,7 +7,7 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 /**
  * This class represents an XML element that contains an IP address.
  */
-class IPElement extends Element
+class IP extends Element
 {
 	/**
 	 * Validates input as IP address.

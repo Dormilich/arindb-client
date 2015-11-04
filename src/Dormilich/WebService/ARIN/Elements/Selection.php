@@ -8,7 +8,7 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
  * This class represents an XML element that may only contain previously 
  * specified string values.
  */
-class FixedElement extends Element
+class Selection extends Element
 {
 	/**
 	 * @var array(string) $allowed List of allowed values.

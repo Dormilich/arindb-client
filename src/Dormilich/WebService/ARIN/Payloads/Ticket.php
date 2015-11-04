@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\BoolElement;
+use Dormilich\WebService\ARIN\Elements\Boolean;
 use Dormilich\WebService\ARIN\Lists\Group;
 
 /**
@@ -39,7 +39,7 @@ class Ticket extends Payload
 
 		$this->create(new Group('messages'));
 		$this->create(new Element('ticketNo'));
-		$this->create(new BoolElement('ns4:shared', $uri));
+		$this->create(new Boolean('ns4:shared', $uri));
 		$this->create(new Element('ns4:orgHandle', $uri));
 		$this->create(new Element('createdDate'));
 		$this->create(new Element('resolvedDate'));

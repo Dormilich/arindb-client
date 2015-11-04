@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 
@@ -67,7 +67,7 @@ class Net extends Payload
 
 	protected function init()
 	{
-		$this->create(new FixedElement('version', [4, 6]));
+		$this->create(new Selection('version', [4, 6]));
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('orgHandle'), 'org');

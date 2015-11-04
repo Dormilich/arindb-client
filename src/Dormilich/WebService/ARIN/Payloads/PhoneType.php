@@ -4,7 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\ElementInterface;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
  * This represents a phone type. It is a nested element of Phone Payload and 
@@ -23,7 +23,7 @@ class PhoneType extends Payload implements ElementInterface
 	protected function init()
 	{
 		$this->create(new Element('description'));
-		$this->create(new FixedElement('code', ['O', 'F', 'M']));
+		$this->create(new Selection('code', ['O', 'F', 'M']));
 	}
 
 	public function isDefined()

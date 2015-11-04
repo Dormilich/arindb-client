@@ -8,7 +8,7 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
  * This class represents an XML element that may only contain previously 
  * specified string values.
  */
-class IntElement extends Element
+class Integer extends Element
 {
     /**
      * @var array $options Options for the filter function.

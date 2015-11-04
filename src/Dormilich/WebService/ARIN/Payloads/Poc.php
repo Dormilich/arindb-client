@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -64,7 +64,7 @@ class Poc extends Payload
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('handle'));
-		$this->create(new FixedElement('contactType', ['PERSON', 'ROLE']));
+		$this->create(new Selection('contactType', ['PERSON', 'ROLE']));
 		$this->create(new Element('companyName'));
 		$this->create(new Element('firstName'));
 		$this->create(new Element('middleName'));

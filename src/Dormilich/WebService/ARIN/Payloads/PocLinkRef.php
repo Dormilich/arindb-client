@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Elements\FixedElement;
+use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
  * This payload is a nested object within ORG and NET Payloads, explaining the 
@@ -26,7 +26,7 @@ class PocLinkRef extends Payload
 	{
 		$this->create(new Element('description'));
 		$this->create(new Element('handle'));
-		$this->create(new FixedElement('function', ['AD', 'AB', 'N', 'T']));
+		$this->create(new Selection('function', ['AD', 'AB', 'N', 'T']));
 	}
 
 	public function isDefined()
