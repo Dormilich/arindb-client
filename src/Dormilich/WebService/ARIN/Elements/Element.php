@@ -138,7 +138,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	public function __toString()
 	{
-		return $this->getValue();
+		return $this->value;
 	}
 
 	/**

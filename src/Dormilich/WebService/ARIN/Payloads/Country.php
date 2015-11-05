@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 
 /**
@@ -15,7 +15,7 @@ use Dormilich\WebService\ARIN\Elements\LengthElement;
  * fields must be specified. If you specify both,they must match the same 
  * country.
  */
-class Country extends Payload implements ElementInterface
+class Country extends Payload
 {
 	public function __construct()
 	{
@@ -31,38 +31,14 @@ class Country extends Payload implements ElementInterface
 		$this->create(new Integer('e164', 1, 999));
 	}
 
-	public function isDefined()
+	public function isValid()
 	{
-		return $this->get('code2')->isDefined() or 
-			$this->get('code3')->isDefined();
+		return $this->get('code2')->isDefined()
+			or $this->get('code3')->isDefined();
 	}
 
-	public function setValue($value)
+	public function toXML()
 	{
-		$value = strtoupper((string) $value);
-
-		if (preg_match('~^[A-Z]{2}$~', $value)) {
-			return $this->get('code2')->setValue($value);
-		}
-
-		if (preg_match('~^[A-Z]{3}$~', $value)) {
-			return $this->get('code3')->setValue($value);
-		}
-
-		$int = filter_var(ltrim($value, '+0'), \FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 1, 'max_range' => 998]
-		]);
-		if ($int) {
-			return $this->get('e164')->setValue($int);
-		}
-
-		$this->get('name')->setValue($value);	
-
-		return $this;	
-	}
-
-	public function addValue($value)
-	{
-		return $this->setValue($value);
+		throw new \LogicException('This Country Payload should not be submitted by itself.');
 	}
 }
