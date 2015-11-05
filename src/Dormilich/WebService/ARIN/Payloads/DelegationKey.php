@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
@@ -23,20 +24,30 @@ class DelegationKey extends Payload
 
 	protected function init()
 	{
-		$this->create(new Selection('algorithm', ['5', '7', '8']));
+		// no explanation is given, which number represents which algorithm
+		$this->create(new Selection('algorithm', [5, 7, 8]));
 		$this->create(new Element('digest'));
-		$this->create(new Element('ttl'));
-		$this->create(new Selection('digestType', ['1', '2']));
+		// guess: validity duration since submission in seconds
+		$this->create(new Integer('ttl', 1));
+		// guess: SHA1 & SHA2 family
+		$this->create(new Selection('digestType', [1, 2]), 'type');
+		// could be an integer, but no explanation is given
 		$this->create(new Element('keyTag'));
 	}
 
-	public function isDefined()
+	/**
+	 * Since there is no statement about validity, let’s assume that every 
+	 * value is required to make the payload valid.
+	 */
+	public function isValid()
 	{
-		return  $this->elements['algorithm']->isDefined()
-			and $this->elements['digest']->isDefined()
-			and $this->elements['ttl']->isDefined()
-			and $this->elements['digestType']->isDefined()
-			and $this->elements['keyTag']->isDefined()
-		;
+		return array_reduce($this->elements, function ($carry, $elem) {
+			return $carry and $elem->isDefined();
+		}, true);
+	}
+
+	public function toXML()
+	{
+		throw new \LogicException('This Delegation Key Payload should not be submitted by itself.');
 	}
 }
