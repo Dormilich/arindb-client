@@ -1,0 +1,7 @@
+<delegationKey>
+    <algorithm name="RSA/SHA-1">5</algorithm>
+    <digest>0DC99D4B6549F83385214189CA48DC6B209ABB71</digest>
+    <ttl>86400</ttl>
+    <digestType name="SHA-1">1</digestType>
+    <keyTag>264</keyTag>
+</delegationKey>
