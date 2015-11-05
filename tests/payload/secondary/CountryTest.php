@@ -87,7 +87,7 @@ class CountryTest extends Payload_TestCase
         $this->assertFalse($payload['e164']->isDefined());
         $this->assertNull($payload['e164']->getValue());
 
-        $payload['e164'] = 42;
+        $payload['e164'] = '42';
 
         $this->assertTrue($payload['e164']->isDefined());
         $this->assertSame(42, $payload['e164']->getValue());
@@ -95,12 +95,17 @@ class CountryTest extends Payload_TestCase
 
         unset($payload['e164']);
         $this->assertFalse($payload['e164']->isDefined());
+
+        // lower limit
+        $payload['e164'] = 1;
+        // upper limit
+        $payload['e164'] = 999;
     }
 
     public function invalidePhoneCodeProvider()
     {
         return [
-            [0], ['states'], [-8], [123456], [3.14]
+            [0], ['states'], [-8], [123456], [3.14], [1000]
         ];
     }
 
