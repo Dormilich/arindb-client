@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\DefinedPayloadFilter;
 use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\FilterInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
@@ -103,25 +104,26 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * Default implementation for sub-payloads that need to implement 
-	 * ElementInterface.
+	 * Fallback if a payload’s value is accessed as if it were an element. 
+	 * Can also be used to convert the payload into an array.
 	 * 
+	 * @param bool $defined_only Flag to include only defined elements.
 	 * @return array
 	 */
 	public function getValue($defined_only = false)
 	{
 		if ($defined_only) {
-			$elements = array_filter($this->elements, function ($e) {
-				return $e->isDefined();
+			$iterator = new \CallbackFilterIterator($this, function ($current) {
+				return $current->isDefined();
 			});
 		}
 		else {
-			$elements = $this->elements;
+			$iterator = $this;
 		}
 
 		return array_map(function ($e) {
 			return $e->getValue();
-		}, $elements);
+		}, iterator_to_array($iterator));
 	}
 
 	/**

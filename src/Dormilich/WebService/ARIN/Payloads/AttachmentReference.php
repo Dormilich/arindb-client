@@ -21,19 +21,22 @@ class AttachmentReference extends Payload
 
 	protected function init()
 	{
-		$this->create(new Element('attachmentFilename'));
-		$this->create(new Element('attachmentId'));
+		$this->create(new Element('attachmentFilename'), 'filename');
+		$this->create(new Element('attachmentId'), 'id');
 	}
 
-	public function isDefined()
+	/**
+	 * This is only an educated guess about the validity constraints.
+	 */
+	public function isValid()
 	{
-		return  $this->elements['attachmentFilename']->isDefined()
-			and $this->elements['attachmentId']->isDefined()
+		return  $this->get('filename')->isDefined()
+			and $this->get('id')->isDefined()
 		;
 	}
 
 	public function toXML()
 	{
-		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+		throw new \LogicException('This Attachment Reference Payload should not be submitted by itself.');
 	}
 }
