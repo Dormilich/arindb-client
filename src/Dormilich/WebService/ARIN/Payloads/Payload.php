@@ -9,6 +9,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Exceptions\ARINException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
+use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
 abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 {
@@ -72,7 +73,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 
 	/**
 	 * Returns TRUE if the elements designated as required are defined.
-	 * Optional elements must always return true, required elemnts only when 
+	 * Optional elements must always return TRUE, required elements only when 
 	 * their (or their sub-elements’) validity requirement is fulfilled.
 	 * 
 	 * @return boolean
@@ -221,6 +222,30 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function parse(\SimpleXMLElement $sxe)
+	{
+		if ($this->getName() !== $sxe->getName()) {
+			throw new ParserException('Tag name mismatch on reading XML.');
+		}
+
+		foreach ($sxe->children() as $name => $child) {
+			$elem = $this->get($name);
+			// fallback for multiple tag names
+			if ($elem->isDefined()) {
+				$elem = reset(array_filter($this->filter($name), function ($item) {
+					return !$item->isDefined();
+				}));
+				if (!$elem) {
+					throw new ParserException('Payload setup and XML structure mismatch.');
+				}
+			}
+			$elem->parse($child);
+		}
 	}
 
 	/**
