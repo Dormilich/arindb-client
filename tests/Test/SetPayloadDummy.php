@@ -25,7 +25,4 @@ class SetPayloadDummy extends Payload
     {
         return $this->elements['dummy']->isValid();
     }
-
-    public function parse(\SimpleXMLElement $sxe)
-    {}
 }

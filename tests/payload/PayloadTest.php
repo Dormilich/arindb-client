@@ -196,6 +196,18 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertSame($xml, $d->toXML()->saveXML());
     }
 
+    public function testParseEmptyPayload()
+    {
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>';
+        $xml = simplexml_load_string($xml);
+
+        $d = new Dummy;
+        $d->parse($xml);
+
+        $this->assertFalse($d->isDefined());
+    }
+
     public function testSerialisePayloadWithSpecifiedEncoding()
     {
         $d = new Dummy;
@@ -219,6 +231,22 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertSame($xml, $d->toXML()->saveXML());
     }
 
+    public function testParsePayloadWithSimpleElement()
+    {
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"><bar>quux</bar></dummy>';
+        $xml = simplexml_load_string($xml);
+
+        $d = new Dummy;
+        $d->parse($xml);
+
+        $this->assertTrue($d->isDefined());
+        $this->assertSame('quux', (string) $d['bar']);
+
+        $this->assertFalse($d['list']->isDefined());
+        $this->assertFalse($d['comment']->isDefined());
+    }
+
     public function testSerialisePayloadWithListElement()
     {
         $d = new Dummy;
@@ -238,6 +266,22 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $xml .= '</dummy>' . \PHP_EOL;
 
         $this->assertSame($xml, $d->toXML()->saveXML());
+    }
+
+    public function testParsePayloadWithListElement()
+    {
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?><dummy xmlns="http://www.arin.net/regrws/core/v1">';
+        $xml .= '<comment><line number="1">I hope</line><line number="2">this doesn’t</line>';
+        $xml .= '<line number="3">blow up!</line></comment></dummy>';
+        $xml = simplexml_load_string($xml);
+
+        $d = new Dummy;
+        $d->parse($xml);
+
+        $this->assertCount(3, $d['comment']);
+        $this->assertSame('I hope', $d['comment'][0]);
+        $this->assertSame('this doesn’t', $d['comment'][1]);
+        $this->assertSame('blow up!', $d['comment'][2]);
     }
 
     public function testSerialiseFullPayload()
@@ -273,5 +317,28 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $xml .= '</dummy>' . \PHP_EOL;
 
         $this->assertSame($xml, $d->toXML()->saveXML());
+    }
+
+    public function testParseFullPayload()
+    {
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?><dummy xmlns="http://www.arin.net/regrws/core/v1">';
+        $xml .= '<bar>quux</bar><list><notice>too late to be true.</notice><warning>watch out!</warning>';
+        $xml .= '</list><comment><line number="1">This is</line><line number="2">booooring</line>';
+        $xml .= '</comment></dummy>';
+        $xml = simplexml_load_string($xml);
+
+        $d = new Dummy;
+        $d->parse($xml);
+
+        $this->assertTrue($d->isDefined());
+        $this->assertSame('quux', (string) $d['bar']);
+
+        $this->assertCount(2, $d['list']);
+        $this->assertSame('too late to be true.', (string) $d['list']['notice']);
+        $this->assertSame('watch out!', (string) $d['list']['warning']);
+
+        $this->assertCount(2, $d['comment']);
+        $this->assertSame('This is', $d['comment'][0]);
+        $this->assertSame('booooring', $d['comment'][1]);
     }
 }
