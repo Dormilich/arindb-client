@@ -1,11 +1,8 @@
 <?php
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Lists\ArrayElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 use Dormilich\WebService\ARIN\Lists\Group;
-use Dormilich\WebService\ARIN\Lists\NamedGroup;
-use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 class SerialiseGroupsTest extends PHPUnit_Framework_TestCase
 {
@@ -25,10 +22,10 @@ class SerialiseGroupsTest extends PHPUnit_Framework_TestCase
         $xml = $doc->saveXML($node);
 
         $string  = '<comment>';
-        $string .= '<line number="1">foo</line>';
-        $string .= '<line number="2">bar</line>';
-        $string .= '<line number="3">baz</line>';
-        $string .= '<line number="4">quux</line>';
+        $string .=   '<line number="1">foo</line>';
+        $string .=   '<line number="2">bar</line>';
+        $string .=   '<line number="3">baz</line>';
+        $string .=   '<line number="4">quux</line>';
         $string .= '</comment>';
 
         $this->assertSame($string, $xml);

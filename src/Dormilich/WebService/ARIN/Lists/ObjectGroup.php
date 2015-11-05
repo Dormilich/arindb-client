@@ -43,38 +43,30 @@ class ObjectGroup extends Group
 	}
 
 	/**
-	 * Check (partial) class or interface name if it exists 1) in the global namespace 
-	 * 2) in the ARIN namespace 3) in one of its sub folders. A class name may be 
-	 * given ass fully qualified name (Dormilich\WebService\ARIN\Lists\Collection), 
-	 * as partial qualified name (Payloads\Message), or as class name (Element).
+	 * Check class name if it is a payload or a generic element. This 
+	 * restriction is necessary for the XML parser to decide which object to 
+	 * instantiate (only payloads have a unique name).
 	 * 
 	 * @param string $className Class name.
-	 * @return boolean TRUE if at least one matching class was found.
+	 * @return boolean TRUE if a matching class was found.
 	 */
 	protected function resolveClass($className)
 	{
-		if (class_exists($className)) {
-			$this->classes[] = $className;
+		$baseNS = substr(__NAMESPACE__, 0, strrpos(__NAMESPACE__, '\\'));
+
+		if ($className === 'Element') {
+			$this->classes[] = $baseNS . '\\Elements\\Element';
 			return true;
 		}
 
-		$nsList = explode('\\', __NAMESPACE__);
-		array_pop($nsList);
-		$baseNS = implode('\\', $nsList) . '\\';
+		$payload = $baseNS . '\\Payloads\\' . $className;
 
-		$nameList = ['', 'Payloads\\', 'Elements\\', 'Lists\\'];
-		$nameList = array_map(function ($category) use ($baseNS, $className) {
-			return $baseNS . $category . $className;
-		}, $nameList);
+		if (class_exists($payload)) {
+			$this->classes[] = $payload;
+			return true;
+		}
 
-		// return FALSE if the class name could be found nowhere
-		return array_reduce($nameList, function ($carry, $class) {
-			if (class_exists($class)) {
-				$this->classes[] = $class;
-				return true;
-			}
-			return $carry or false;
-		}, false);
+		return false;
 	}
 
 	/**
@@ -88,7 +80,7 @@ class ObjectGroup extends Group
 	{
 		// no matter which classes are allowed, it must implement XMLHandler
 		$value = parent::convert($value);
-		// check if it's one of the allowed classes
+		// check if it’s one of the allowed classes
 		if ($this->supports($value)) {
 			return $value;
 		}
@@ -106,7 +98,7 @@ class ObjectGroup extends Group
 	public function supports($value)
 	{
 		return array_reduce($this->classes, function ($carry, $class) use ($value) {
-			return $value instanceof $class ? true : ($carry or false);
+			return $value instanceof $class ?: ($carry or false);
 		}, false);
 	}
 }

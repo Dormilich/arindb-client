@@ -26,7 +26,7 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
 
-        $group = new ObjectGroup('test', 'Elements\\Element');
+        $group = new ObjectGroup('test', 'Element');
         $this->assertInstanceOf(
             'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
     }

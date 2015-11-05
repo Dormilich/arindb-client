@@ -216,7 +216,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	public function isDefined()
 	{
-		return strlen($this->value) > 0;
+		return strlen($this->value) > 0; // or count($this->attributes) > 0
 	}
 
 	/**

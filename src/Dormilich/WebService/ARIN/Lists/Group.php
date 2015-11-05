@@ -4,7 +4,9 @@ namespace Dormilich\WebService\ARIN\Lists;
 
 use Dormilich\WebService\ARIN\FilterInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
 /**
  * This class accepts any serialisable object(s) as its content.
@@ -114,16 +116,13 @@ class Group extends ArrayElement implements FilterInterface
 		$ns = substr_replace(__NAMESPACE__, '\\Payloads\\', strrpos(__NAMESPACE__, '\\'));
 
 		foreach ($sxe->children() as $name => $child) {
-			// quasi-leaf
 			$payload = $ns . ucfirst($name);
 			if (class_exists($payload)) {
 				$elem = new $payload;
 			}
-			// node
-			elseif ($child->hasChildren()) {
+			elseif (count($child)) {
 				$elem = new Group($name);
 			}
-			// leaf
 			else {
 				$elem = $this->createElement($child);
 			}
