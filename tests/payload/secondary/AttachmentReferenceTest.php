@@ -10,7 +10,7 @@ class AttachmentReferenceTest extends Payload_TestCase
         $payload = new AttachmentReference;
 
         $this->assertFalse($payload['id']->isDefined());
-        $this->assertSame('', $payload['id']->getValue());
+        $this->assertNull($payload['id']->getValue());
 
         $payload['id'] = 'paperwork';
 
@@ -31,7 +31,7 @@ class AttachmentReferenceTest extends Payload_TestCase
         $payload = new AttachmentReference;
 
         $this->assertFalse($payload['filename']->isDefined());
-        $this->assertSame('', $payload['filename']->getValue());
+        $this->assertNull($payload['filename']->getValue());
 
         $payload['filename'] = 'test.exe';
 
@@ -55,7 +55,7 @@ class AttachmentReferenceTest extends Payload_TestCase
 
         $this->assertSame(['attachmentId' => 'paperwork'], $payload->getValue(true));
         $this->assertSame([
-            'attachmentFilename' => '', 
+            'attachmentFilename' => NULL, 
             'attachmentId' => 'paperwork', 
         ], $payload->getValue());
 

@@ -106,7 +106,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         // default state
         $this->assertFalse($x['foo']->isDefined());
-        $this->assertSame('', $x['foo']->getValue());
+        $this->assertNull($x['foo']->getValue());
 
         $x['foo'] = 123;
 
@@ -118,7 +118,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         // unset state = default state
         $this->assertFalse($x['foo']->isDefined());
-        $this->assertSame('', $x['foo']->getValue());
+        $this->assertNull($x['foo']->getValue());
     }
 
     public function testUnsetNonexistingElementsIsIgnored()

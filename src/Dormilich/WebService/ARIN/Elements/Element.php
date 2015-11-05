@@ -33,7 +33,7 @@ class Element implements ElementInterface, XMLHandler
 	/**
 	 * @var string $value The textContent of the element.
 	 */
-	protected $value = '';
+	protected $value;
 
 	/**
 	 * @var array $attributes XML attibute definitions.
@@ -138,7 +138,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	public function __toString()
 	{
-		return $this->value;
+		return (string) $this->value;
 	}
 
 	/**
@@ -160,7 +160,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	public function setValue($value)
 	{
-		$this->value = '';
+		$this->value = NULL;
 
 		if (NULL !== $value) {
 			$this->value = $this->convert($value);

@@ -79,7 +79,7 @@ class Integer extends Element
      */
     public function getValue()
     {
-        return $this->value === '' ? NULL : (int) $this->value;
+        return $this->value === NULL ? NULL : (int) $this->value;
     }
 
     /**

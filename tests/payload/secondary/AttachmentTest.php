@@ -10,7 +10,7 @@ class AttachmentTest extends Payload_TestCase
         $payload = new Attachment;
 
         $this->assertFalse($payload['data']->isDefined());
-        $this->assertSame('', $payload['data']->getValue());
+        $this->assertNull($payload['data']->getValue());
 
         $payload['data'] = 'paperwork';
 
@@ -26,7 +26,7 @@ class AttachmentTest extends Payload_TestCase
         $payload = new Attachment;
 
         $this->assertFalse($payload['filename']->isDefined());
-        $this->assertSame('', $payload['filename']->getValue());
+        $this->assertNull($payload['filename']->getValue());
 
         $payload['filename'] = 'test.exe';
 
@@ -44,7 +44,7 @@ class AttachmentTest extends Payload_TestCase
         $payload['data'] = 'paperwork';
 
         $this->assertSame(['data' => 'paperwork'], $payload->getValue(true));
-        $this->assertSame(['data' => 'paperwork', 'filename' => ''], $payload->getValue());
+        $this->assertSame(['data' => 'paperwork', 'filename' => NULL], $payload->getValue());
 
         $payload['filename'] = 'test.exe';
 

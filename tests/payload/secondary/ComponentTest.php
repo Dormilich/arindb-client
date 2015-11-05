@@ -10,7 +10,7 @@ class ComponentTest extends Payload_TestCase
         $payload = new Component;
 
         $this->assertFalse($payload['name']->isDefined());
-        $this->assertSame('', $payload['name']->getValue());
+        $this->assertNull($payload['name']->getValue());
 
         $payload['name'] = 'error';
 
@@ -26,7 +26,7 @@ class ComponentTest extends Payload_TestCase
         $payload = new Component;
 
         $this->assertFalse($payload['message']->isDefined());
-        $this->assertSame('', $payload['message']->getValue());
+        $this->assertNull($payload['message']->getValue());
 
         $payload['message'] = 'this is an error';
 
@@ -44,7 +44,7 @@ class ComponentTest extends Payload_TestCase
         $payload['name'] = 'foo';
 
         $this->assertSame(['name' => 'foo'], $payload->getValue(true));
-        $this->assertSame(['name' => 'foo', 'message' => ''], $payload->getValue());
+        $this->assertSame(['name' => 'foo', 'message' => NULL], $payload->getValue());
 
         $payload['message'] = 'bar';
 

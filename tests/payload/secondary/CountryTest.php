@@ -10,7 +10,7 @@ class CountryTest extends Payload_TestCase
         $payload = new Country;
 
         $this->assertFalse($payload['name']->isDefined());
-        $this->assertSame('', $payload['name']->getValue());
+        $this->assertNull($payload['name']->getValue());
 
         $payload['name'] = 'Germany';
 
@@ -26,7 +26,7 @@ class CountryTest extends Payload_TestCase
         $payload = new Country;
 
         $this->assertFalse($payload['code2']->isDefined());
-        $this->assertSame('', $payload['code2']->getValue());
+        $this->assertNull($payload['code2']->getValue());
 
         $payload['code2'] = 'US';
 
@@ -59,7 +59,7 @@ class CountryTest extends Payload_TestCase
         $payload = new Country;
 
         $this->assertFalse($payload['code3']->isDefined());
-        $this->assertSame('', $payload['code3']->getValue());
+        $this->assertNull($payload['code3']->getValue());
 
         $payload['code3'] = 'USA';
 
@@ -133,7 +133,7 @@ class CountryTest extends Payload_TestCase
         $this->assertSame([
             'name'  => 'UNITED STATES OF AMERICA', 
             'code2' => 'US', 
-            'code3' => '', 
+            'code3' => NULL, 
             'e164'  => NULL,
         ], $payload->getValue());
 
