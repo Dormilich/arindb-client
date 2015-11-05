@@ -24,16 +24,13 @@ class Attachment extends Payload
 		$this->create(new Element('filename'));
 	}
 
-	public function isDefined()
+	public function isValid()
 	{
-		$data = $this->getAttribute('data')->isDefined();
-		$file = $this->getAttribute('filename')->isDefined();
-
-		return $data or $file;
+		return $this->isDefined();
 	}
 
 	public function toXML()
 	{
-		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+		throw new \LogicException('This Attachment Payload should not be submitted by itself.');
 	}
 }
