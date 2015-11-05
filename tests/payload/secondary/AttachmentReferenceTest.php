@@ -104,7 +104,7 @@ class AttachmentReferenceTest extends Payload_TestCase
         $node = $payload->toDOM($doc);
         $actual = $doc->saveXML($node);
 
-        $xml = $this->loadDOM('attachmentReference');
+        $xml = $this->loadDOM('attachment-reference');
         $expected = $xml->saveXML($xml->documentElement);
 
         $this->assertSame($expected, $actual);
@@ -126,7 +126,7 @@ class AttachmentReferenceTest extends Payload_TestCase
     public function testParseXML()
     {
         $payload = new AttachmentReference;
-        $payload->parse($this->loadXML('attachmentReference'));
+        $payload->parse($this->loadXML('attachment-reference'));
 
         $this->assertSame([
             'attachmentFilename' => 'ATTACHMENTFILENAME', 
