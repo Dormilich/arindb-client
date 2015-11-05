@@ -108,11 +108,20 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 * 
 	 * @return array
 	 */
-	public function getValue()
+	public function getValue($defined_only = false)
 	{
+		if ($defined_only) {
+			$elements = array_filter($this->elements, function ($e) {
+				return $e->isDefined();
+			});
+		}
+		else {
+			$elements = $this->elements;
+		}
+
 		return array_map(function ($e) {
 			return $e->getValue();
-		}, $this->elements);
+		}, $elements);
 	}
 
 	/**
