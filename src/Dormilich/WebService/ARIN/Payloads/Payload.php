@@ -127,15 +127,16 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * Get all elements whose tag name matches the given value.
+	 * Get all elements whose tag name matches the given value(s).
 	 * 
 	 * @param mixed $name Tag name.
 	 * @return array List of matching elements.
 	 */
 	public function filter($name)
 	{
-		return array_filter($this->elements, function ($item) use ($name) {
-			return $item->getName() === $name;
+		$list = func_get_args();
+		return array_filter($this->elements, function ($item) use ($list) {
+			return in_array($item->getName(), $list, true);
 		});
 	}
 

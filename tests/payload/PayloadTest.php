@@ -186,6 +186,16 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($p->isValid());
     }
 
+    public function testFilterSupportsElementList()
+    {
+        $d = new Dummy;
+        $filtered = $d->filter('comment', 'list');
+        $this->assertCount(2, $filtered);
+
+        // definition order, not filter call order
+        $this->assertSame(['list', 'comment'], array_keys($filtered));
+    }
+
     public function testSerialiseEmptyPayload()
     {
         $d = new Dummy;
