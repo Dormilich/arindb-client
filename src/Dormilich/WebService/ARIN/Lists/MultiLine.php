@@ -15,6 +15,16 @@ use Dormilich\WebService\ARIN\Exceptions\ParserException;
 class MultiLine extends Group
 {
 	/**
+	 * Get the collection elements of the array element.
+	 * 
+	 * @return array
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
+
+	/**
 	 * Convert the data item into a string.
 	 * 
 	 * @param mixed $value 

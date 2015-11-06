@@ -53,7 +53,9 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 */
 	public function getValue()
 	{
-		return $this->value;
+		return array_map(function ($e) {
+			return $e->getValue();
+		}, $this->value);
 	}
 
 	/**
