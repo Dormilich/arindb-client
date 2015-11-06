@@ -50,7 +50,7 @@ class NamedGroup extends Group
 			return (string) $value;
 		}
 		$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
-		throw new \LogicException(sprintf($msg, gettype($value), $this->name));
+		throw new \LogicException(sprintf($msg, gettype($value), $this->getName()));
 	}
 
 	/**
@@ -69,6 +69,6 @@ class NamedGroup extends Group
 			return $value;
 		}
 		$msg = 'Object with name [%s] is not allowed in the [%s] element.';
-		throw new ConstraintException(sprintf($msg, $value->getName(), $this->name));
+		throw new ConstraintException(sprintf($msg, $value->getName(), $this->getName()));
 	}
 }

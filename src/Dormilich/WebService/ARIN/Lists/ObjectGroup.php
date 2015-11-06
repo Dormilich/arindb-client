@@ -86,7 +86,7 @@ class ObjectGroup extends Group
 		}
 		$msg = 'Value of type %s is not a valid object for the [%s] element.';
 		$type = is_object($value) ? get_class($value) : gettype($value);
-		throw new ConstraintException(sprintf($msg, $type, $this->name));
+		throw new ConstraintException(sprintf($msg, $type, $this->getName()));
 	}
 
 	/**

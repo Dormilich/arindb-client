@@ -112,7 +112,7 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 		}
 		$msg = 'Value of type %s is not a valid object for the [%s] element.';
 		$type = is_object($value) ? get_class($value) : gettype($value);
-		throw new DataTypeException(sprintf($msg, $type, $this->name));
+		throw new DataTypeException(sprintf($msg, $type, $this->getName()));
 	}
 
 	/**
