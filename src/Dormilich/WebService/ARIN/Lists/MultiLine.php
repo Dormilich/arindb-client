@@ -12,22 +12,37 @@ use Dormilich\WebService\ARIN\Exceptions\ParserException;
  * name (multiline) is replaced by the respective element names (comment, 
  * streetAddress). 
  */
-class MultiLine extends ArrayElement
+class MultiLine extends Group
 {
 	/**
 	 * Convert the data item into a string.
 	 * 
 	 * @param mixed $value 
 	 * @return string
-	 * @throws Exception Value not stringifiable.
+	 * @throws DataTypeException Value not stringifiable.
 	 */
 	protected function convert($value)
 	{
-		if (is_scalar($value) or (is_object($value) and method_exists($value, '__toString'))) {
-			return (string) $value;
+		if (is_object($value) and method_exists($value, '__toString')) {
+			$value = (string) $value;
 		}
-		$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
-		throw new DataTypeException(sprintf($msg, gettype($value), $this->name));
+
+		if (!is_scalar($value)) {
+			$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
+			throw new DataTypeException(sprintf($msg, gettype($value), $this->getName()));
+		}
+
+		return (string) $value;
+	}
+
+	/**
+	 * Returns TRUE if the element’s data collection is not empty.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		return count($this->value) > 0;
 	}
 
 	/**
@@ -61,5 +76,31 @@ class MultiLine extends ArrayElement
 		foreach ($sxe->children() as $line) {
 			$this->addValue($line);
 		}
+	}
+
+	/**
+	 * Check if the requested index exists.
+	 * 
+	 * @param integer $offset Collection element index.
+	 * @return boolean
+	 */
+	public function offsetExists($offset)
+	{
+		return isset($this->value[$offset]);
+	}
+
+	/**
+	 * Get the requested element from the collection. Returns NULL if index 
+	 * does not exist.
+	 * 
+	 * @param integer $offset Collection element index.
+	 * @return mixed Returns NULL if index does not exist.
+	 */
+	public function offsetGet($offset)
+	{
+		if ($this->offsetExists($offset)) {
+			return $this->value[$offset];
+		}
+		return NULL;
 	}
 }

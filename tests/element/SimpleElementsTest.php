@@ -33,6 +33,27 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
 	}
 
+	// Element
+
+	public function testElementWithValidationCallback()
+	{
+		$elem = new Element('test', NULL, 'ctype_xdigit');
+		$elem->setValue(md5('validation callback test'));
+
+		$this->assertTrue($elem->isDefined());
+	}
+
+	/**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
+	 */
+	public function testElementWithValidationCallbackAndInvalidValueFails()
+	{
+		$elem = new Element('test', NULL, 'ctype_xdigit');
+		$elem->setValue('validation callback test');
+
+		$this->assertTrue($elem->isDefined());
+	}
+
 	// Boolean
 
 	public function boolValueProvider()
@@ -222,6 +243,8 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	{
 		return [
 			[-1, 1, 0], [NULL, 5, -3], [8, NULL, 64367], 
+			// limits are used in the correct order!
+			[1, -1, 0], 
 		];
 	}
 
@@ -230,7 +253,10 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testIntegerAcceptsInputInRange($min, $max, $value)
 	{
+		$int = new Integer('test', $min, $max);
+		$int->setValue($value);
 
+		$this->assertTrue($int->isDefined());
 	}
 
 	public function invalidIntegerInputProvider()

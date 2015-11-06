@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Lists;
 
 use Dormilich\WebService\ARIN\FilterInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\ParserException;
@@ -12,22 +13,87 @@ use Dormilich\WebService\ARIN\Exceptions\ParserException;
  * This class accepts any serialisable object(s) as its content.
  * The main use of this class is to provide a container for nested payloads.
  */
-class Group extends ArrayElement implements FilterInterface
+class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAccess, \Countable
 {
 	/**
-	 * Check if any member of the collection is defined.
-	 * 
-	 * @return boolean
+	 * @var string $name The element’s tag name.
 	 */
-	public function isDefined()
-	{
-		$bool = array_map(function ($item) {
-			return $item->isDefined();
-		}, $this->value);
+	protected $name;
 
-		return array_reduce($bool, function ($carry, $item) {
-			return $carry or $item;
-		}, false);
+	/**
+	 * @var array $value Collection of the nested data.
+	 */
+	protected $value = [];
+
+	/**
+	 * Set the base name of the array element.
+	 * 
+	 * @param string $name Tag name.
+	 * @return self
+	 */
+	public function __construct($name)
+	{
+		$this->name = end(explode(':', (string) $name));
+	}
+
+	/**
+	 * Reset the element’s contents on cloning.
+	 * 
+	 * @return void
+	 */
+	public function __clone()
+	{
+		$this->setValue(NULL);
+	}
+
+	/**
+	 * Get the collection elements of the array element.
+	 * 
+	 * @return array
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
+
+	/**
+	 * Discard the existing data and add the new content. A collection can 
+	 * also be set using an array of coresponding data.
+	 * 
+	 * @param array|mixed $value Value item(s) to set.
+	 * @return self
+	 */
+	public function setValue($value)
+	{
+		$this->value = [];
+
+		if (NULL === $value) {
+			return $this;
+		}
+
+		if (is_array($value)) {
+			foreach ($value as $item) {
+				$this->addValue($item);
+			}
+		}
+		else {
+			$this->addValue($value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add a single data item to the collection.
+	 * 
+	 * @param mixed $value 
+	 * @return self
+	 */
+	public function addValue($value)
+	{
+		$this->value[] = $this->convert($value);
+
+		return $this;
 	}
 
 	/**
@@ -45,6 +111,49 @@ class Group extends ArrayElement implements FilterInterface
 		$msg = 'Value of type %s is not a valid object for the [%s] element.';
 		$type = is_object($value) ? get_class($value) : gettype($value);
 		throw new DataTypeException(sprintf($msg, $type, $this->name));
+	}
+
+	/**
+	 * Get the element’s tag name (local name).
+	 * 
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * Check if any member of the collection is defined.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		$bool = array_map(function ($item) {
+			return $item->isDefined();
+		}, $this->value);
+
+		return array_reduce($bool, function ($carry, $item) {
+			return $carry or $item;
+		}, false);
+	}
+
+	/**
+	 * Transform the element into its XML representation.
+	 * 
+	 * @param DOMDocument $doc 
+	 * @return DOMElement
+	 */
+	public function toDOM(\DOMDocument $doc)
+	{
+		$node = $doc->createElement($this->getName());
+
+		foreach ($this->value as $value) {
+			$node->appendChild($value->toDOM($doc));
+		}
+
+		return $node;
 	}
 
 	/**
@@ -70,39 +179,6 @@ class Group extends ArrayElement implements FilterInterface
 	public function fetch($name)
 	{
 		return reset($this->filter($name)) ?: NULL;
-	}
-
-	/**
-	 * Check if the requested index or an element with that name exists.
-	 * 
-	 * @param integer|string $offset Collection element index or name.
-	 * @return boolean
-	 */
-	public function offsetExists($offset)
-	{
-		// indexed
-		if (parent::offsetExists($offset)) {
-			return true;
-		}
-		// named
-		return count($this->filter($offset)) > 0;
-	}
-
-	/**
-	 * Get the requested element from the collection. Returns NULL if index 
-	 * does not exist.
-	 * 
-	 * @param integer|string $offset Collection element index or name.
-	 * @return mixed Returns NULL if index does not exist.
-	 */
-	public function offsetGet($offset)
-	{
-		// indexed
-		if (parent::offsetExists($offset)) {
-			return parent::offsetGet($offset);
-		}
-		// first named
-		return $this->fetch($offset);
 	}
 
 	/**
@@ -147,4 +223,83 @@ class Group extends ArrayElement implements FilterInterface
         }
         return new Element($sxe->getName());
     }
+
+	/**
+	 * Check if the requested index or an element with that name exists.
+	 * 
+	 * @param integer|string $offset Collection element index or name.
+	 * @return boolean
+	 */
+	public function offsetExists($offset)
+	{
+		// indexed
+		if (isset($this->value[$offset])) {
+			return true;
+		}
+		// named
+		return count($this->filter($offset)) > 0;
+	}
+
+	/**
+	 * Get the requested element from the collection. Returns NULL if index 
+	 * does not exist.
+	 * 
+	 * @param integer|string $offset Collection element index or name.
+	 * @return mixed Returns NULL if index does not exist.
+	 */
+	public function offsetGet($offset)
+	{
+		// indexed
+		if (isset($this->value[$offset])) {
+			return $this->value[$offset];
+		}
+		// first named
+		return $this->fetch($offset);
+	}
+
+	/**
+	 * Set an element at the requested index. If the index is not found in the 
+	 * collection, the value is appended instead.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param integer $offset Collection element index.
+	 * @param mixed $value Replacement value.
+	 * @return void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		if ($this->offsetExists($offset)) {
+			$this->value[$offset] = $this->convert($value);
+		}
+		else {
+			$this->addValue($value);
+		}
+	}
+
+	/**
+	 * Remove the element at the requested position. The collection will be 
+	 * re-indexed after the removal.
+	 * 
+	 * @see http://php.net/ArrayAccess
+	 * 
+	 * @param integer $offset Collection element index.
+	 * @return void
+	 */
+	public function offsetUnset($offset)
+	{
+		if ($this->offsetExists($offset)) {
+			array_splice($this->value, $offset, 1);
+		}
+	}
+
+	/**
+	 * Count the number of elements in the collection. 
+	 * 
+	 * @return integer
+	 */
+	public function count()
+	{
+		return count($this->value);
+	}
 }

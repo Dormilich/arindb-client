@@ -11,24 +11,20 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 class ArrayElementsTest extends PHPUnit_Framework_TestCase
 {
-    public function testElementsInheritElement()
+    public function testListsInheritGroup()
     {
         // this class changes only the toDOM() method
         $line = new MultiLine('test');
         $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Lists\ArrayElement', $line);
-
-        $group = new Group('test');
-        $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
+            'Dormilich\WebService\ARIN\Lists\Group', $line);
 
         $group = new NamedGroup('test', 'foo');
         $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
+            'Dormilich\WebService\ARIN\Lists\Group', $group);
 
         $group = new ObjectGroup('test', 'Element');
         $this->assertInstanceOf(
-            'Dormilich\WebService\ARIN\Lists\ArrayElement', $group);
+            'Dormilich\WebService\ARIN\Lists\Group', $group);
     }
 
     // MultiLine
