@@ -4,92 +4,17 @@ use Dormilich\WebService\ARIN\Payloads\Customer;
 use Test\Payload_TestCase;
 
 class CustomerTest extends Payload_TestCase
-{/*
-	public function testKEYProperty()
-	{
-		$payload = new Customer;
-
-		$this->assertFalse($payload[KEY]->isValid());
-		$this->assertNull($payload[KEY]->getValue());
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertTrue($payload[KEY]->isValid());
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-
-		unset($payload[KEY]);
-		$this->assertFalse($payload[KEY]->isValid());
-
-		// using name instead of alias
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-	}
-*//*
-	public function testKEYProperty()
-	{
-		$payload = new Customer;
-
-		$this->assertFalse($payload[KEY]->isValid());
-		$this->assertNull($payload[KEY]->getValue());
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertTrue($payload[KEY]->isValid());
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-
-		unset($payload[KEY]);
-		$this->assertFalse($payload[KEY]->isValid());
-
-		// using name instead of alias
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-		$this->assertSame('STRING', $payload[KEY]->getValue());
-	}
-
-	public function testGetPayloadAsArray()
-	{
-		$payload = new Customer;
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertSame([], $payload->getValue(true));
-		$this->assertSame([
-		], $payload->getValue());
-
-		$payload[KEY] = 'STRING';
-
-		$this->assertSame([
-		], $payload->getValue());
-	}
-
-	/**
-	 * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
-	 *
-	public function testSetUnknownPropertyFails()
-	{
-		$payload = new Customer;
-		$payload[KEY] = 'STRING';
-	}
-
+{
 	public function testValidity()
 	{
 		$payload = new Customer;
 
 		$this->assertFalse($payload->isValid());
 
-		$payload[KEY] = 'STRING';
-		$this->assertFalse($payload->isValid());
-
-		$payload[KEY] = 'STRING';
-		$payload[KEY] = 'STRING';
+		$payload['handle'] = 'CUSTOMERHANDLE';
 		$this->assertTrue($payload->isValid());
 	}
-*/
+
 	public function testSerialise()
 	{
 		$payload = new Customer;
