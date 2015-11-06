@@ -52,7 +52,7 @@ class LengthElement extends Element
 	{
 		if (strlen($value) !== $this->length) {
 			$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
-			throw new ConstraintException(sprintf($msg, $value, $this->length, $this->name));
+			throw new ConstraintException(sprintf($msg, $value, $this->length, $this->getName()));
 		}
 		return $value;
 	}

@@ -5,6 +5,7 @@ use Dormilich\WebService\ARIN\Elements\Boolean;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
+use Dormilich\WebService\ARIN\Elements\RegExp;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Test\Stringer;
 
@@ -27,6 +28,10 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$length = new LengthElement('test', 1);
 		$this->assertInstanceOf(
 			'Dormilich\WebService\ARIN\Elements\Element', $length);
+
+		$fixed = new RegExp('test', '/./');
+		$this->assertInstanceOf(
+			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
 
 		$fixed = new Selection('test', [1]);
 		$this->assertInstanceOf(
@@ -394,5 +399,32 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 		$ip->setValue('192.168.17.2', IP::UNPADDED);
 		$this->assertSame('192.168.17.2', $ip->getValue());
+	}
+
+	// RegExp
+
+	public function testRegExpWithValidInput()
+	{
+		$re = new RegExp('test', '/\w+/');
+		$re->setValue('foo');
+
+		$this->assertTrue($re->isValid());
+	}
+
+	/**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
+	 */
+	public function testRegExpWithInvalidInput()
+	{
+		$re = new RegExp('test', '/\w+/');
+		$re->setValue('...');
+	}
+
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testRegExpWithInvalidPattern()
+	{
+		$re = new RegExp('test', 'foo');
 	}
 }

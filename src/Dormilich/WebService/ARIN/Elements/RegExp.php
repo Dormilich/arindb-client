@@ -8,12 +8,12 @@ use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
  * This class represents an XML element that may only contain previously 
  * specified string values.
  */
-class Selection extends Element
+class RegExp extends Element
 {
 	/**
 	 * @var array(string) $allowed List of allowed values.
 	 */
-	protected $allowed = [];
+	protected $pattern;
 
 	/**
 	 * Set up the element defining the allowed values.
@@ -22,14 +22,13 @@ class Selection extends Element
 	 * @param string $ns (optional) Namespace URI.
 	 * @param array(string) $allowed Allowed values.
 	 * @return self
-	 * @throws DataTypeException An allowed value is not a string.
-	 * @throws LogicException Allowed value definition missing.
-	 * @throws LogicException Allowed value definition empty.
-     * @throws LogicException Namespace prefix missing.
+	 * @throws LogicException Namespace prefix missing.
+	 * @throws LogicException Pattern definition missing.
+	 * @throws LogicException RegExp failed the validation test.
 	 */
 	public function __construct($name, $ns)
 	{
-        $this->setNamespace((string) $name, $ns);
+		$this->setNamespace((string) $name, $ns);
 
 		$args = array_slice(func_get_args(), 1, 2);
 
@@ -38,16 +37,29 @@ class Selection extends Element
 		}
 
 		if (count($args) === 0) {
-			throw new \LogicException('Allowed values are not defined.');
+			throw new \LogicException('Regular expression pattern is not defined.');
 		}
 
-		foreach ((array) end($args) as $value) {
-			$this->allowed[] = (string) $value;
-		}
+		$this->setPattern(end($args));
+	}
 
-		if (count($this->allowed) === 0) {
-			throw new \LogicException('Allowed values list must not be empty.');
-		}
+	/**
+	 * Set and validate the regular expression.
+	 * 
+	 * @param string $regexp 
+	 * @return void
+	 * @throws LogicException RegExp failed the validation test.
+	 */
+	protected function setPattern($regexp)
+	{
+		$this->pattern = (string) $regexp;
+
+		set_error_handler(function ($code, $message) {
+			restore_error_handler();
+			throw new \LogicException($message, $code);
+		});
+		preg_match($this->pattern, '');
+		restore_error_handler();
 	}
 
 	/**
@@ -59,7 +71,7 @@ class Selection extends Element
 	 */
 	protected function validate($value)
 	{
-		if (!in_array((string) $value, $this->allowed, true)) {
+		if (!preg_match($this->pattern, $value)) {
 			$msg = 'Value "%s" is not allowed for the [%s] element.';
 			throw new ConstraintException(sprintf($msg, $value, $this->getName()));
 		}

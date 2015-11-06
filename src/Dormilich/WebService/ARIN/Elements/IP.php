@@ -96,7 +96,7 @@ class IP extends Element
 			return $this->transformIP($value, 6);
 		}
 		$msg = 'Value "%s" is not a valid IP address in the [%s] element.';
-		throw new ConstraintException(sprintf($msg, $value, $this->name));
+		throw new ConstraintException(sprintf($msg, $value, $this->getName()));
 	}
 
 	/**
