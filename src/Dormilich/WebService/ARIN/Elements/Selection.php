@@ -42,7 +42,7 @@ class Selection extends Element
 		}
 
 		foreach ((array) end($args) as $value) {
-			$this->allowed[] = parent::convert($value);
+			$this->allowed[] = (string) $value;
 		}
 
 		if (count($this->allowed) === 0) {
@@ -57,13 +57,12 @@ class Selection extends Element
 	 * @return string
 	 * @throws ConstraintException Value not allowed.
 	 */
-	protected function convert($value)
+	protected function validate($value)
 	{
-		$value = parent::convert($value);
-		if (in_array($value, $this->allowed, true)) {
-			return $value;
+		if (!in_array((string) $value, $this->allowed, true)) {
+			$msg = 'Value "%s" is not allowed for the [%s] element.';
+			throw new ConstraintException(sprintf($msg, $value, $this->name));
 		}
-		$msg = 'Value "%s" is not allowed for the [%s] element.';
-		throw new ConstraintException(sprintf($msg, $value, $this->name));
+		return $value;
 	}
 }

@@ -46,15 +46,14 @@ class LengthElement extends Element
 	 * 
 	 * @param mixed $value 
 	 * @return string
-	 * @throws Exception Invalid string length found.
+	 * @throws ConstraintException Invalid string length found.
 	 */
-	protected function convert($value)
+	protected function validate($value)
 	{
-		$value = parent::convert($value);
-		if (strlen($value) === $this->length) {
-			return $value;
+		if (strlen($value) !== $this->length) {
+			$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
+			throw new ConstraintException(sprintf($msg, $value, $this->length, $this->name));
 		}
-		$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
-		throw new ConstraintException(sprintf($msg, $value, $this->length, $this->name));
+		return $value;
 	}
 }

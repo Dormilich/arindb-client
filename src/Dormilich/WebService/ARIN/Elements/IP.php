@@ -32,7 +32,7 @@ class IP extends Element
 	 * @param string $ns (optional) Namespace URI.
 	 * @param mixed $flag Padding conversion flag.
 	 * @return self
-     * @throws LogicException Namespace prefix missing.
+	 * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns = NULL)
 	{
@@ -81,26 +81,38 @@ class IP extends Element
 	}
 
 	/**
-	 * Validates input as IP address.
+	 * Validate the input value against a validation function.
 	 * 
-	 * @param string $value 
-	 * @return string
+	 * @param mixed $value Input value.
+	 * @return boolean Boolean equivalent of the input value.
+	 * @throws ConstraintException Validation failure.
 	 */
-	protected function convert($value)
+	protected function validate($value)
 	{
-		$value = parent::convert($value);
-		$unpadded = $this->unpad($value);
-
-		if (!filter_var($unpadded, \FILTER_VALIDATE_IP)) {
-			$msg = 'Value "%s" is not a valid IP address in the [%s] element.';
-			throw new ConstraintException(sprintf($msg, $value, $this->name));
+		if (ip2long($value) !== false) {
+			return $this->transformIP($value, 4);
 		}
+		if (filter_var($value, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+			return $this->transformIP($value, 6);
+		}
+		$msg = 'Value "%s" is not a valid IP address in the [%s] element.';
+		throw new ConstraintException(sprintf($msg, $value, $this->name));
+	}
 
+	/**
+	 * Apply (un)padding to the IP address if the padding flag is set.
+	 * 
+	 * @param string $ip IP address.
+	 * @param integer $version IP version.
+	 * @return string Transformed IP address.
+	 */
+	protected function transformIP($value, $version)
+	{
 		if ($this->padding === self::PADDED) {
-			return $this->pad($value);
+			return call_user_func([$this, 'pad'.$version], $value);
 		}
 		if ($this->padding === self::UNPADDED) {
-			return $unpadded;
+			return call_user_func([$this, 'unpad'.$version], $value);
 		}
 		return $value;
 	}
@@ -108,20 +120,13 @@ class IP extends Element
 	/**
 	 * Convert padded IPv4 into unpadded IPv4 since the IP filter may not work 
 	 * on padded IPv4.
-	 * Tests showed that explode/implode is 2-3 times faster than preg_replace.
 	 * 
-	 * @param string $ip Padded/unpadded IP address.
+	 * @param string $ip Padded/unpadded IPv4 address.
 	 * @return string Unpadded IP address.
 	 */
-	protected function unpad($ip)
+	protected function unpad4($ip)
 	{
-		if (strpos($ip, '.') === false) {
-			return $ip;
-		}
-		$list = explode('.', $ip);
-		$tpl  = implode('.', array_fill(0, count($list), '%d'));
-
-		return vsprintf($tpl, $list);
+		return long2ip(ip2long($ip));
 	}
 
 	/**
@@ -130,14 +135,46 @@ class IP extends Element
 	 * @param string $ip Padded/unpadded IP address.
 	 * @return string Padded IP address.
 	 */
-	protected function pad($ip)
+	protected function pad4($ip)
 	{
-		if (strpos($ip, '.') === false) {
-			return $ip;
-		}
 		$list = explode('.', $ip);
 		$tpl  = implode('.', array_fill(0, count($list), '%03d'));
 
+		return vsprintf($tpl, $list);
+	}
+
+	/**
+	 * Convert padded IPv4 into unpadded IPv6.
+	 * 
+	 * @param string $ip Padded/unpadded IPv6 address.
+	 * @return string Unpadded IPv6 address.
+	 */
+	protected function unpad6($ip)
+	{
+		$list = array_map('hexdec', explode(':', $ip));
+		$tpl  = implode(':', array_fill(0, count($list), '%x'));
+		$ip   = vsprintf($tpl, $list);
+		
+		return preg_replace('~:(0:)+~', '::', $ip, 1);
+	}
+
+	/**
+	 * Convert unpadded IPv6 into padded IPv6.
+	 * 
+	 * @param string $ip Padded/unpadded IPv6 address.
+	 * @return string Padded IPv6 address.
+	 */
+	protected function pad6($ip)
+	{
+		$cnt = substr_count($ip, ':');
+
+		if (7 === $cnt) {
+			$ext = implode('0', array_fill(0, 9-$cnt, ':'));
+			$ip  = str_replace('::', $ext, $ip);
+		}
+		$list = explode(':', $ip);
+		$tpl  = implode(':', array_fill(0, count($list), '%04s'));
+		
 		return vsprintf($tpl, $list);
 	}
 }

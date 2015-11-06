@@ -42,8 +42,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 			[1, true],      [0, false], 
 			['true', true], ['false', false], 
 			['on', true],   ['off', false], 
-			['foo', false], ['', false], 
-			[new stdClass, false], 
+			['', false], 
 			// NULL resets the content!
 			[NULL, NULL], 
 		];

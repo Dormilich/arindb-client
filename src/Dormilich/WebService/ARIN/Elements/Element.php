@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Elements;
 
 use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
@@ -41,18 +42,26 @@ class Element implements ElementInterface, XMLHandler
 	protected $attributes = [];
 
 	/**
+	 * @var callable $callback Validation callback.
+	 */
+	private $callback;
+
+	/**
 	 * Setting up the basic XML definition. The name may be either a tag name
 	 * —or if a namespace is given—a qualified name.
 	 * 
 	 * @param string $name Tag name.
 	 * @param string $ns Namespace URI.
+	 * @param callable $callback A validator function.
 	 * @return self
 	 * @throws LogicException Invalid namespace URI.
 	 * @throws LogicException Namespace prefix missing.
 	 */
-	public function __construct($name, $ns = NULL)
+	public function __construct($name, $ns = NULL, callable $callback = NULL)
 	{
 		$this->setNamespace((string) $name, $ns);
+
+		$this->callback = $callback;
 
 		if ($ns and !$this->namespace) {
 			throw new \LogicException('Invalid namespace.');
@@ -188,15 +197,42 @@ class Element implements ElementInterface, XMLHandler
 	 * 
 	 * @param mixed $value 
 	 * @return string
-	 * @throws Exception Value not stringifiable.
+	 * @throws DataTypeException Value not stringifiable.
 	 */
 	protected function convert($value)
 	{
-		if (is_scalar($value) or (is_object($value) and method_exists($value, '__toString'))) {
-			return (string) $value;
+		if (is_object($value) and method_exists($value, '__toString')) {
+			$value = (string) $value;
 		}
-		$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
-		throw new DataTypeException(sprintf($msg, gettype($value), $this->name));
+
+		if (!is_scalar($value)) {
+			$msg = 'Value of type %s cannot be converted to a string for the [%s] element.';
+			throw new DataTypeException(sprintf($msg, gettype($value), $this->getName()));
+		}
+
+		return (string) $this->validate($value);
+	}
+
+	/**
+	 * Validate the input value against a validation function.
+	 * 
+	 * @param mixed $value Input value.
+	 * @return mixed Validated input value.
+	 * @throws ConstraintException Validation failure.
+	 */
+	protected function validate($value)
+	{
+		if (!$this->callback) {
+			return $value;
+		}
+
+		if (!call_user_func($this->callback, $value)) {
+			$msg = 'Value [%s] is not allowed for the [%s] element.';
+			$type = is_scalar($value) ? $value : gettype($value);
+			throw new ConstraintException(sprintf($msg, $type, $this->getName()));
+		}
+
+		return $value;
 	}
 
 	/**

@@ -58,12 +58,17 @@ class Integer extends Element
      */
     private function setFilterOptions(array $args)
     {
+        if (isset($args[0], $args[1])) {
+            sort($args, \SORT_NUMERIC);
+        }
+
         if (isset($args[0])) {
             $min = filter_var($args[0], \FILTER_VALIDATE_INT);
             if (is_int($min)) {
                 $this->options['min_range'] = $min;
             }
         }
+
         if (isset($args[1])) {
             $max = filter_var($args[1], \FILTER_VALIDATE_INT);
             if (is_int($max)) {
@@ -83,20 +88,22 @@ class Integer extends Element
     }
 
     /**
-     * Check if a value qualifies as integer and is converted to its numeric representation.
+     * Validate the input value against a validation function.
      * 
-     * @param mixed $value 
-     * @return string
-     * @throws ConstraintException Value constraint violation.
+     * @param mixed $value Input value.
+     * @return boolean Boolean equivalent of the input value.
+     * @throws ConstraintException Validation failure.
      */
-    protected function convert($value)
+    protected function validate($value)
     {
-        $value = parent::convert($value);
         $int = filter_var($value, \FILTER_VALIDATE_INT, ['options' => $this->options]);
-        if (false !== $int) {
-            return (string) $int;
+
+        if (!is_int($int)) {
+            $msg = 'Value [%s] is not an integer value for the [%s] element.';
+            $type = is_scalar($value) ? $value : gettype($value);
+            throw new ConstraintException(sprintf($msg, $type, $this->getName()));
         }
-        $msg = 'Value "%s" is not a valid integer in the [%s] element.';
-        throw new ConstraintException(sprintf($msg, $value, $this->name));
+
+        return $int;
     }
 }
