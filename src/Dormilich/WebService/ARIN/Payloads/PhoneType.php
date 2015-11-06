@@ -32,6 +32,6 @@ class PhoneType extends Payload
 
 	public function toXML()
 	{
-		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+		throw new \LogicException('This Phone Type Payload should not be submitted by itself.');
 	}
 }
