@@ -56,4 +56,12 @@ class Customer extends Payload
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Boolean('privateCustomer'), 'private');
 	}
+
+	// not sure if there are any constraints at all ...
+	public function isValid()
+	{
+		return array_reduce($this->elements, function ($carry, $item) {
+			return $carry or $item->isValid();
+		}, false);
+	}
 }
