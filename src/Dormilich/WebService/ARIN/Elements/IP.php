@@ -134,10 +134,7 @@ class IP extends Element
 	 */
 	protected function pad4($ip)
 	{
-		$list = explode('.', $ip);
-		$tpl  = implode('.', array_fill(0, 4, '%03d'));
-
-		return vsprintf($tpl, $list);
+		return vsprintf('%03d.%03d.%03d.%03d', explode('.', $ip));
 	}
 
 	/**
