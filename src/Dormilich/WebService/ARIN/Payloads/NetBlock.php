@@ -43,10 +43,16 @@ class NetBlock extends Payload
 
 	public function isValid()
 	{
+		$type  = $this->get('type')->isValid();
 		$start = $this->get('start')->isValid();
 		$end   = $this->get('end')->isValid();
 		$cidr  = $this->get('cidr')->isValid();
 
-		return $start and ($end or $cidr);
+		return $type and $start and ($end xor $cidr);
+	}
+
+	public function toXML()
+	{
+		throw new \LogicException('This Net Block Payload should not be submitted by itself.');
 	}
 }

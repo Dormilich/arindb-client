@@ -1,0 +1,6 @@
+<netBlock>
+    <type>A</type>
+    <description>DESCRIPTION</description>
+    <startAddress>10.0.0.0</startAddress>
+    <cidrLength>24</cidrLength>
+</netBlock>
