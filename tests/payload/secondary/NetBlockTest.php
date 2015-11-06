@@ -104,7 +104,7 @@ class NetBlockTest extends Payload_TestCase
 	public function testStartAddressWithInvalidInput()
 	{
 		$payload = new NetBlock;
-		$payload['start'] = 12345;
+		$payload['start'] = 'foobar';
 	}
 
 	public function testEndAddressProperty()
@@ -145,7 +145,7 @@ class NetBlockTest extends Payload_TestCase
 	public function testEndAddressWithInvalidInput()
 	{
 		$payload = new NetBlock;
-		$payload['end'] = 12345;
+		$payload['end'] = -20;
 	}
 
 	public function testCIDRProperty()
@@ -190,7 +190,7 @@ class NetBlockTest extends Payload_TestCase
 	public function testCidrLengthWithInvalidInput($value)
 	{
 		$payload = new NetBlock;
-		$payload['end'] = $value;
+		$payload['cidr'] = $value;
 	}
 
 	public function testGetPayloadAsArray()

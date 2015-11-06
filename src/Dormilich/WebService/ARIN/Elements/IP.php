@@ -89,12 +89,21 @@ class IP extends Element
 	 */
 	protected function validate($value)
 	{
+		// IPv4
 		if (ip2long($value) !== false) {
 			return $this->transformIP($value, 4);
 		}
+		// IPv6
 		if (filter_var($value, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
 			return $this->transformIP($value, 6);
 		}
+		// IPv4 as net number
+		$options = ['min_range' => 0, 'max_range' => (1 << 32) - 1];
+		$ipnum4  = filter_var($value, \FILTER_VALIDATE_INT, ['options' => $options]);
+		if (is_int($ipnum4)) {
+			return $this->transformIP(long2ip($value), 4);
+		}
+
 		$msg = 'Value "%s" is not a valid IP address in the [%s] element.';
 		throw new ConstraintException(sprintf($msg, $value, $this->getName()));
 	}
