@@ -63,6 +63,16 @@ class RegExp extends Element
 	}
 
 	/**
+	 * Get the regular expression used in the check.
+	 * 
+	 * @return string
+	 */
+	public function getPattern()
+	{
+		return $this->pattern;
+	}
+
+	/**
 	 * Check if a value conforms to a list of allowed values using strict equality.
 	 * 
 	 * @param mixed $value 

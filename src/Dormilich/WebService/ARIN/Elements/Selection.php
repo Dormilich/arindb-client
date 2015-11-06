@@ -23,9 +23,9 @@ class Selection extends Element
 	 * @param array(string) $allowed Allowed values.
 	 * @return self
 	 * @throws DataTypeException An allowed value is not a string.
+     * @throws LogicException Namespace prefix missing.
 	 * @throws LogicException Allowed value definition missing.
 	 * @throws LogicException Allowed value definition empty.
-     * @throws LogicException Namespace prefix missing.
 	 */
 	public function __construct($name, $ns)
 	{
@@ -41,13 +41,35 @@ class Selection extends Element
 			throw new \LogicException('Allowed values are not defined.');
 		}
 
-		foreach ((array) end($args) as $value) {
+		$this->setAllowed(end($args));
+	}
+
+	/**
+	 * Set the allowed values. The values are cast to string.
+	 * 
+	 * @param array $values 
+	 * @return void
+	 * @throws LogicException Allowed value definition empty.
+	 */
+	protected function setAllowed(array $values)
+	{
+		foreach ($values as $value) {
 			$this->allowed[] = (string) $value;
 		}
 
 		if (count($this->allowed) === 0) {
 			throw new \LogicException('Allowed values list must not be empty.');
 		}
+	}
+
+	/**
+	 * Get the liast of allowed values.
+	 * 
+	 * @return array(string)
+	 */
+	public function getAllowed()
+	{
+		return $this->allowed;
 	}
 
 	/**

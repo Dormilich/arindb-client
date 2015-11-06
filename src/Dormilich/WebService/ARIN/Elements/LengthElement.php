@@ -34,9 +34,30 @@ class LengthElement extends Element
 			array_shift($args);
 		}
 
-		$this->length = filter_var(end($args), \FILTER_VALIDATE_INT, [
+		$this->setLength(end($args));
+	}
+
+	/**
+	 * Set the value#s length constraint. Defaults to 1.
+	 * 
+	 * @param mixed $length 
+	 * @return void
+	 */
+	protected function setLength($length)
+	{
+		$this->length = filter_var($length, \FILTER_VALIDATE_INT, [
 			'options' => ['min_range' => 1, 'default' => 1]
 		]);
+	}
+
+	/**
+	 * Get the length constraint.
+	 * 
+	 * @return integer
+	 */
+	public function getLength()
+	{
+		return $this->length;
 	}
 
 	/**
