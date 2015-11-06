@@ -2,7 +2,8 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * This payload is a nested element of a Ticket Payload returned when a Get 
@@ -10,7 +11,7 @@ use Dormilich\WebService\ARIN\Lists\Group;
  * 'true'. You can then request a Get Message call with a specified MessageID, 
  * and will be returned a MessagePayload. 
  * 
- * This MessageReferencePayload should not be submitted by itself.
+ * This MessageReference Payload should not be submitted by itself.
  */
 class MessageReference extends Payload
 {
@@ -22,11 +23,17 @@ class MessageReference extends Payload
 
 	protected function init()
 	{
-		$this->create(new Group('attachmentReferences'));
+		$this->create(new ObjectGroup('attachmentReferences', 'AttachmentReference'));
+		$this->create(new Element('messageId'), 'id');
+	}
+
+	public function isValid()
+	{
+		return $this->get('messageId')->isValid();
 	}
 
 	public function toXML()
 	{
-		throw new \Exception('This Attachment Payload should not be submitted by itself.');
+		throw new \LogicException('This Message Reference Payload should not be submitted by itself.');
 	}
 }

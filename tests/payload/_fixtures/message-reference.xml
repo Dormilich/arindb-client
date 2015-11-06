@@ -1,0 +1,9 @@
+<messageReference>
+    <attachmentReferences>
+        <attachmentReference>
+            <attachmentFilename>ATTACHMENTFILENAME</attachmentFilename>
+            <attachmentId>ATTACHMENTID</attachmentId>
+        </attachmentReference>
+    </attachmentReferences>
+    <messageId>MESSAGEID</messageId>
+</messageReference>
