@@ -121,21 +121,9 @@ class IP extends Element
 			return call_user_func([$this, 'pad'.$version], $value);
 		}
 		if ($this->padding === self::UNPADDED) {
-			return call_user_func([$this, 'unpad'.$version], $value);
+			return inet_ntop(inet_pton($value));
 		}
 		return $value;
-	}
-
-	/**
-	 * Convert padded IPv4 into unpadded IPv4 since the IP filter may not work 
-	 * on padded IPv4.
-	 * 
-	 * @param string $ip Padded/unpadded IPv4 address.
-	 * @return string Unpadded IP address.
-	 */
-	protected function unpad4($ip)
-	{
-		return long2ip(ip2long($ip));
 	}
 
 	/**
@@ -147,24 +135,9 @@ class IP extends Element
 	protected function pad4($ip)
 	{
 		$list = explode('.', $ip);
-		$tpl  = implode('.', array_fill(0, count($list), '%03d'));
+		$tpl  = implode('.', array_fill(0, 4, '%03d'));
 
 		return vsprintf($tpl, $list);
-	}
-
-	/**
-	 * Convert padded IPv4 into unpadded IPv6.
-	 * 
-	 * @param string $ip Padded/unpadded IPv6 address.
-	 * @return string Unpadded IPv6 address.
-	 */
-	protected function unpad6($ip)
-	{
-		$list = array_map('hexdec', explode(':', $ip));
-		$tpl  = implode(':', array_fill(0, count($list), '%x'));
-		$ip   = vsprintf($tpl, $list);
-		
-		return preg_replace('~:(0:)+~', '::', $ip, 1);
 	}
 
 	/**
@@ -175,15 +148,7 @@ class IP extends Element
 	 */
 	protected function pad6($ip)
 	{
-		$cnt = substr_count($ip, ':');
-
-		if (7 === $cnt) {
-			$ext = implode('0', array_fill(0, 9-$cnt, ':'));
-			$ip  = str_replace('::', $ext, $ip);
-		}
-		$list = explode(':', $ip);
-		$tpl  = implode(':', array_fill(0, count($list), '%04s'));
-		
-		return vsprintf($tpl, $list);
+		$hex = bin2hex(inet_pton($ip));
+		return implode(':', str_split($hex, 4));
 	}
 }
