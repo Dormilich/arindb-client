@@ -27,7 +27,7 @@ class DelegationKey extends Payload
 		// no explanation is given, which number represents which algorithm
 		$this->create(new Selection('algorithm', [5, 7, 8]));
 		// a hash value
-		$this->create(new Element('digest'));
+		$this->create(new Element('digest', NULL, 'ctype_xdigit'));
 		// guess: validity duration since submission in seconds
 		$this->create(new Integer('ttl', 1));
 		// guess: SHA1 & SHA2 family

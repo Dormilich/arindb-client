@@ -8,17 +8,27 @@ class DelegationKeyTest extends Payload_TestCase
     public function testDigestProperty()
     {
         $payload = new DelegationKey;
+        $hash = md5('The quick brown fox jumped over the lazy dog.');
 
         $this->assertFalse($payload['digest']->isDefined());
         $this->assertNull($payload['digest']->getValue());
 
-        $payload['digest'] = '5214189CA48DC6B';
+        $payload['digest'] = $hash;
 
         $this->assertTrue($payload['digest']->isDefined());
-        $this->assertSame('5214189CA48DC6B', $payload['digest']->getValue());
+        $this->assertSame($hash, $payload['digest']->getValue());
 
         unset($payload['digest']);
         $this->assertFalse($payload['digest']->isDefined());
+    }
+
+    /**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
+     */
+    public function testDigestRejectsNonHashValue()
+    {
+        $payload = new DelegationKey;
+        $payload['digest'] = 'The quick brown fox...';
     }
 
     public function testKeyTagProperty()
