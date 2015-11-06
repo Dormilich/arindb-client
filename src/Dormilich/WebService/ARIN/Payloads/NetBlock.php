@@ -41,11 +41,11 @@ class NetBlock extends Payload
 		$this->create(new Integer('cidrLength', 0, 128), 'cidr');
 	}
 
-	public function isDefined()
+	public function isValid()
 	{
-		$start = $this->getAttribute('start')->isDefined();
-		$end   = $this->getAttribute('end')->isDefined();
-		$cidr  = $this->getAttribute('cidr')->isDefined();
+		$start = $this->get('start')->isValid();
+		$end   = $this->get('end')->isValid();
+		$cidr  = $this->get('cidr')->isValid();
 
 		return $start and ($end or $cidr);
 	}

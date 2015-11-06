@@ -128,10 +128,10 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 * 
 	 * @return boolean
 	 */
-	public function isDefined()
+	public function isValid()
 	{
 		$bool = array_map(function ($item) {
-			return $item->isDefined();
+			return $item->isValid();
 		}, $this->value);
 
 		return array_reduce($bool, function ($carry, $item) {

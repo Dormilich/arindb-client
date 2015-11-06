@@ -250,7 +250,7 @@ class Element implements ElementInterface, XMLHandler
 	 * 
 	 * @return boolean
 	 */
-	public function isDefined()
+	public function isValid()
 	{
 		return strlen($this->value) > 0; // or count($this->attributes) > 0
 	}

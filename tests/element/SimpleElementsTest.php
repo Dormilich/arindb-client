@@ -40,7 +40,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$elem = new Element('test', NULL, 'ctype_xdigit');
 		$elem->setValue(md5('validation callback test'));
 
-		$this->assertTrue($elem->isDefined());
+		$this->assertTrue($elem->isValid());
 	}
 
 	/**
@@ -51,7 +51,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$elem = new Element('test', NULL, 'ctype_xdigit');
 		$elem->setValue('validation callback test');
 
-		$this->assertTrue($elem->isDefined());
+		$this->assertTrue($elem->isValid());
 	}
 
 	// Boolean
@@ -256,7 +256,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$int = new Integer('test', $min, $max);
 		$int->setValue($value);
 
-		$this->assertTrue($int->isDefined());
+		$this->assertTrue($int->isValid());
 	}
 
 	public function invalidIntegerInputProvider()

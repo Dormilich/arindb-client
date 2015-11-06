@@ -21,7 +21,7 @@ interface XMLHandler
 	 * 
 	 * @return boolean TRUE if the element scontains (sufficient) data.
 	 */
-	public function isDefined();
+	public function isValid();
 
 	/**
 	 * Transform the element into its XML representation.

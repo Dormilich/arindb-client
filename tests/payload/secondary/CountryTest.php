@@ -9,32 +9,32 @@ class CountryTest extends Payload_TestCase
     {
         $payload = new Country;
 
-        $this->assertFalse($payload['name']->isDefined());
+        $this->assertFalse($payload['name']->isValid());
         $this->assertNull($payload['name']->getValue());
 
         $payload['name'] = 'Germany';
 
-        $this->assertTrue($payload['name']->isDefined());
+        $this->assertTrue($payload['name']->isValid());
         $this->assertSame('Germany', $payload['name']->getValue());
 
         unset($payload['name']);
-        $this->assertFalse($payload['name']->isDefined());
+        $this->assertFalse($payload['name']->isValid());
     }
 
     public function testCode2Property()
     {
         $payload = new Country;
 
-        $this->assertFalse($payload['code2']->isDefined());
+        $this->assertFalse($payload['code2']->isValid());
         $this->assertNull($payload['code2']->getValue());
 
         $payload['code2'] = 'US';
 
-        $this->assertTrue($payload['code2']->isDefined());
+        $this->assertTrue($payload['code2']->isValid());
         $this->assertSame('US', $payload['code2']->getValue());
 
         unset($payload['code2']);
-        $this->assertFalse($payload['code2']->isDefined());
+        $this->assertFalse($payload['code2']->isValid());
     }
 
     public function invalideCodeValueProvider()
@@ -58,16 +58,16 @@ class CountryTest extends Payload_TestCase
     {
         $payload = new Country;
 
-        $this->assertFalse($payload['code3']->isDefined());
+        $this->assertFalse($payload['code3']->isValid());
         $this->assertNull($payload['code3']->getValue());
 
         $payload['code3'] = 'USA';
 
-        $this->assertTrue($payload['code3']->isDefined());
+        $this->assertTrue($payload['code3']->isValid());
         $this->assertSame('USA', $payload['code3']->getValue());
 
         unset($payload['code3']);
-        $this->assertFalse($payload['code3']->isDefined());
+        $this->assertFalse($payload['code3']->isValid());
     }
 
     /**
@@ -84,17 +84,17 @@ class CountryTest extends Payload_TestCase
     {
         $payload = new Country;
 
-        $this->assertFalse($payload['e164']->isDefined());
+        $this->assertFalse($payload['e164']->isValid());
         $this->assertNull($payload['e164']->getValue());
 
         $payload['e164'] = '42';
 
-        $this->assertTrue($payload['e164']->isDefined());
+        $this->assertTrue($payload['e164']->isValid());
         $this->assertSame(42, $payload['e164']->getValue());
         $this->assertSame('42', (string) $payload['e164']);
 
         unset($payload['e164']);
-        $this->assertFalse($payload['e164']->isDefined());
+        $this->assertFalse($payload['e164']->isValid());
 
         // lower limit
         $payload['e164'] = 1;
@@ -161,7 +161,7 @@ class CountryTest extends Payload_TestCase
     {
         $payload = new Country;
 
-        $this->assertFalse($payload->isDefined());
+        $this->assertFalse($payload->isValid());
         $this->assertFalse($payload->isValid());
 
         $payload['name'] = 'GERMANY';

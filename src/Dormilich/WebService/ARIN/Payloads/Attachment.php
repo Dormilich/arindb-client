@@ -30,7 +30,9 @@ class Attachment extends Payload
 	 */
 	public function isValid()
 	{
-		return $this->isDefined();
+		return array_reduce($this->elements, function ($carry, $item) {
+			return $carry or $item->isValid();
+		}, false);
 	}
 
 	public function toXML()

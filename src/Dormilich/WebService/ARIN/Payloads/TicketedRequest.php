@@ -20,9 +20,6 @@ class TicketedRequest extends ObjectGroup
 {
 	public function __construct()
 	{
-        parent::__construct('ticketedRequest', [
-            'Payloads\\Ticket', 
-            'Payloads\\Net', 
-        ]);
+        parent::__construct('ticketedRequest', ['Ticket', 'Net']);
 	}
 }

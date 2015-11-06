@@ -28,6 +28,6 @@ class Dummy extends Payload
 
     public function isValid()
     {
-        return $this->get('foo')->isDefined();
+        return $this->get('foo')->isValid();
     }
 }

@@ -117,15 +117,15 @@ class ElementTest extends PHPUnit_Framework_TestCase
 		$elem = new Element('test');
 
 		// starts with undefined
-		$this->assertFalse($elem->isDefined());
+		$this->assertFalse($elem->isValid());
 
 		// define value
 		$elem->setValue(1);
-		$this->assertTrue($elem->isDefined());
+		$this->assertTrue($elem->isValid());
 
 		// unset value
 		$elem->setValue(null);
-		$this->assertFalse($elem->isDefined());
+		$this->assertFalse($elem->isValid());
 	}
 
 	public function testAttributesLeavesValueUntouched()
@@ -137,7 +137,7 @@ class ElementTest extends PHPUnit_Framework_TestCase
 		$elem->foo = 'foo';
 
 		$this->assertSame('foo', $elem->foo);
-		$this->assertFalse($elem->isDefined());
+		$this->assertFalse($elem->isValid());
 
 		unset($elem->foo);
 

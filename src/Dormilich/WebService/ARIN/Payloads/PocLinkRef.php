@@ -29,15 +29,15 @@ class PocLinkRef extends Payload
 		$this->create(new Selection('function', ['AD', 'AB', 'N', 'T']));
 	}
 
-	public function isDefined()
+	public function isValid()
 	{
-		return $this->get('function')->isDefined();
+		return $this->get('function')->isValid();
 	}
 
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)
 	{
 		foreach ($this as $name => $elem) {
-			if ($elem->isDefined()) {
+			if ($elem->isValid()) {
 				$node->setAttribute($name, $elem->getValue());
 			}
 		}

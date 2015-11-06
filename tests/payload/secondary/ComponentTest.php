@@ -9,32 +9,32 @@ class ComponentTest extends Payload_TestCase
     {
         $payload = new Component;
 
-        $this->assertFalse($payload['name']->isDefined());
+        $this->assertFalse($payload['name']->isValid());
         $this->assertNull($payload['name']->getValue());
 
         $payload['name'] = 'error';
 
-        $this->assertTrue($payload['name']->isDefined());
+        $this->assertTrue($payload['name']->isValid());
         $this->assertSame('error', $payload['name']->getValue());
 
         unset($payload['name']);
-        $this->assertFalse($payload['name']->isDefined());
+        $this->assertFalse($payload['name']->isValid());
     }
 
     public function testMessageProperty()
     {
         $payload = new Component;
 
-        $this->assertFalse($payload['message']->isDefined());
+        $this->assertFalse($payload['message']->isValid());
         $this->assertNull($payload['message']->getValue());
 
         $payload['message'] = 'this is an error';
 
-        $this->assertTrue($payload['message']->isDefined());
+        $this->assertTrue($payload['message']->isValid());
         $this->assertSame('this is an error', (string) $payload['message']);
 
         unset($payload['message']);
-        $this->assertFalse($payload['message']->isDefined());
+        $this->assertFalse($payload['message']->isValid());
     }
 
     public function testGetPayloadAsArray()
@@ -64,7 +64,7 @@ class ComponentTest extends Payload_TestCase
     {
         $payload = new Component;
 
-        $this->assertFalse($payload->isDefined());
+        $this->assertFalse($payload->isValid());
         $this->assertFalse($payload->isValid());
 
         $payload['name'] = 'error';

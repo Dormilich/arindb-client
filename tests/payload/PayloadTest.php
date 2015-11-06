@@ -105,19 +105,19 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $x = new Dummy;
 
         // default state
-        $this->assertFalse($x['foo']->isDefined());
+        $this->assertFalse($x['foo']->isValid());
         $this->assertNull($x['foo']->getValue());
 
         $x['foo'] = 123;
 
         // set state
-        $this->assertTrue($x['foo']->isDefined());
+        $this->assertTrue($x['foo']->isValid());
         $this->assertSame('123', $x['foo']->getValue());
 
         unset($x['foo']);
 
         // unset state = default state
-        $this->assertFalse($x['foo']->isDefined());
+        $this->assertFalse($x['foo']->isValid());
         $this->assertNull($x['foo']->getValue());
     }
 
@@ -159,31 +159,29 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
         $x['list'] = $q;
 
-        $this->assertTrue($x['foo']->isDefined());
-        $this->assertTrue($x['list']->isDefined());
+        $this->assertTrue($x['foo']->isValid());
+        $this->assertTrue($x['list']->isValid());
 
         $y = clone $x;
 
-        $this->assertFalse($y['foo']->isDefined());
-        $this->assertFalse($y['list']->isDefined());
+        $this->assertFalse($y['foo']->isValid());
+        $this->assertFalse($y['list']->isValid());
     }
 
     public function testPayloadValidity()
     {
-        $d = new Dummy;
+        $dummy = new Dummy;
 
-        $p = new SetPayloadDummy;
-        $p['dummy'] = $d;
+        $container = new SetPayloadDummy;
+        $container['dummy'] = $dummy;
 
-        $d['comment'] = 'a comment line';
-        $this->assertTrue($d->isDefined());
-        $this->assertFalse($d->isValid());
-        $this->assertFalse($p->isValid());
+        $dummy['comment'] = 'a comment line';
+        $this->assertFalse($dummy->isValid());
+        $this->assertFalse($container->isValid());
 
-        $d['foo'] = 'bar';
-        $this->assertTrue($d->isDefined());
-        $this->assertTrue($d->isValid());
-        $this->assertTrue($p->isValid());
+        $dummy['foo'] = 'bar';
+        $this->assertTrue($dummy->isValid());
+        $this->assertTrue($container->isValid());
     }
 
     public function testFilterSupportsElementList()
@@ -215,7 +213,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $d = new Dummy;
         $d->parse($xml);
 
-        $this->assertFalse($d->isDefined());
+        $this->assertFalse($d->isValid());
     }
 
     public function testSerialisePayloadWithSpecifiedEncoding()
@@ -250,11 +248,11 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $d = new Dummy;
         $d->parse($xml);
 
-        $this->assertTrue($d->isDefined());
+        $this->assertTrue($d->isValid());
         $this->assertSame('quux', (string) $d['bar']);
 
-        $this->assertFalse($d['list']->isDefined());
-        $this->assertFalse($d['comment']->isDefined());
+        $this->assertFalse($d['list']->isValid());
+        $this->assertFalse($d['comment']->isValid());
     }
 
     public function testSerialisePayloadWithListElement()
@@ -340,7 +338,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $d = new Dummy;
         $d->parse($xml);
 
-        $this->assertTrue($d->isDefined());
+        $this->assertTrue($d->isValid());
         $this->assertSame('quux', (string) $d['bar']);
 
         $this->assertCount(2, $d['list']);

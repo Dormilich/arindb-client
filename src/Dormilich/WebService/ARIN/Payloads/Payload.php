@@ -73,24 +73,15 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
-	 * Returns TRUE if the elements designated as required are defined.
-	 * Optional elements must always return TRUE, required elements only when 
-	 * their (or their sub-elements’) validity requirement is fulfilled.
+	 * Returns TRUE if all elements are defined.
 	 * 
 	 * @return boolean
 	 */
-	abstract function isValid();
-
-	/**
-	 * Returns TRUE if at least one element is defined.
-	 * 
-	 * @return boolean
-	 */
-	public function isDefined()
+	public function isValid()
 	{
 		return array_reduce($this->elements, function ($carry, $item) {
-			return $carry or $item->isDefined();
-		}, false);
+			return $carry and $item->isValid();
+		}, true);
 	}
 
 	/**
@@ -114,7 +105,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	{
 		if ($defined_only) {
 			$iterator = new \CallbackFilterIterator($this, function ($current) {
-				return $current->isDefined();
+				return $current->isValid();
 			});
 		}
 		else {
@@ -248,9 +239,9 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 		foreach ($sxe->children() as $name => $child) {
 			$elem = $this->get($name);
 			// fallback for multiple tag names
-			if ($elem->isDefined()) {
+			if ($elem->isValid()) {
 				$elem = reset(array_filter($this->filter($name), function ($item) {
-					return !$item->isDefined();
+					return !$item->isValid();
 				}));
 				if (!$elem) {
 					throw new ParserException('Payload setup and XML structure mismatch.');
@@ -270,7 +261,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	protected function addXMLElements(\DOMDocument $doc, \DOMElement $node)
 	{
 		foreach ($this->elements as $elem) {
-			if ($elem->isDefined()) {
+			if ($elem->isValid()) {
 				$node->appendChild($elem->toDOM($doc));
 			}
 		}

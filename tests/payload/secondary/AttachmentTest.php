@@ -9,32 +9,32 @@ class AttachmentTest extends Payload_TestCase
     {
         $payload = new Attachment;
 
-        $this->assertFalse($payload['data']->isDefined());
+        $this->assertFalse($payload['data']->isValid());
         $this->assertNull($payload['data']->getValue());
 
         $payload['data'] = 'paperwork';
 
-        $this->assertTrue($payload['data']->isDefined());
+        $this->assertTrue($payload['data']->isValid());
         $this->assertSame('paperwork', $payload['data']->getValue());
 
         unset($payload['data']);
-        $this->assertFalse($payload['data']->isDefined());
+        $this->assertFalse($payload['data']->isValid());
     }
 
     public function testFilenameProperty()
     {
         $payload = new Attachment;
 
-        $this->assertFalse($payload['filename']->isDefined());
+        $this->assertFalse($payload['filename']->isValid());
         $this->assertNull($payload['filename']->getValue());
 
         $payload['filename'] = 'test.exe';
 
-        $this->assertTrue($payload['filename']->isDefined());
+        $this->assertTrue($payload['filename']->isValid());
         $this->assertSame('test.exe', (string) $payload['filename']);
 
         unset($payload['filename']);
-        $this->assertFalse($payload['filename']->isDefined());
+        $this->assertFalse($payload['filename']->isValid());
     }
 
     public function testGetPayloadAsArray()
@@ -64,7 +64,7 @@ class AttachmentTest extends Payload_TestCase
     {
         $payload = new Attachment;
 
-        $this->assertFalse($payload->isDefined());
+        $this->assertFalse($payload->isValid());
         $this->assertFalse($payload->isValid());
 
         $payload['data'] = 'paperwork';

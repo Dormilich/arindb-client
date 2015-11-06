@@ -13,6 +13,6 @@ class Collection extends ObjectGroup
 {
     public function __construct()
     {
-        parent::__construct('collection', 'Payloads\\Payload');
+        parent::__construct('collection', 'Payload');
     }
 }

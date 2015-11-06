@@ -55,6 +55,6 @@ class ParseGroupsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('test', $group[2]->getName());
 		$this->assertSame('item', $group[2][0]->getName());
 		$this->assertSame('bar', $group[2][0]->name);
-		$this->assertFalse($group[2][0]->isDefined());
+		$this->assertFalse($group[2][0]->isValid());
 	}
 }

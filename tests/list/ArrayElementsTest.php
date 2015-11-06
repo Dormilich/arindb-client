@@ -55,10 +55,10 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
     {
         $m = new MultiLine('test');
 
-        $this->assertFalse($m->isDefined());
+        $this->assertFalse($m->isValid());
 
         $m->setValue(1);
-        $this->assertTrue($m->isDefined());
+        $this->assertTrue($m->isValid());
     }
 
     public function testMultilineArrayIsset()
@@ -129,15 +129,15 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
         $g = new Group('test');
 
         // empty => false
-        $this->assertFalse($g->isDefined());
+        $this->assertFalse($g->isValid());
 
         // not empty, but the contained element is empty
         $g[] = new Element('foo');
-        $this->assertFalse($g->isDefined());
+        $this->assertFalse($g->isValid());
 
         // array access rocks...
         $g[0]->setValue('bar');
-        $this->assertTrue($g->isDefined());
+        $this->assertTrue($g->isValid());
     }
 
     public function testGroupCount()

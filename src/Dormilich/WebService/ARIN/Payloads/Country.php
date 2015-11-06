@@ -33,8 +33,8 @@ class Country extends Payload
 
 	public function isValid()
 	{
-		return $this->get('code2')->isDefined()
-			or $this->get('code3')->isDefined();
+		return $this->get('code2')->isValid()
+			or $this->get('code3')->isValid();
 	}
 
 	public function toXML()

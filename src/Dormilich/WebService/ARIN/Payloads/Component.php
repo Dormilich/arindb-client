@@ -21,13 +21,6 @@ class Component extends Payload
 		$this->create(new Element('message'));
 	}
 
-	public function isValid()
-	{
-		return  $this->get('name')->isDefined()
-			and $this->get('message')->isDefined()
-		;
-	}
-
 	public function toXML()
 	{
 		throw new \LogicException('This Component Error Payload should not be submitted by itself.');

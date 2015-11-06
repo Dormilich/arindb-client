@@ -25,16 +25,6 @@ class AttachmentReference extends Payload
 		$this->create(new Element('attachmentId'), 'id');
 	}
 
-	/**
-	 * This is only an educated guess about the validity constraints.
-	 */
-	public function isValid()
-	{
-		return  $this->get('filename')->isDefined()
-			and $this->get('id')->isDefined()
-		;
-	}
-
 	public function toXML()
 	{
 		throw new \LogicException('This Attachment Reference Payload should not be submitted by itself.');

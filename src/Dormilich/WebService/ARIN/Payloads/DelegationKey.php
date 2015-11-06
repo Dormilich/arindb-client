@@ -36,17 +36,6 @@ class DelegationKey extends Payload
 		$this->create(new Element('keyTag'));
 	}
 
-	/**
-	 * Since there is no statement about validity, let’s assume that every 
-	 * value is required to make the payload valid.
-	 */
-	public function isValid()
-	{
-		return array_reduce($this->elements, function ($carry, $elem) {
-			return $carry and $elem->isDefined();
-		}, true);
-	}
-
 	public function toXML()
 	{
 		throw new \LogicException('This Delegation Key Payload should not be submitted by itself.');

@@ -40,7 +40,7 @@ class MultiLine extends Group
 	 * 
 	 * @return boolean
 	 */
-	public function isDefined()
+	public function isValid()
 	{
 		return count($this->value) > 0;
 	}

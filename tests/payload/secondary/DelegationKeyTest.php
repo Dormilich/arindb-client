@@ -10,16 +10,16 @@ class DelegationKeyTest extends Payload_TestCase
         $payload = new DelegationKey;
         $hash = md5('The quick brown fox jumped over the lazy dog.');
 
-        $this->assertFalse($payload['digest']->isDefined());
+        $this->assertFalse($payload['digest']->isValid());
         $this->assertNull($payload['digest']->getValue());
 
         $payload['digest'] = $hash;
 
-        $this->assertTrue($payload['digest']->isDefined());
+        $this->assertTrue($payload['digest']->isValid());
         $this->assertSame($hash, $payload['digest']->getValue());
 
         unset($payload['digest']);
-        $this->assertFalse($payload['digest']->isDefined());
+        $this->assertFalse($payload['digest']->isValid());
     }
 
     /**
@@ -35,33 +35,33 @@ class DelegationKeyTest extends Payload_TestCase
     {
         $payload = new DelegationKey;
 
-        $this->assertFalse($payload['keyTag']->isDefined());
+        $this->assertFalse($payload['keyTag']->isValid());
         $this->assertNull($payload['keyTag']->getValue());
 
         $payload['keyTag'] = 12345;
 
-        $this->assertTrue($payload['keyTag']->isDefined());
+        $this->assertTrue($payload['keyTag']->isValid());
         $this->assertSame('12345', $payload['keyTag']->getValue());
 
         unset($payload['keyTag']);
-        $this->assertFalse($payload['keyTag']->isDefined());
+        $this->assertFalse($payload['keyTag']->isValid());
     }
 
     public function testTtlProperty()
     {
         $payload = new DelegationKey;
 
-        $this->assertFalse($payload['ttl']->isDefined());
+        $this->assertFalse($payload['ttl']->isValid());
         $this->assertNull($payload['ttl']->getValue());
 
         $payload['ttl'] = 3600;
 
-        $this->assertTrue($payload['ttl']->isDefined());
+        $this->assertTrue($payload['ttl']->isValid());
         $this->assertSame(3600, $payload['ttl']->getValue());
         $this->assertSame('3600', (string) $payload['ttl']);
 
         unset($payload['ttl']);
-        $this->assertFalse($payload['ttl']->isDefined());
+        $this->assertFalse($payload['ttl']->isValid());
 
         // lower boundary
         $payload['ttl'] = 3600;
@@ -88,16 +88,16 @@ class DelegationKeyTest extends Payload_TestCase
     {
         $payload = new DelegationKey;
 
-        $this->assertFalse($payload['algorithm']->isDefined());
+        $this->assertFalse($payload['algorithm']->isValid());
         $this->assertNull($payload['algorithm']->getValue());
 
         $payload['algorithm'] = 8;
 
-        $this->assertTrue($payload['algorithm']->isDefined());
+        $this->assertTrue($payload['algorithm']->isValid());
         $this->assertSame('8', $payload['algorithm']->getValue());
 
         unset($payload['algorithm']);
-        $this->assertFalse($payload['algorithm']->isDefined());
+        $this->assertFalse($payload['algorithm']->isValid());
 
         // other valid values
 
@@ -131,16 +131,16 @@ class DelegationKeyTest extends Payload_TestCase
     {
         $payload = new DelegationKey;
 
-        $this->assertFalse($payload['type']->isDefined());
+        $this->assertFalse($payload['type']->isValid());
         $this->assertNull($payload['type']->getValue());
 
         $payload['type'] = 1;
 
-        $this->assertTrue($payload['type']->isDefined());
+        $this->assertTrue($payload['type']->isValid());
         $this->assertSame('1', $payload['type']->getValue());
 
         unset($payload['type']);
-        $this->assertFalse($payload['type']->isDefined());
+        $this->assertFalse($payload['type']->isValid());
 
         // using name instead of alias
 
@@ -205,7 +205,7 @@ class DelegationKeyTest extends Payload_TestCase
     {
         $payload = new DelegationKey;
 
-        $this->assertFalse($payload->isDefined());
+        $this->assertFalse($payload->isValid());
         $this->assertFalse($payload->isValid());
 
         $payload['algorithm'] = 5;

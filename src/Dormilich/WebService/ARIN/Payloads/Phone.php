@@ -26,12 +26,4 @@ class Phone extends Payload
 		$this->create(new Element('number'));
 		$this->create(new Element('extension'));
 	}
-
-	public function isDefined()
-	{
-		$type = $this->getAttribute('type')->isDefined();
-		$num  = $this->getAttribute('number')->isDefined();
-
-		return $type and $num;
-	}
 }

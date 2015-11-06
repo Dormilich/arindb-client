@@ -9,16 +9,16 @@ class AttachmentReferenceTest extends Payload_TestCase
     {
         $payload = new AttachmentReference;
 
-        $this->assertFalse($payload['id']->isDefined());
+        $this->assertFalse($payload['id']->isValid());
         $this->assertNull($payload['id']->getValue());
 
         $payload['id'] = 'paperwork';
 
-        $this->assertTrue($payload['id']->isDefined());
+        $this->assertTrue($payload['id']->isValid());
         $this->assertSame('paperwork', $payload['id']->getValue());
 
         unset($payload['id']);
-        $this->assertFalse($payload['id']->isDefined());
+        $this->assertFalse($payload['id']->isValid());
 
         $payload['attachmentId'] = 'legacy';
 
@@ -30,16 +30,16 @@ class AttachmentReferenceTest extends Payload_TestCase
     {
         $payload = new AttachmentReference;
 
-        $this->assertFalse($payload['filename']->isDefined());
+        $this->assertFalse($payload['filename']->isValid());
         $this->assertNull($payload['filename']->getValue());
 
         $payload['filename'] = 'test.exe';
 
-        $this->assertTrue($payload['filename']->isDefined());
+        $this->assertTrue($payload['filename']->isValid());
         $this->assertSame('test.exe', (string) $payload['filename']);
 
         unset($payload['filename']);
-        $this->assertFalse($payload['filename']->isDefined());
+        $this->assertFalse($payload['filename']->isValid());
 
         $payload['attachmentFilename'] = 'legacy';
 
@@ -80,7 +80,7 @@ class AttachmentReferenceTest extends Payload_TestCase
     {
         $payload = new AttachmentReference;
 
-        $this->assertFalse($payload->isDefined());
+        $this->assertFalse($payload->isValid());
         $this->assertFalse($payload->isValid());
 
         $payload['id'] = 'paperwork';

@@ -3,7 +3,6 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\Selection;
 
 /**
@@ -12,7 +11,7 @@ use Dormilich\WebService\ARIN\Elements\Selection;
  * automatically filled in using the information in the code field, and should 
  * be left blank. 
  */
-class PhoneType extends Payload implements ElementInterface
+class PhoneType extends Payload
 {
 	public function __construct()
 	{
@@ -26,27 +25,9 @@ class PhoneType extends Payload implements ElementInterface
 		$this->create(new Selection('code', ['O', 'F', 'M']));
 	}
 
-	public function isDefined()
+	public function isValid()
 	{
-		return $this->get('code')->isDefined();
-	}
-
-	public function setValue($value)
-	{
-		$value = (string) $value;
-
-		if (in_array($value, ['O', 'F', 'M'])) {
-			$this->get('code')->setValue($value);
-		}
-
-		$this->get('description')->setValue($value);	
-
-		return $this;	
-	}
-
-	public function addValue($value)
-	{
-		return $this->setValue($value);
+		return $this->get('code')->isValid();
 	}
 
 	public function toXML()
