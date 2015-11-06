@@ -206,7 +206,6 @@ class DelegationKeyTest extends Payload_TestCase
         $payload = new DelegationKey;
 
         $this->assertFalse($payload->isValid());
-        $this->assertFalse($payload->isValid());
 
         $payload['algorithm'] = 5;
         $payload['digest'] = '0DC99D4B6549F83385214189CA48DC6B209ABB71';

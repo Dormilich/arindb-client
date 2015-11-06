@@ -162,7 +162,6 @@ class CountryTest extends Payload_TestCase
         $payload = new Country;
 
         $this->assertFalse($payload->isValid());
-        $this->assertFalse($payload->isValid());
 
         $payload['name'] = 'GERMANY';
         $this->assertFalse($payload->isValid());

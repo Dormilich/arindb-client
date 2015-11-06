@@ -65,7 +65,6 @@ class ComponentTest extends Payload_TestCase
         $payload = new Component;
 
         $this->assertFalse($payload->isValid());
-        $this->assertFalse($payload->isValid());
 
         $payload['name'] = 'error';
         $this->assertFalse($payload->isValid());

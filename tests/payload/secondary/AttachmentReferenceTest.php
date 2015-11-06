@@ -81,8 +81,7 @@ class AttachmentReferenceTest extends Payload_TestCase
         $payload = new AttachmentReference;
 
         $this->assertFalse($payload->isValid());
-        $this->assertFalse($payload->isValid());
-
+ 
         $payload['id'] = 'paperwork';
         $this->assertFalse($payload->isValid());
 

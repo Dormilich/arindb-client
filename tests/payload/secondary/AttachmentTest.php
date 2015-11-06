@@ -65,7 +65,6 @@ class AttachmentTest extends Payload_TestCase
         $payload = new Attachment;
 
         $this->assertFalse($payload->isValid());
-        $this->assertFalse($payload->isValid());
 
         $payload['data'] = 'paperwork';
         $this->assertTrue($payload->isValid());
