@@ -3,9 +3,9 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The ORG Payload provides details about an organization, including their 
@@ -69,6 +69,15 @@ class Org extends Payload
 		$this->create(new Element('dbaName'));
 		$this->create(new Element('taxId'));
 		$this->create(new Element('orgUrl'));
-		$this->create(new Group('pocLinks'), 'poc');
+		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');
+	}
+
+	public function isValid()
+	{
+		// there’s not much in the docs…
+		$handle = $this->get('handle')->isValid();
+		$date   = $this->get('created')->isValid();
+
+		return !($handle xor $date);
 	}
 }
