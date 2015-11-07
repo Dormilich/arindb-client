@@ -4,8 +4,9 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
-use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
+use Dormilich\WebService\ARIN\Lists\NamedGroup;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The NET Payload contains details about an IPv4 or IPv6 network.
@@ -72,11 +73,56 @@ class Net extends Payload
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('orgHandle'), 'org');
 		$this->create(new Element('handle'));
-		$this->create(new Group('netBlocks'), 'net');
+		$this->create(new ObjectGroup('netBlocks', 'NetBlock'), 'net');
 		$this->create(new Element('customerHandle'), 'customer');
 		$this->create(new Element('parentNetHandle'), 'parentNet');
-		$this->create(new Element('netName'));
-		$this->create(new Group('originASes'), 'ASN');
-		$this->create(new Group('pocLinks'), 'poc');
+		$this->create(new Element('netName'), 'name');
+		$this->create(new NamedGroup('originASes', 'originAS'), 'ASN');
+		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');
+	}
+
+	// this one is quite tricky to figure out
+	public function isValid()
+	{
+		if ($this->fixedModify()) {
+			return $this->validModify();
+		}
+		return $this->validAssign();
+	}
+
+	private function validAssign()
+	{
+		$net  = $this->get('net')->isValid();
+		$name = $this->get('name')->isValid();
+		$ref  = $this->get('parentNet')->isValid();
+
+		$cust = $this->get('customer')->isValid();
+		$org  = $this->get('org')->isValid();
+
+		return $ref and $net and $name and ($cust xor $org);
+	}
+
+	private function fixedModify()
+	{
+		$fixed = $this->filter('version', 'registrationDate', 'handle', 
+			'netBlocks', 'parentNetHandle');
+
+		$fixed = array_reduce($fixed, function ($carry, $item) {
+			return $carry and $item->isValid();
+		}, true);
+
+		$cust = $this->get('customer')->isValid();
+		$org  = $this->get('org')->isValid();
+
+		return $fixed and ($cust or $org);
+	}
+
+	private function validModify()
+	{
+		$mod = $this->filter('comment', 'netName', 'originASes', 'pocLinks');
+
+		return array_reduce($mod, function ($carry, $item) {
+			return $carry or $item->isValid();
+		}, false);
 	}
 }

@@ -188,7 +188,7 @@ class Element implements ElementInterface, XMLHandler
 		$this->value = NULL;
 
 		if (NULL !== $value) {
-			$this->value = $this->convert($value);
+			$this->value = trim($this->convert($value));
 		}
 
 		return $this;

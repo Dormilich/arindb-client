@@ -1,0 +1,12 @@
+<net xmlns="http://www.arin.net/regrws/core/v1">
+    <orgHandle>ARIN</orgHandle>
+    <netBlocks>
+        <netBlock>
+            <type>A</type>
+            <startAddress>10.0.0.0</startAddress>
+            <cidrLength>24</cidrLength>
+        </netBlock>
+    </netBlocks>
+    <parentNetHandle>PARENTNETHANDLE</parentNetHandle>
+    <netName>NETNAME</netName>
+</net>
