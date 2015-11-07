@@ -20,10 +20,8 @@ class DelegationTest extends Payload_TestCase
 
 		$payload['delegationKeys'][] = $key;
 
-		$payload['nameservers'][0] = new Element('nameserver');
-		$payload['nameservers'][0]->setValue('NS4.EXAMPLE.COM');
-		$payload['nameservers'][1] = new Element('nameserver');
-		$payload['nameservers'][1]->setValue('NS5.EXAMPLE.COM');
+		$payload['nameservers'][] = Element::createWith('nameserver', 'NS4.EXAMPLE.COM');
+		$payload['nameservers'][] = Element::createWith('nameserver', 'NS5.EXAMPLE.COM');
 
 		$this->assertTrue($payload->isValid());
 
