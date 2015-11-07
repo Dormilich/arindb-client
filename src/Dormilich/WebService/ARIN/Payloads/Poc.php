@@ -4,9 +4,10 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
-use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
+use Dormilich\WebService\ARIN\Lists\NamedGroup;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The POC Payload provides information about a POC.
@@ -57,18 +58,36 @@ class Poc extends Payload
 	{
 		$this->create(new LengthElement('iso3166-2', 2), 'state');
 		$this->create(new Country, 'country');
-		$this->create(new Group('emails'));
+		$this->create(new NamedGroup('emails', 'email'));
 		$this->create(new MultiLine('streetAddress'), 'address');
 		$this->create(new Element('city'));
 		$this->create(new Element('postalCode'));
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');
 		$this->create(new Element('handle'));
-		$this->create(new Selection('contactType', ['PERSON', 'ROLE']));
-		$this->create(new Element('companyName'));
+		$this->create(new Selection('contactType', ['PERSON', 'ROLE']), 'type');
+		$this->create(new Element('companyName'), 'company');
 		$this->create(new Element('firstName'));
 		$this->create(new Element('middleName'));
 		$this->create(new Element('lastName'));
-		$this->create(new Group('phones'));
+		$this->create(new ObjectGroup('phones', 'Phone'));
+	}
+
+	public function isValid()
+	{
+		if ($this->get('type')->getValue() === 'ROLE') {
+			$company = $this->get('company')->isValid();
+			$first   = $this->get('firstName')->isValid();
+			$last    = $this->get('lastName')->isValid();
+
+			return $company and $last and !$first;
+		}
+		elseif ($this->get('type')->getValue() === 'PERSON') {
+			$first   = $this->get('firstName')->isValid();
+			$last    = $this->get('lastName')->isValid();
+
+			return $first and $last;
+		}
+		return false;
 	}
 }
