@@ -149,6 +149,31 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([$x['foo'], $x['list'], $x['comment']], $values);
     }
 
+    public function testPaylodToArray()
+    {
+        $x = new Dummy;
+
+        $this->assertSame([
+            'bar' => NULL,
+            'list' => [],
+            'comment' => [],
+        ], $x->getValue());
+        $this->assertSame([], $x->getValue(true));
+
+        $x['foo'] = 1;
+        $x['list'] = Element::createWith('notice', 'look behind');
+
+        $this->assertSame([
+            'bar' => '1',
+            'list' => ['look behind'],
+            'comment' => [],
+        ], $x->getValue());
+        $this->assertSame([
+            'bar' => '1',
+            'list' => ['look behind'],
+        ], $x->getValue(true));
+    }
+
     public function testResetPayload()
     {
         $x = new Dummy;

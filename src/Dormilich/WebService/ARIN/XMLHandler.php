@@ -22,7 +22,7 @@ interface XMLHandler
 	public function getName();
 
 	/**
-	 * Determines if an element is empty or valid. The XML serialiser may 
+	 * Determines if an element is valid. The XML serialiser may 
 	 * choose to omit empty elements in the serialisation process.
 	 * 
 	 * @return boolean TRUE if the element scontains (sufficient) data.

@@ -268,7 +268,18 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	public function isValid()
 	{
-		return strlen($this->value) > 0; // or count($this->attributes) > 0
+		#return $this->value !== NULL or count($this->attributes) > 0;
+		return strlen($this->value) > 0;
+	}
+
+	/**
+	 * Returns TRUE if the element’s value is set.
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		return $this->value !== NULL;
 	}
 
 	/**

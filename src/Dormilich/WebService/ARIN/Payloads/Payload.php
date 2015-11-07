@@ -86,6 +86,19 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
+	 * Fallback if a payload’s value is accessed as if it were an element. 
+	 * Can also be used to convert the payload into an array.
+	 * 
+	 * @return array
+	 */
+	public function isDefined()
+	{
+		return array_reduce($this->elements, function ($carry, $item) {
+			return $carry or $item->isDefined();
+		}, false);
+	}
+
+	/**
 	 * Get the name of the Payload’s base XML element.
 	 * 
 	 * @return string Base XML element’s tag name.
@@ -99,13 +112,23 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 * Fallback if a payload’s value is accessed as if it were an element. 
 	 * Can also be used to convert the payload into an array.
 	 * 
+	 * @param bool $defined_only Flag to include only defined elements.
 	 * @return array
 	 */
-	public function getValue()
+	public function getValue($defined_only = false)
 	{
-		return array_map(function ($e) {
-			return $e->getValue();
-		}, iterator_to_array($this));
+		if ($defined_only) {
+			$iterator = new \CallbackFilterIterator($this, function ($current) {
+				return $current->isDefined();
+			});
+		}
+		else {
+			$iterator = $this;
+		}
+
+		return array_map(function ($e) use ($defined_only) {
+			return $e->getValue($defined_only);
+		}, iterator_to_array($iterator));
 	}
 
 	/**
