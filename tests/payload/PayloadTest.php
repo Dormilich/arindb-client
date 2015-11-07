@@ -154,11 +154,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $x = new Dummy;
 
         $x['foo'] = 1;
-
-        $q = new Element('notice');
-        $q->setValue('look behind');
-
-        $x['list'] = $q;
+        $x['list'] = Element::createWith('notice', 'look behind');
 
         $this->assertTrue($x['foo']->isValid());
         $this->assertTrue($x['list']->isValid());

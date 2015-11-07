@@ -47,6 +47,22 @@ class Element implements ElementInterface, XMLHandler
 	private $callback;
 
 	/**
+	 * Create an Element instance with its value set. This is useful for setting 
+	 * the contents of a NamedGroup.
+	 * 
+	 * @param string $name Element name.
+	 * @param string $value Element value.
+	 * @return Element
+	 */
+	public static function createWith($name, $value)
+	{
+		$element = new Element($name);
+		$element->setValue($value);
+
+		return $element;
+	}
+
+	/**
 	 * Setting up the basic XML definition. The name may be either a tag name
 	 * —or if a namespace is given—a qualified name.
 	 * 
