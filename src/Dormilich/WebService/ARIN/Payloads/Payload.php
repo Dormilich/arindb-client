@@ -245,21 +245,39 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 
 		foreach ($ns as $prefix => $namespace) {
 			foreach ($sxe->children($namespace) as $name => $child) {
-				$elem = $this->get($name);
-				// fallback for multiple tag names
-				if ($elem->isValid()) {
-					$elem = reset(array_filter($this->filter($name), function ($item) {
-						return !$item->isValid();
-					}));
-					if (!$elem) {
-						throw new ParserException('Payload setup and XML structure mismatch.');
-					}
-				}
-				$elem->parse($child);
+				$this->getEmptyElement($name)->parse($child);
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * For the rare case when there are multiple elements of the same name in 
+	 * the XML (e.g. comment), fetch the next empty payload element of that name. 
+	 * 
+	 * Note: there is currently no supporting payload definition for that.
+	 * 
+	 * @param string $name 
+	 * @return XMLHandler
+	 */
+	private function getEmptyElement($name)
+	{
+		$elem = $this->get($name);
+
+		if (!$elem->isValid()) {
+			return $elem;
+		}
+
+		$elem = reset(array_filter($this->filter($name), function ($item) {
+			return !$item->isValid();
+		}));
+
+		if (!$elem) {
+			throw new ParserException('Payload setup and XML structure mismatch.');
+		}
+
+		return $elem;
 	}
 
 	/**
@@ -315,7 +333,14 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 		return $doc;
 	}
 
-	public static function readXML($xmlString)
+	/**
+	 * Parse an XML string into the respective payload object. If no suitable 
+	 * payload class is found, put it into a group.
+	 * 
+	 * @param string $xmlString 
+	 * @return Payload|Group
+	 */
+	public static function loadXML($xmlString)
 	{
 		$xml = simplexml_load_string($xmlString);
 		$class = __NAMESPACE__ . '\\' . ucfirst($xml->getName());
