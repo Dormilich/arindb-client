@@ -1,0 +1,17 @@
+<collection xmlns="http://www.arin.net/regrws/core/v1">
+    <delegation>
+        <name>0.76.in-addr.arpa.</name>
+        <delegationKeys>
+            <delegationKey>
+                <algorithm name = "RSA/SHA-1">5</algorithm>
+                <digest>0DC99D4B6549F83385214189CA48DC6B209ABB71</digest>
+                <digestType name = "SHA-1">1</digestType>
+                <keyTag>264</keyTag>
+            </delegationKey>
+        </delegationKeys>
+        <nameservers>
+            <nameserver>NS1.DOMAIN.COM</nameserver>
+            <nameserver>NS2.DOMAIN.COM</nameserver>
+        </nameservers>
+    </delegation>
+</collection>
