@@ -99,23 +99,13 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 * Fallback if a payload’s value is accessed as if it were an element. 
 	 * Can also be used to convert the payload into an array.
 	 * 
-	 * @param bool $defined_only Flag to include only defined elements.
 	 * @return array
 	 */
-	public function getValue($defined_only = false)
+	public function getValue()
 	{
-		if ($defined_only) {
-			$iterator = new \CallbackFilterIterator($this, function ($current) {
-				return $current->isValid();
-			});
-		}
-		else {
-			$iterator = $this;
-		}
-
 		return array_map(function ($e) {
 			return $e->getValue();
-		}, iterator_to_array($iterator));
+		}, iterator_to_array($this));
 	}
 
 	/**

@@ -170,11 +170,6 @@ class DelegationKeyTest extends Payload_TestCase
 		$this->assertSame([
 			'algorithm'  => '5', 
 			'digest'     => '0DC99D4B6549F83385214189CA48DC6B209ABB71', 
-			'digestType' => '1', 
-		], $payload->getValue(true));
-		$this->assertSame([
-			'algorithm'  => '5', 
-			'digest'     => '0DC99D4B6549F83385214189CA48DC6B209ABB71', 
 			'ttl'        => NULL, 
 			'digestType' => '1', 
 			'keyTag'     => NULL, 

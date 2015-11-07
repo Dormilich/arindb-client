@@ -52,15 +52,12 @@ class AttachmentReferenceTest extends Payload_TestCase
 		$payload = new AttachmentReference;
 
 		$payload['id'] = 'paperwork';
-
-		$this->assertSame(['attachmentId' => 'paperwork'], $payload->getValue(true));
 		$this->assertSame([
 			'attachmentFilename' => NULL, 
 			'attachmentId' => 'paperwork', 
 		], $payload->getValue());
 
 		$payload['filename'] = 'test.exe';
-
 		$this->assertSame([
 			'attachmentFilename' => 'test.exe', 
 			'attachmentId' => 'paperwork', 

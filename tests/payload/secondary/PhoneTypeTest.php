@@ -70,7 +70,6 @@ class PhoneTypeTest extends Payload_TestCase
 
 		$payload['code'] = 'F';
 
-		$this->assertSame(['code' => 'F'], $payload->getValue(true));
 		$this->assertSame([
 			'description' => NULL, 
 			'code' => 'F', 

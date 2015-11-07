@@ -42,12 +42,9 @@ class AttachmentTest extends Payload_TestCase
 		$payload = new Attachment;
 
 		$payload['data'] = 'paperwork';
-
-		$this->assertSame(['data' => 'paperwork'], $payload->getValue(true));
 		$this->assertSame(['data' => 'paperwork', 'filename' => NULL], $payload->getValue());
 
 		$payload['filename'] = 'test.exe';
-
 		$this->assertSame(['data' => 'paperwork', 'filename' => 'test.exe'], $payload->getValue());
 	}
 

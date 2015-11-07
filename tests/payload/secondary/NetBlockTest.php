@@ -201,10 +201,6 @@ class NetBlockTest extends Payload_TestCase
 		$payload['end']   = '192.168.2.31';
 
 		$this->assertSame([
-			'startAddress' => '192.168.2.0', 
-			'endAddress'   => '192.168.2.31', 
-		], $payload->getValue(true));
-		$this->assertSame([
 			'type' => NULL, 
 			'description'  => NULL, 
 			'startAddress' => '192.168.2.0', 

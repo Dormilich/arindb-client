@@ -39,11 +39,12 @@ class MessageTest extends Payload_TestCase
             'subject'     => 'SUBJECT',
             'text'        => ['Line 1'],
             'category'    => 'NONE',
+            'attachments' => [],
             'attachmentReferences' => [[
                 'attachmentFilename' => 'ATTACHMENTFILENAME',
                 'attachmentId'       => 'ATTACHMENTID',
             ]],
-        ], $payload->getValue(true));
+        ], $payload->getValue());
 
         $this->assertFalse($payload->isValid());
     }

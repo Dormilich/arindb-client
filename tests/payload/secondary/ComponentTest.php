@@ -42,12 +42,9 @@ class ComponentTest extends Payload_TestCase
 		$payload = new Component;
 
 		$payload['name'] = 'foo';
-
-		$this->assertSame(['name' => 'foo'], $payload->getValue(true));
 		$this->assertSame(['name' => 'foo', 'message' => NULL], $payload->getValue());
 
 		$payload['message'] = 'bar';
-
 		$this->assertSame(['name' => 'foo', 'message' => 'bar'], $payload->getValue());
 	}
 

@@ -68,7 +68,6 @@ class MessageReferenceTest extends Payload_TestCase
 
 		$payload['id'] = '7ZERNX1O3487ZHNE';
 
-		$this->assertSame(['messageId' => '7ZERNX1O3487ZHNE'], $payload->getValue(true));
 		$this->assertSame([
 			'attachmentReferences' => [],
 			'messageId' => '7ZERNX1O3487ZHNE',

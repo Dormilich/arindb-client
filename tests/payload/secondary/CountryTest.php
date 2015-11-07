@@ -129,10 +129,6 @@ class CountryTest extends Payload_TestCase
 		$this->assertSame([
 			'name'  => 'UNITED STATES OF AMERICA', 
 			'code2' => 'US', 
-		], $payload->getValue(true));
-		$this->assertSame([
-			'name'  => 'UNITED STATES OF AMERICA', 
-			'code2' => 'US', 
 			'code3' => NULL, 
 			'e164'  => NULL,
 		], $payload->getValue());
