@@ -1,0 +1,4 @@
+<roa xmlns="http://www.arin.net/regrws/rpki/v1">
+    <roaData>1|1340135296|My First ROA|1234|05-25-2011|05-25-2012|10.0.0.0|8|16|</roaData>
+    <signature>RGWqTw...sviQ==</signature>
+</roa>

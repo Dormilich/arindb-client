@@ -18,7 +18,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	/**
 	 * @var string REG-RWS XML namespace.
 	 */
-	const XMLNS = 'http://www.arin.net/regrws/core/v1';
+	protected $xmlns = 'http://www.arin.net/regrws/core/v1';
 
 	/**
 	 * @var string Name of the Payload’s XML base element.
@@ -325,7 +325,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 			throw new ParserException(ucfirst($this->getName()) . ' Payload is not valid for submission.');
 		}
 		$doc = new \DOMDocument('1.0', $encoding);
-		$root = $doc->createElementNS(self::XMLNS, $this->getName());
+		$root = $doc->createElementNS($this->xmlns, $this->getName());
 		$doc->appendChild($root);
 
 		$this->addXMLElements($doc, $doc->documentElement);

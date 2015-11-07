@@ -29,6 +29,8 @@ use Dormilich\WebService\ARIN\Elements\Element;
  */
 class Roa extends Payload
 {
+	protected $xmlns = 'http://www.arin.net/regrws/rpki/v1';
+
 	public function __construct()
 	{
 		$this->name = 'roa';
@@ -37,7 +39,8 @@ class Roa extends Payload
 
 	protected function init()
 	{
-		$this->create(new Element('roaData'));
+		// may have to swap them, as the documentation is inconsistent here
+		$this->create(new Element('roaData'), 'data');
 		$this->create(new Element('signature'));
 	}
 }
