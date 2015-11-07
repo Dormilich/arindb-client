@@ -7,6 +7,7 @@ use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\FilterInterface;
 use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Lists\Group;
 use Dormilich\WebService\ARIN\Exceptions\ARINException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
@@ -236,19 +237,29 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 			throw new ParserException('Tag name mismatch on reading XML.');
 		}
 
-		foreach ($sxe->children() as $name => $child) {
-			$elem = $this->get($name);
-			// fallback for multiple tag names
-			if ($elem->isValid()) {
-				$elem = reset(array_filter($this->filter($name), function ($item) {
-					return !$item->isValid();
-				}));
-				if (!$elem) {
-					throw new ParserException('Payload setup and XML structure mismatch.');
-				}
-			}
-			$elem->parse($child);
+		$ns = $sxe->getDocNamespaces();
+		// a bit of a hack to make it work with and without namespaces
+		if (count($ns) === 0) {
+			$ns[] = NULL;
 		}
+
+		foreach ($ns as $prefix => $namespace) {
+			foreach ($sxe->children($namespace) as $name => $child) {
+				$elem = $this->get($name);
+				// fallback for multiple tag names
+				if ($elem->isValid()) {
+					$elem = reset(array_filter($this->filter($name), function ($item) {
+						return !$item->isValid();
+					}));
+					if (!$elem) {
+						throw new ParserException('Payload setup and XML structure mismatch.');
+					}
+				}
+				$elem->parse($child);
+			}
+		}
+
+		return $this;
 	}
 
 	/**
@@ -302,6 +313,20 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 		$this->addXMLElements($doc, $doc->documentElement);
 
 		return $doc;
+	}
+
+	public static function readXML($xmlString)
+	{
+		$xml = simplexml_load_string($xmlString);
+		$class = __NAMESPACE__ . '\\' . ucfirst($xml->getName());
+
+		if (class_exists($class)) {
+			$payload = new $class;
+		}
+		else {
+			$payload = new Group($xml->getName());
+		}
+		return $payload->parse($xml);
 	}
 
 	/**
