@@ -48,7 +48,7 @@ class NetBlock extends Payload
 		$end   = $this->get('end')->isValid();
 		$cidr  = $this->get('cidr')->isValid();
 
-		return $type and $start and ($end xor $cidr);
+		return $type and $start and ($end or $cidr);
 	}
 
 	public function toXML()

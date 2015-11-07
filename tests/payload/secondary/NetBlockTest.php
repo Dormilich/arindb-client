@@ -251,16 +251,6 @@ class NetBlockTest extends Payload_TestCase
 		$payload['start'] = '192.168.2.0';
 		$payload['end']   = '192.168.2.31';
 		$this->assertTrue($payload->isValid());
-
-		// net address over-defined
-		$payload['description'] = 'subnet';
-		$payload['cidr'] = 27;
-		$this->assertFalse($payload->isValid());
-
-		// and again sufficient
-		unset($payload['cidr']);
-		$payload['end']   = '192.168.2.31';
-		$this->assertTrue($payload->isValid());
 	}
 
 	public function testSerialise()
