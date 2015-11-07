@@ -9,6 +9,12 @@ namespace Dormilich\WebService\ARIN;
 interface XMLHandler
 {
 	/**
+	 * Do (not) validate the payload before creating the request XML.
+	 */
+	const VALIDATE   = true;
+	const NOVALIDATE = false;
+
+	/**
 	 * The tag name of the base XML element.
 	 * 
 	 * @return string

@@ -285,12 +285,18 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	/**
 	 * Create a new XML document and serialise the payload’s contents.
 	 * 
+	 * @param string|NULL $encoding The document (charset) encoding.
+	 * @param boolean $validate Check the payload’s validity before serialisation.
 	 * @return DOMDocument The Payload’s XML document.
+	 * @throws ParserException Invalid document.
 	 */
-	public function toXML($encoding='UTF-8')
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
+		if (XMLHandler::VALIDATE === $validate and !$this->isValid()) {
+			throw new ParserException(ucfirst($this->getName()) . ' Payload is not valid for submission.');
+		}
 		$doc = new \DOMDocument('1.0', $encoding);
-		$root = $doc->createElementNS(self::XMLNS, $this->name);
+		$root = $doc->createElementNS(self::XMLNS, $this->getName());
 		$doc->appendChild($root);
 
 		$this->addXMLElements($doc, $doc->documentElement);

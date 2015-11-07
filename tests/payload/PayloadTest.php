@@ -1,5 +1,6 @@
 <?php
 
+use Dormilich\WebService\ARIN\XMLHandler as XML;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Test\Dummy;
 use Test\SetPayloadDummy;
@@ -194,16 +195,9 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertSame(['list', 'comment'], array_keys($filtered));
     }
 
-    public function testSerialiseEmptyPayload()
-    {
-        $d = new Dummy;
-
-        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
-        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>' . \PHP_EOL;
-
-        $this->assertSame($xml, $d->toXML()->saveXML());
-    }
-
+    /**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ParserException
+     */
     public function testParseEmptyPayload()
     {
         $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -214,6 +208,17 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $d->parse($xml);
 
         $this->assertFalse($d->isValid());
+        $d->toXML('UTF-8', XML::VALIDATE)->saveXML();
+    }
+
+    public function testSerialiseEmptyPayload()
+    {
+        $d = new Dummy;
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . \PHP_EOL;
+        $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>' . \PHP_EOL;
+
+        $this->assertSame($xml, $d->toXML('UTF-8', XML::NOVALIDATE)->saveXML());
     }
 
     public function testSerialisePayloadWithSpecifiedEncoding()
@@ -223,7 +228,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $xml  = '<?xml version="1.0" encoding="ISO-8859-1"?>' . \PHP_EOL;
         $xml .= '<dummy xmlns="http://www.arin.net/regrws/core/v1"/>' . \PHP_EOL;
 
-        $this->assertSame($xml, $d->toXML("ISO-8859-1")->saveXML());
+        $this->assertSame($xml, $d->toXML("ISO-8859-1", XML::NOVALIDATE)->saveXML());
     }
 
     public function testSerialisePayloadWithSimpleElement()
@@ -273,7 +278,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $xml .=   '</comment>';
         $xml .= '</dummy>' . \PHP_EOL;
 
-        $this->assertSame($xml, $d->toXML()->saveXML());
+        $this->assertSame($xml, $d->toXML('UTF-8', XML::NOVALIDATE)->saveXML());
     }
 
     public function testParsePayloadWithListElement()
