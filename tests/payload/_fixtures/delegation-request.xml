@@ -1,0 +1,15 @@
+<delegation xmlns="http://www.arin.net/regrws/core/v1">
+    <delegationKeys>
+        <delegationKey>
+            <algorithm>5</algorithm>
+            <digest>0DC99D4B6549F83385214189CA48DC6B209ABB71</digest>
+            <ttl>86400</ttl>
+            <digestType>1</digestType>
+            <keyTag>264</keyTag>
+        </delegationKey>
+    </delegationKeys>
+    <nameservers>
+        <nameserver>NS4.EXAMPLE.COM</nameserver>
+        <nameserver>NS5.EXAMPLE.COM</nameserver>
+    </nameservers>
+</delegation>

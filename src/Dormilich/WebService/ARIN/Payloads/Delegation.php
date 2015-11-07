@@ -3,7 +3,8 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\NamedGroup;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The Delegation Payload allows you to define the details of a Delegation, 
@@ -23,7 +24,14 @@ class Delegation extends Payload
 	protected function init()
 	{
 		$this->create(new Element('name'));
-		$this->create(new Group('delegationKeys'));
-		$this->create(new Group('nameservers'));
+		$this->create(new ObjectGroup('delegationKeys', 'DelegationKey'));
+		$this->create(new NamedGroup('nameservers', 'nameserver'));
+	}
+
+	// not sue about the keys, though
+	public function isValid()
+	{
+		return   $this->get('nameservers')->isValid()
+			and !$this->get('name')->isValid();
 	}
 }
