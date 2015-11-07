@@ -1,0 +1,15 @@
+<message xmlns="http://www.arin.net/regrws/core/v1" xmlns:ns2="http://www.arin.net/regrws/messages/v1">
+    <ns2:messageId>MESSAGEID</ns2:messageId>
+    <ns2:createdDate>Tue Feb 28 17:41:17 EST 2012</ns2:createdDate>
+    <subject>SUBJECT</subject>
+    <text>
+        <line number="1">Line 1</line>
+    </text>
+    <category>NONE</category>
+    <attachmentReferences>
+        <attachmentReference>
+            <attachmentFilename>ATTACHMENTFILENAME</attachmentFilename>
+            <attachmentId>ATTACHMENTID</attachmentId>
+        </attachmentReference>
+    </attachmentReferences>
+</message>

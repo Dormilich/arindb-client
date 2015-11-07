@@ -1,0 +1,13 @@
+<message xmlns="http://www.arin.net/regrws/core/v1">
+    <subject>SUBJECT</subject>
+    <text>
+        <line number="1">Line 1</line>
+    </text>
+    <category>NONE</category>
+    <attachments>
+        <attachment>
+            <data>DATA</data>
+            <filename>FILENAME</filename>
+        </attachment>
+    </attachments>
+</message>

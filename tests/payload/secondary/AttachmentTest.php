@@ -67,9 +67,6 @@ class AttachmentTest extends Payload_TestCase
 		$this->assertFalse($payload->isValid());
 
 		$payload['data'] = 'paperwork';
-		$this->assertTrue($payload->isValid());
-
-		unset($payload['data']);
 		$this->assertFalse($payload->isValid());
 
 		$payload['filename'] = 'test.exe';

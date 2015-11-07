@@ -4,7 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
-use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 
 /**
@@ -29,12 +29,34 @@ class Message extends Payload
 	protected function init()
 	{
 		$uri = 'http://www.arin.net/regrws/messages/v1';
-		$this->create(new Element('ns2:messageId', $uri));
-		$this->create(new Element('ns2:createdDate', $uri));
+		// response only
+		$this->create(new Element('ns2:messageId', $uri), 'id');
+		// response only
+		$this->create(new Element('ns2:createdDate', $uri), 'created');
 		$this->create(new Element('subject'));
 		$this->create(new MultiLine('text'));
-		$types = ['NONE', 'JUSTIFICATION'];
-		$this->create(new Selection('category', $types));
-		$this->create(new Group('attachments'));
+		$this->create(new Selection('category', ['NONE', 'JUSTIFICATION']));
+		// request only
+		$this->create(new ObjectGroup('attachments', 'Attachment'));
+		// response only
+		$this->create(new ObjectGroup('attachmentReferences', 'AttachmentReference'));
+	}
+
+	public function isValid()
+	{
+		$id   = $this->get('id')->isValid();
+		$date = $this->get('created')->isValid();
+		$ref  = count($this->get('attachmentReferences'));
+
+		if ($id or $date or $ref) {
+			return false;
+		}
+
+		$subj = $this->get('subject')->isValid();
+		$text = $this->get('text')->isValid();
+		$cat  = $this->get('category')->isValid();
+		$att  = $this->get('attachments')->isValid();
+
+		return ($subj and $cat and ($text or $att));
 	}
 }

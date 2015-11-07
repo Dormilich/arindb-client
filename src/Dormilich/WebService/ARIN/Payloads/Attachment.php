@@ -24,17 +24,6 @@ class Attachment extends Payload
 		$this->create(new Element('filename'));
 	}
 
-	/**
-	 * It is not exactly clear when an attachment payload is valid, although 
-	 * the definition suggests that any defined element suffices.
-	 */
-	public function isValid()
-	{
-		return array_reduce($this->elements, function ($carry, $item) {
-			return $carry or $item->isValid();
-		}, false);
-	}
-
 	public function toXML()
 	{
 		throw new \LogicException('This Attachment Payload should not be submitted by itself.');
