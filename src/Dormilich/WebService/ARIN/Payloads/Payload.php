@@ -292,7 +292,7 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	 */
 	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
-		if (XMLHandler::VALIDATE === $validate and !$this->isValid()) {
+		if (XMLHandler::NOVALIDATE !== $validate and !$this->isValid()) {
 			throw new ParserException(ucfirst($this->getName()) . ' Payload is not valid for submission.');
 		}
 		$doc = new \DOMDocument('1.0', $encoding);
