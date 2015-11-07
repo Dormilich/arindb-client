@@ -118,6 +118,17 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	}
 
 	/**
+	 * Check if the value is supported.
+	 * 
+	 * @param XMLHandler $value 
+	 * @return boolean
+	 */
+	public function supports(XMLHandler $value)
+	{
+		return true;
+	}
+
+	/**
 	 * Get the element’s tag name (local name).
 	 * 
 	 * @return string
@@ -209,6 +220,11 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 			$payload = $ns . ucfirst($name);
 			if (class_exists($payload)) {
 				$elem = new $payload;
+				// unfortunately there are cases where a simple element has the 
+				// same name as a payload (e.g. Error Payload)
+				if (!$this->supports($elem)) {
+					$elem = $this->createElement($child);
+				}
 			}
 			elseif (count($child)) {
 				$elem = new Group($name);

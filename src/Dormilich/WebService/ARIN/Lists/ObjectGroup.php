@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Lists;
 
+use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
@@ -92,10 +93,10 @@ class ObjectGroup extends Group
 	/**
 	 * Check if the value’s class is supported.
 	 * 
-	 * @param object $value 
+	 * @param XMLHandler $value 
 	 * @return boolean
 	 */
-	public function supports($value)
+	public function supports(XMLHandler $value)
 	{
 		return array_reduce($this->classes, function ($carry, $class) use ($value) {
 			return $value instanceof $class ?: ($carry or false);

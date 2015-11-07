@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Lists;
 
+use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
@@ -65,10 +66,21 @@ class NamedGroup extends Group
 		// objects must implement XMLHandler
 		$value = parent::convert($value);
 		// check if it's one of the allowed classes
-		if (in_array($value->getName(), $this->nameList, true)) {
+		if ($this->supports($value)) {
 			return $value;
 		}
 		$msg = 'Object with name [%s] is not allowed in the [%s] element.';
 		throw new ConstraintException(sprintf($msg, $value->getName(), $this->getName()));
+	}
+
+	/**
+	 * Check if the value’s name is supported.
+	 * 
+	 * @param XMLHandler $value 
+	 * @return boolean
+	 */
+	public function supports(XMLHandler $value)
+	{
+		return in_array($value->getName(), $this->nameList, true);
 	}
 }

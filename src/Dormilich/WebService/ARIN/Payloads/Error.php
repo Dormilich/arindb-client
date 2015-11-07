@@ -3,7 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
-use Dormilich\WebService\ARIN\Lists\Group;
+use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
  * The Error Payload is returned when any call encounters errors and it 
@@ -20,10 +20,18 @@ class Error extends Payload
 	protected function init()
 	{
 		$this->create(new Element('message'));
-		// though it’s originally restricted, it’s not
-		// an attribute that is set by the user
 		$this->create(new Element('code'));
-		$this->create(new Group('components'));
-		$this->create(new Group('additionalInfo'));
+		$this->create(new ObjectGroup('components', 'Component'));
+		$this->create(new ObjectGroup('additionalInfo', 'Element'));
+	}
+
+	public function isValid()
+	{
+		return false;
+	}
+
+	public function toXML()
+	{
+		throw new \LogicException('This Error Payload should not be submitted at all.');
 	}
 }
