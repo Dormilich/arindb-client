@@ -1,0 +1,21 @@
+<ticket xmlns="http://www.arin.net/regrws/core/v1" xmlns:ns2="http://www.arin.net/regrws/messages/v1">
+    <messageReferences>
+        <messageReference>
+            <messageId>MESSAGEID</messageId>
+            <attachmentReferences>
+                <attachmentReference>
+                    <attachmentFilename>ATTACHMENTFILENAME</attachmentFilename>
+                    <attachmentId>ATTACHMENTID</attachmentId>
+                </attachmentReference>
+            </attachmentReferences>
+        </messageReference>
+    </messageReferences>
+    <ticketNo>TICKETNO</ticketNo>
+    <createdDate>Tue Jan 25 16:17:18 EST 2011</createdDate>
+    <resolvedDate>Tue Jan 25 16:17:18 EST 2011</resolvedDate>
+    <closedDate>Tue Jan 25 16:17:18 EST 2011</closedDate>
+    <updatedDate>Tue Jan 25 16:17:18 EST 2011</updatedDate>
+    <webTicketType>POC_RECOVERY</webTicketType>
+    <webTicketStatus>PENDING_CONFIRMATION</webTicketStatus>
+    <webTicketResolution>ACCEPTED</webTicketResolution>
+</ticket>

@@ -1,0 +1,29 @@
+<ticket xmlns="http://www.arin.net/regrws/core/v1" xmlns:ns2="http://www.arin.net/regrws/messages/v1" xmlns:ns4="http://www.arin.net/regrws/shared-ticket/v1">
+    <messages>
+        <message>
+            <ns2:messageId>MESSAGEID</ns2:messageId>
+            <ns2:createdDate>Tue Feb 28 17:41:17 EST 2012</ns2:createdDate>
+            <subject>SUBJECT</subject>
+            <text>
+                <line number="1">Line 1</line>
+            </text>
+            <category>NONE</category>
+            <attachments>
+                <attachment>
+                    <data>DATA</data>
+                    <filename>FILENAME</filename>
+                </attachment>
+            </attachments>
+        </message>
+    </messages>
+    <ticketNo>TICKETNO</ticketNo>
+    <ns4:shared>true</ns4:shared>
+    <ns4:orgHandle>ORGHANDLE</ns4:orgHandle>
+    <createdDate>Mon Nov 07 14:04:29 EST 2011</createdDate>
+    <resolvedDate>Mon Nov 07 14:04:29 EST 2011</resolvedDate>
+    <closedDate>Mon Nov 07 14:04:29 EST 2011</closedDate>
+    <updatedDate>Mon Nov 07 14:04:29 EST 2011</updatedDate>
+    <webTicketType>POC_RECOVERY</webTicketType>
+    <webTicketStatus>PENDING_CONFIRMATION</webTicketStatus>
+    <webTicketResolution>ACCEPTED</webTicketResolution>
+</ticket>
