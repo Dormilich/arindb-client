@@ -26,4 +26,10 @@ class Phone extends Payload
 		$this->create(new Element('number'));
 		$this->create(new Element('extension'));
 	}
+
+	public function isValid()
+	{
+		return  $this->get('type')->isValid()
+			and $this->get('number')->isValid();
+	}
 }
