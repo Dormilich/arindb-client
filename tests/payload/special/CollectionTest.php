@@ -23,7 +23,7 @@ class CollectionTest extends Payload_TestCase
 		$this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Ticket', $payload['ticket']);
 	}
 
-	public function testParse()
+	public function testParsePhone()
 	{
 		$payload = new Collection;
 		$payload->parse($this->loadXML('list-phone'));
