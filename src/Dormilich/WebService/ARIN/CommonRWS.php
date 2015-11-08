@@ -5,6 +5,7 @@ namespace Dormilich\WebService\ARIN;
 
 use Dormilich\WebService\Adapter\ClientAdapter;
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\Exceptions\RequestException;
 use Dormilich\WebService\ARIN\Payloads\Payload;
 use Dormilich\WebService\ARIN\Payloads\Customer;
 use Dormilich\WebService\ARIN\Payloads\Net;
@@ -90,7 +91,7 @@ class CommonRWS
 			$body = $body->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
 		}
 		if (count($options)) {
-			$path .= ';' . http_build_query($ex, '', ';', \PHP_QUERY_RFC3986);
+			$path .= ';' . http_build_query($options, '', ';', \PHP_QUERY_RFC3986);
 		}
 		$path .= '?apikey=' . rawurlencode($this->config['password']);
 
@@ -100,25 +101,13 @@ class CommonRWS
 	}
 
 	/**
-	 * Create an Org or Poc resource. This method is intended to be used by descendent classes.
-	 * 
-	 * @param Payload $payload 
-	 * @param array $options 
-	 * @return Payload
-	 */
-	protected function make(Payload $payload, array $options)
-	{
-		return $this->submit('POST', $payload->getName() . '/' . $payload['handle'], $options, $payload);
-	}
-
-	/**
 	 * Request a Customer, Net, Org, or Poc resource. The request payload only 
 	 * needs the 'handle' property to be set.
 	 * 
 	 * @param Payload $payload 
 	 * @return Payload
 	 */
-	public function get(Payload $payload)
+	public function read(Payload $payload)
 	{
 		return $this->submit('GET', $payload->getName() . '/' . $payload['handle']);
 	}
@@ -170,27 +159,23 @@ class CommonRWS
 			if ($param) {
 				return $this->submit('POST', sprintf('net/%s/customer', $param), [], $payload);
 			}
-			throw new Exception('Parent net handle missing.');
+			throw new RequestException('Parent net handle missing.');
 		}
 
 		if ($payload instanceof Org) {
 			if ($param) {
 				return $this->submit('POST', sprintf('net/%s/org', $param), [], $payload);
 			}
-			return $this->make($payload);
+			return $this->submit('POST', 'org', [], $payload);
 		}
 
 		if ($payload instanceof Poc) {
-			return $this->make($payload, ['makeLink' => $this->bool2string($param)]);
+			return $this->submit('POST', 'poc', [
+				'makeLink' => $this->bool2string($param)
+			], $payload);
 		}
 
-		throw new Exception('Object of type '.$payload->getName().' does not support direct creation.');
-	}
-
-	private function createFromParent(Net $net, Payload $payload)
-	{
-		$path = sprintf('net/%s/%s', $net['handle'], $payload->getName());
-		return $this->submit('POST', $path, [], $payload);
+		throw new RequestException('Object of type '.$payload->getName().' does not support direct creation.');
 	}
 
 	/**

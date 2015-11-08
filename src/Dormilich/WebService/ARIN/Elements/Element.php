@@ -323,7 +323,7 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	protected function createElement(\DOMDocument $doc)
 	{
-		if (!$this->namespace) {
+		if (!$this->prefix) {
 			return $doc->createElement($this->name, $this->value);
 		}
 		$name = $this->prefix . ':' . $this->name;

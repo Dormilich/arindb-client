@@ -248,8 +248,8 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
     {
         $ns = $sxe->getNamespaces();
 
-        if ($uri = current($ns)) {
-            return new Element(key($ns).':'.$sxe->getName(), $uri);
+        if (key($ns)) {
+            return new Element(key($ns).':'.$sxe->getName(), current($ns));
         }
         return new Element($sxe->getName());
     }

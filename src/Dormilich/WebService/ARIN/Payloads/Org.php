@@ -49,10 +49,11 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  */
 class Org extends Payload
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'org';
 		$this->init();
+		$this->set('handle', $handle);
 	}
 
 	protected function init()

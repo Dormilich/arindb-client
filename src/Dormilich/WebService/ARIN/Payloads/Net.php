@@ -60,10 +60,11 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  */
 class Net extends Payload
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'net';
 		$this->init();
+		$this->set('handle', $handle);
 	}
 
 	protected function init()

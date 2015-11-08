@@ -37,6 +37,18 @@ class CustomerRequestTest extends Payload_TestCase
         $this->assertEquals($payload, $customer);
     }
 
+    /**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\RequestException
+     */
+    public function testCreateCustomerWithoutNetHandleFails()
+    {
+        $client = $this->getClient('customer');
+        $arin = new CommonRWS($client);
+        $payload = new Customer;
+
+        $customer = $arin->create($payload);
+    }
+
     public function testReadCustomer()
     {
         $client = $this->getClient('customer');
@@ -44,8 +56,7 @@ class CustomerRequestTest extends Payload_TestCase
 
         $this->assertFalse($arin->isProduction());
 
-        #$customer = $arin->read('CUST');
-        $customer = $arin->get(new Customer('CUST'));
+        $customer = $arin->read(new Customer('CUST'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/customer/CUST?apikey=', $client->url);
@@ -59,8 +70,7 @@ class CustomerRequestTest extends Payload_TestCase
 
         $this->assertFalse($arin->isProduction());
 
-        #$payload = $arin->read('CUST');
-        $payload = $arin->get(new Customer('CUST'));
+        $payload = $arin->read(new Customer('CUST'));
 
         // edit properties here
 
@@ -95,7 +105,7 @@ class CustomerRequestTest extends Payload_TestCase
 
         $this->assertTrue($arin->isProduction());
 
-        $customer = $arin->get(new Customer('CUST'));
+        $customer = $arin->read(new Customer('CUST'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.arin.net/rest/customer/CUST?apikey=my-pass-word', $client->url);
