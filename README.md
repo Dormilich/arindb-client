@@ -15,6 +15,7 @@ arrays). Note that you can only set named leaf nodes’ values via array access 
 in the example below).
 
 ```php
+use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Payloads\Customer;
 use Dormilich\WebService\ARIN\Payloads\Country;
 use Dormilich\WebService\ARIN\Payloads\Net;
@@ -64,8 +65,7 @@ unset($customer['comment'][2]);
 
 // element groups work similar (but you have to know what to put in!)
 $net = new Net;
-$net['ASN'][0] = new Element('originAS'); # make sure that name is correct
-$net['ASN'][0]->setValue('AS-007');
+$net['ASN'][0] = Element::createWith('originAS', 'AS-007');
 
 // and of course they are editable
 $net['net'][0] = new NetBlock;
