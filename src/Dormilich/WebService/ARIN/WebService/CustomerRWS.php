@@ -17,17 +17,12 @@ class CustomerRWS extends AbstractWebService
      */
     public function __construct(ClientAdapter $client, array $config = array())
     {
-        $this->client = $client;
-
-        $this->setOptions($config);
-
-        $base = $this->isProduction() ? parent::PRODUCTION_HOST : parent::SANDBOX_HOST;
-        $this->client->setBaseUri($base);
+        $this->init($client, $config);
     }
 
     public function create($parentNet, Customer $payload)
     {
-        return $this->submit('POST', sprintf('net/%s/customer', $parentNet));
+        return $this->submit('POST', sprintf('net/%s/customer', $parentNet), [], $payload);
     }
 
     public function read($handle)
@@ -37,7 +32,7 @@ class CustomerRWS extends AbstractWebService
 
     public function update(Customer $payload)
     {
-        return $this->submit('PUT', sprintf('customer/%s', $handle), [], $payload);
+        return $this->submit('PUT', sprintf('customer/%s', $payload['handle']), [], $payload);
     }
 
     public function delete($handle)

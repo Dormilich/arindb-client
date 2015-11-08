@@ -23,6 +23,23 @@ abstract class AbstractWebService
 
     protected $client;
 
+    /**
+     * Create a webservice to request WHOIS data. 
+     * 
+     * @param ClientAdapter $client A connection adapter.
+     * @param array $config Webservice config options 
+     * @return self
+     */
+    public function init(ClientAdapter $client, array $config = array())
+    {
+        $this->client = $client;
+
+        $this->setOptions($config);
+
+        $base = $this->isProduction() ? self::PRODUCTION_HOST : self::SANDBOX_HOST;
+        $this->client->setBaseUri($base);
+    }
+
     protected function setOptions(array $options)
     {
         $defaults = [

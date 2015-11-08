@@ -4,10 +4,12 @@ namespace Test;
 
 class Payload_TestCase extends \PHPUnit_Framework_TestCase
 {
+    protected $source = 'payload';
+
     private function getFilePath($name)
     {
         $file = __DIR__ . '/_fixtures/' . $name . '.xml';
-        $file = str_replace('/Test/', '/payload/', $file);
+        $file = str_replace('/Test/', '/'.$this->source.'/', $file);
         if (is_readable($file)) {
             return $file;
         }
@@ -25,5 +27,13 @@ class Payload_TestCase extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument;
         $document->load($this->getFilePath($name), \LIBXML_NOBLANKS);
         return $document;
+    }
+
+    public function getClient($name)
+    {
+        if (empty($name)) {
+            return new MockClient('');
+        }
+        return new MockClient($this->loadXML($name)->asXML());
     }
 }
