@@ -27,10 +27,11 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  */
 class Ticket extends Payload
 {
-	public function __construct()
+	public function __construct($number = NULL)
 	{
 		$this->name = 'ticket';
 		$this->init();
+		$this->set('ticketNo', $number);
 	}
 
 	protected function init()

@@ -17,9 +17,7 @@ abstract class WebServiceSetup
 
     const PRODUCTION_HOST = 'https://reg.arin.net/rest/';
 
-    private $config       = [];
-
-    protected $result;
+    protected $config     = [];
 
     protected $client;
 
