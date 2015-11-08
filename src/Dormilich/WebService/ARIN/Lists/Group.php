@@ -235,6 +235,8 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 			$elem->parse($child);
 			$this->addValue($elem);
 		}
+
+		return $this;
 	}
 
     /**

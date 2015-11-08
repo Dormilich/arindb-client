@@ -187,8 +187,9 @@ class CommonRWS
 	 * @param string $parentNet 
 	 * @return TicketedRequest
 	 */
-	public function assign(Net $payload, $parentNet)
+	public function assign(Net $payload)
 	{
+		$parentNet = $this->getParentNet($payload);
 		return $this->submit('POST', sprintf('net/%s/reassign', $parentNet), [], $payload);
 	}
 
@@ -201,9 +202,26 @@ class CommonRWS
 	 * @param string $parentNet 
 	 * @return TicketedRequest
 	 */
-	public function allocate(Net $payload, $parentNet)
+	public function allocate(Net $payload, $parentNet = NULL)
 	{
+		$parentNet = $this->getParentNet($payload);
 		return $this->submit('POST', sprintf('net/%s/reallocate', $parentNet), [], $payload);
+	}
+
+	/**
+	 * Get the parent net handle from the net payload.
+	 * 
+	 * @param Net $net A Net payload.
+	 * @return string Parent net handle.
+	 */
+	private function getParentNet(Net $net)
+	{
+		$parentNet = $net['parentNet']->getValue();
+
+		if (!$parentNet) {
+			throw new RequestException('Parent Net handle is not defined.');
+		}
+		return $parentNet;
 	}
 
 	/**
