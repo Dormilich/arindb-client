@@ -1,7 +1,7 @@
 <?php
 // CommonRWS.php
 
-namespace Dormilich\WebService\ARIN\RWS;
+namespace Dormilich\WebService\ARIN;
 
 use Dormilich\WebService\Adapter\ClientAdapter;
 use Dormilich\WebService\ARIN\XMLHandler;
@@ -130,7 +130,7 @@ class CommonRWS
 	 * @param Payload $payload 
 	 * @return Payload
 	 */
-	public function modify(Payload $payload)
+	public function update(Payload $payload)
 	{
 		return $this->submit('PUT', $payload->getName() . '/' . $payload['handle'], [], $payload);
 	}
@@ -142,7 +142,7 @@ class CommonRWS
 	 * @param Payload $payload 
 	 * @return Payload
 	 */
-	public function remove(Payload $payload)
+	public function delete(Payload $payload)
 	{
 		return $this->submit('DELETE', $payload->getName() . '/' . $payload['handle']);
 	}
