@@ -84,12 +84,59 @@ Exceptions are fired for
 
 ## Setting up the web service
 
-I’ve not created that part yet.
+For the web service to work, you need a connection object that implements the `ClientAdapter` interface. This can be 
+an existing library or you can write the connectivity functionality yourself (although I recommend the first option). 
+
+To configure the web service itself there are four options to set:
+- _environment_ : either "live" for the prduction database or "test" for the OT&E database.
+- _password_ : your respective API key for accessing either database.
+- _encoding_ : the encoding charset for the XML you will send. Defaults to UTF-8.
+- _strict_ : set this option to FALSE if you want to bypass the pre-serialisation validity check. Defaults to TRUE.
 
 ## Working with the web service
 
-See above.
+Once you have this connection, you then decide which web service object to work with. Since there is no uniform 
+logic in ARIN’s REST URLs they were grouped to offer a sensible implementation. Currently there is:
+- _CommonRWS_ : relates to operations on Customer, Net, Org, and Poc (Point of Contact) resources. 
+(needs to be extended for further Poc handling)
+- _TicketRWS_ : for working with ARIN tickets.
+- _ReportRWS_ : request reports for certain resources 
+- _RoutingRWS_ : for routes, nameservers, and delegations.
+
+
+```php
+use Dormilich\WebService\ARIN\Payloads\Customer;
+use Dormilich\WebService\ARIN\Payloads\Net;
+use Dormilich\WebService\ARIN\WebService\CommonRWS;
+
+$client = new MyClient(…);
+$arin = new CommonRWS($client, [
+    'environment' => 'live',
+    'password'    => 'my-arin-password',
+]);
+
+$payload = new Customer;
+
+# set up customer object …
+
+// don’t ask why customers are assigned to a net
+$customer = $arin->create($payload, 'PARENT-NET-HANDLE');
+
+// assign a net with that customer
+
+$net = new Net;
+
+# assign network properties, among that…
+$net['customer']  = $customer['handle'];
+$net['parentNet'] = 'PARENT-NET-HANDLE';
+
+// subnets are assigned to customers
+// (or allocated to organisations)
+$net = $arin->assign($net)['net'];
+``` 
 
 ## Error handling
 
-See above.
+The error handling depends on how your connection object handles HTTP errors. If the Reg-RWS returns an error 
+payload, you can convert that to an object via `Payload::loadXML()` or you use the object you received from 
+the web service call if your connection didn’t throw an exception.
