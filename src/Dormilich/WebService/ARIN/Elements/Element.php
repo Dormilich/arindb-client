@@ -262,6 +262,17 @@ class Element implements ElementInterface, XMLHandler
 	}
 
 	/**
+	 * Convenience method to check an elements name.
+	 * 
+	 * @param string $name Tag name.
+	 * @return boolean
+	 */
+	public function hasName($name)
+	{
+		return $this->getName() === $name;
+	}
+
+	/**
 	 * Returns TRUE if the element’s text content is not empty.
 	 * 
 	 * @return boolean
@@ -291,7 +302,7 @@ class Element implements ElementInterface, XMLHandler
 			throw new ParserException('Tag name mismatch on reading XML.');
 		}
 		// set value
-		$this->setValue((string) $sxe);
+		$this->setValue($sxe);
 		// set attributes
 		foreach ($sxe->attributes() as $name => $value) {
 			$this->__set($name, $value);

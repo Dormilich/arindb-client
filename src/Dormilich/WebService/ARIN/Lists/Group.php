@@ -139,6 +139,17 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	}
 
 	/**
+	 * Convenience method to check an elements name.
+	 * 
+	 * @param string $name Tag name.
+	 * @return boolean
+	 */
+	public function hasName($name)
+	{
+		return $this->getName() === $name;
+	}
+
+	/**
 	 * Check if any member of the collection is valid.
 	 * 
 	 * @return boolean

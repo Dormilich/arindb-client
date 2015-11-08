@@ -109,6 +109,17 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 	}
 
 	/**
+	 * Convenience method to check an elements name.
+	 * 
+	 * @param string $name Tag name.
+	 * @return boolean
+	 */
+	public function hasName($name)
+	{
+		return $this->getName() === $name;
+	}
+
+	/**
 	 * Fallback if a payload’s value is accessed as if it were an element. 
 	 * Can also be used to convert the payload into an array.
 	 * 

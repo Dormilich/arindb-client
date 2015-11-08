@@ -22,6 +22,14 @@ interface XMLHandler
 	public function getName();
 
 	/**
+	 * Convenience method to check an elements name.
+	 * 
+	 * @param string $name Tag name.
+	 * @return boolean
+	 */
+	public function hasName($name);
+
+	/**
 	 * Determines if an element is valid. The XML serialiser may 
 	 * choose to omit empty elements in the serialisation process.
 	 * 
