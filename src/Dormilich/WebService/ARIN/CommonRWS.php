@@ -79,6 +79,24 @@ class CommonRWS extends WebServiceSetup
 			throw new RequestException('Parent net handle missing.');
 		}
 
+		if ($payload instanceof Net) {
+			if (!$payload['parentNet']->isValid()) {
+				throw new RequestException('Parent Net handle is not defined.');
+			}
+
+			if ($payload['customer']->isValid()) {
+				$path = sprintf('net/%s/reassign', $payload['parentNet']);
+			}
+			elseif ($payload['org']->isValid()) {
+				$path = sprintf('net/%s/reallocate', $payload['parentNet']);
+			}
+			else {
+				throw new RequestException('Customer/Org handle is not defined.');
+			}
+
+			return $this->submit('POST', $path, [], $payload);
+		}
+
 		if ($payload instanceof Org) {
 			if ($param) {
 				return $this->submit('POST', sprintf('net/%s/org', $param), [], $payload);
@@ -93,51 +111,5 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		throw new RequestException('Object of type '.$payload->getName().' does not support direct creation.');
-	}
-
-	/**
-	 * Assign a subnet to a customer.
-	 * 
-	 * @see https://www.arin.net/resources/restfulmethods.html#netreassign
-	 * 
-	 * @param Net $payload 
-	 * @param string $parentNet 
-	 * @return TicketedRequest
-	 */
-	public function assign(Net $payload)
-	{
-		$parentNet = $this->getParentNet($payload);
-		return $this->submit('POST', sprintf('net/%s/reassign', $parentNet), [], $payload);
-	}
-
-	/**
-	 * Assign a subnet to an organisation.
-	 * 
-	 * @see https://www.arin.net/resources/restfulmethods.html#netreallocate
-	 * 
-	 * @param Net $payload 
-	 * @param string $parentNet 
-	 * @return TicketedRequest
-	 */
-	public function allocate(Net $payload, $parentNet = NULL)
-	{
-		$parentNet = $this->getParentNet($payload);
-		return $this->submit('POST', sprintf('net/%s/reallocate', $parentNet), [], $payload);
-	}
-
-	/**
-	 * Get the parent net handle from the net payload.
-	 * 
-	 * @param Net $net A Net payload.
-	 * @return string Parent net handle.
-	 */
-	private function getParentNet(Net $net)
-	{
-		$parentNet = $net['parentNet']->getValue();
-
-		if (!$parentNet) {
-			throw new RequestException('Parent Net handle is not defined.');
-		}
-		return $parentNet;
 	}
 }
