@@ -26,7 +26,8 @@ class CommonRWS extends WebServiceSetup
 	 */
 	public function read(Payload $payload)
 	{
-		return $this->submit('GET', $payload->getName() . '/' . $payload['handle']);
+		$path = $payload->getName() . '/' . $payload['handle'];
+		return $this->submit('GET', $path);
 	}
 
 	/**
@@ -38,7 +39,8 @@ class CommonRWS extends WebServiceSetup
 	 */
 	public function update(Payload $payload)
 	{
-		return $this->submit('PUT', $payload->getName() . '/' . $payload['handle'], [], $payload);
+		$path = $payload->getName() . '/' . $payload['handle'];
+		return $this->submit('PUT', $path, [], $payload);
 	}
 
 	/**
@@ -50,12 +52,13 @@ class CommonRWS extends WebServiceSetup
 	 */
 	public function delete(Payload $payload)
 	{
-		return $this->submit('DELETE', $payload->getName() . '/' . $payload['handle']);
+		$path = $payload->getName() . '/' . $payload['handle'];
+		return $this->submit('DELETE', $path);
 	}
 
 	/**
-	 * Create a Customer, Org, or Poc resource. Depending on the object, you 
-	 * may need to pass additional information.
+	 * Create a Customer, Net, Org, or Poc resource. Depending on the object, 
+	 * you may need to pass additional information.
 	 *  - Poc + make link: assign Poc to your account
 	 *  - Org + net handle: assign the Org to a net
 	 *  - Customer + net handle: the parent net handle is required
@@ -63,8 +66,8 @@ class CommonRWS extends WebServiceSetup
 	 * @param Payload $payload 
 	 * @param mixed $param 
 	 * @return Payload
-	 * @throws Exception Payload is not a Customer, Org, or Poc.
-	 * @throws Exception Parent net handle missing for Customer.
+	 * @throws RequestException Payload is not a Customer, Net, Org, or Poc.
+	 * @throws RequestException Parent net handle missing for Customer.
 	 */
 	public function create(Payload $payload, $param = NULL)
 	{
@@ -73,10 +76,11 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		if ($payload instanceof Customer) {
-			if ($param) {
-				return $this->submit('POST', sprintf('net/%s/customer', $param), [], $payload);
+			if (!$param) {
+				throw new RequestException('Parent net handle missing.');
 			}
-			throw new RequestException('Parent net handle missing.');
+			$path = sprintf('net/%s/customer', $param);
+			return $this->submit('POST', $path, [], $payload);
 		}
 
 		if ($payload instanceof Net) {
@@ -98,10 +102,11 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		if ($payload instanceof Org) {
+			$path = 'org';
 			if ($param) {
-				return $this->submit('POST', sprintf('net/%s/org', $param), [], $payload);
+				$path = sprintf('net/%s/org', $param);
 			}
-			return $this->submit('POST', 'org', [], $payload);
+			return $this->submit('POST', $path, [], $payload);
 		}
 
 		if ($payload instanceof Poc) {
