@@ -359,15 +359,21 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 
 	/**
 	 * Parse an XML string into the respective payload object. If no suitable 
-	 * payload class is found, put it into a group.
+	 * payload class is found, put it into a group. 
 	 * 
 	 * @param string $xmlString 
 	 * @return Payload|Group
+	 * @throws ErrorException XML reading error.
 	 */
 	public static function loadXML($xmlString)
 	{
+		set_error_handler(function ($code, $msg, $file, $line) {
+			restore_error_handler();
+			throw new \ErrorException($msg, 0, $code, $file, $line);
+		});
 		$xml = simplexml_load_string($xmlString);
 		$class = __NAMESPACE__ . '\\' . ucfirst($xml->getName());
+		restore_error_handler();
 
 		if (class_exists($class)) {
 			$payload = new $class;

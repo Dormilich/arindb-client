@@ -7,6 +7,7 @@ use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
+use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
 use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
 /**
@@ -289,6 +290,7 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 * 
 	 * @param integer|string $offset Collection element index or name.
 	 * @return mixed Returns NULL if index does not exist.
+	 * @throws NotFoundException Element not found.
 	 */
 	public function offsetGet($offset)
 	{
@@ -297,7 +299,13 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 			return $this->value[$offset];
 		}
 		// first named
-		return $this->fetch($offset);
+		$elem = $this->fetch($offset);
+
+		if (!$elem) {
+			throw new NotFoundException('Element '.$offset.' not found.');
+		}
+
+		return $elem;
 	}
 
 	/**

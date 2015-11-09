@@ -192,9 +192,17 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame($a, $g['foo']);
         $this->assertSame($c, $g['bar']);
-        $this->assertNull($g['quux']);
 
         $this->assertSame([$a, $b], $g->filter('foo'));
+    }
+
+    /**
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\NotFoundException
+     */
+    public function testGetNonExistingElementFails()
+    {
+        $g = new Group('test');
+        $g['quux'];
     }
 
     // NamedGroup
