@@ -22,10 +22,10 @@ use Dormilich\WebService\ARIN\Elements\Selection;
  */
 class NetBlock extends Payload
 {
-	public function __construct()
+	public function __construct($flag = IP::UNPADDED)
 	{
 		$this->name = 'netBlock';
-		$this->init();
+		$this->init($flag);
 	}
 
 	protected function init()
@@ -36,9 +36,10 @@ class NetBlock extends Payload
 		];
 		$this->create(new Selection('type', $abbr));
 		$this->create(new Element('description'));
-		$this->create(new IP('startAddress', IP::UNPADDED), 'start');
-		$this->create(new IP('endAddress', IP::UNPADDED), 'end');
-		$this->create(new Integer('cidrLength', 0, 128), 'cidr');
+		$flag = func_get_arg(0); // can’t change method parameters
+		$this->create(new IP('startAddress', $flag), 'start');
+		$this->create(new IP('endAddress', $flag), 'end');
+		$this->create(new Integer('cidrLength', 0, 128), 'length');
 	}
 
 	public function isValid()
@@ -46,7 +47,7 @@ class NetBlock extends Payload
 		$type  = $this->get('type')->isValid();
 		$start = $this->get('start')->isValid();
 		$end   = $this->get('end')->isValid();
-		$cidr  = $this->get('cidr')->isValid();
+		$cidr  = $this->get('length')->isValid();
 
 		return $type and $start and ($end or $cidr);
 	}
@@ -54,5 +55,16 @@ class NetBlock extends Payload
 	public function toXML()
 	{
 		throw new \LogicException('This Net Block Payload should not be submitted by itself.');
+	}
+
+	public function __toString()
+	{
+		$start  = $this->get('start');
+		$length = $this->get('length');
+
+		if ($start->isValid() and $length->isValid()) {
+			return inet_ntop(inet_pton($start->getValue())) . '/' . $length;
+		}
+		return '';
 	}
 }
