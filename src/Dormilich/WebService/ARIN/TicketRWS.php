@@ -55,14 +55,6 @@ class TicketRWS extends WebServiceSetup
 
 	// tickets
 
-	private function getExtrawurst($msgRef)
-	{
-		return http_build_query([
-			'apikey'  => $this->config['password'], 
-			'msgRefs' => $this->bool2string($msgRef),
-		], '', '&', \PHP_QUERY_RFC3986);
-	}
-
 	/**
 	 * Get a ticket. The msgRefs parameter specifies, whether messages or 
 	 * message references shall be returned.
@@ -73,12 +65,10 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function read(Ticket $ticket, $refs = false)
 	{
-		$query = $this->getExtrawurst($refs);
-		$path = sprintf('ticket/%s?%s', $ticket['ticketNo'], $query);
-
-		$xml = $this->client->request('GET', $path);
-
-		return Payload::loadXML($xml);
+		$path = 'ticket/' . $ticket['ticketNo'];
+		return $this->submit('GET', $path, [
+			'msgRefs' => $this->bool2string($refs)
+		]);
 	}
 
 	/**
@@ -104,8 +94,11 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function update(Ticket $ticket, $refs = false)
 	{
-        $query = $this->getExtrawurst($refs);
-        $path = sprintf('ticket/%s?%s', $ticket['ticketNo'], $query);
+		$path  = 'ticket/' . $ticket['ticketNo'];
+		$path .= '?'.  http_build_query([
+			'apikey'  => $this->config['password'], 
+			'msgRefs' => $this->bool2string($refs),
+		], '', '&', \PHP_QUERY_RFC3986);
 
         $body = $ticket->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
 		$xml = $this->client->request('PUT', $path, $body);
@@ -125,23 +118,21 @@ class TicketRWS extends WebServiceSetup
 	public function search($type, $status, $summary = false)
 	{
 		$path = 'ticket';
-		$options = [];
-
-		if ($type) {
-			$options['ticketType'] = strtoupper($type);
-		}
-		if ($status) {
-			$options['ticketStatus'] = strtoupper($status);
-		}
 
 		if ($summary) {
 			$path .= '/summary';
 		}
-
-		if (count($options)) {
-			return $this->submit('GET', $path, $options);
+		if ($type) {
+			$path .= ';ticketType=' . strtoupper($type);
 		}
-		throw new RequestException('Search constraints must not be empty.');
+		if ($status) {
+			$path .= ';ticketStatus=' . strtoupper($status);
+		}
+
+		if (strpos($path, ';') === false) {
+			throw new RequestException('Search constraints must not be empty.');
+		}
+		return $this->submit('GET', $path);
 	}
 
 	// messages

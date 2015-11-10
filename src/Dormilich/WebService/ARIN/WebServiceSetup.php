@@ -74,15 +74,15 @@ abstract class WebServiceSetup
      * @param Payload|NULL $body The payload object.
      * @return Payload The parsed response.
      */
-    protected function submit($method, $path, array $options = array(), Payload $body = NULL)
+    protected function submit($method, $path, array $query = array(), Payload $body = NULL)
     {
         if ($body) {
             $body = $body->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
         }
-        if (count($options)) {
-            $path .= ';' . http_build_query($options, '', ';', \PHP_QUERY_RFC3986);
-        }
-        $path .= '?apikey=' . rawurlencode($this->config['password']);
+
+        $apikey = ['apikey' => rawurlencode($this->config['password'])];
+
+        $path .= '?' . http_build_query($apikey + $query, '', '&', \PHP_QUERY_RFC3986);
 
         $xml = $this->client->request($method, $path, $body);
 
