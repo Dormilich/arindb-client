@@ -127,7 +127,7 @@ $net['customer']  = $customer->getHandle();
 $net['parentNet'] = 'PARENT-NET-HANDLE';
 
 // don’t ask me why there is a need for a wrapper
-$response = $arin->create($net)['net'];
+$response = $arin->create($net);
 
 // mind that a network assignment will result 
 // in a ticket if the automated process failed.
