@@ -29,7 +29,7 @@ class Payload_TestCase extends \PHPUnit_Framework_TestCase
         return $document;
     }
 
-    public function getClient($name)
+    public function getClient($name = NULL)
     {
         if (empty($name)) {
             return new MockClient('<xml/>');

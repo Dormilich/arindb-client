@@ -6,12 +6,34 @@ use Test\Payload_TestCase;
 
 class CustomerRequestTest extends Payload_TestCase
 {
-    public function testCreateCustomer()
+    public function testServiceDefaultsToTestDatabase()
     {
-        $client = $this->getClient('customer');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
 
         $this->assertFalse($arin->isProduction());
+    }
+
+    public function testSetServiceToTestDatabase()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client, ['environment' => 'test']);
+
+        $this->assertFalse($arin->isProduction());
+    }
+
+    public function testSetServiceToProductionDatabase()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client, ['environment' => 'live']);
+
+        $this->assertTrue($arin->isProduction());
+    }
+
+    public function testCreateCustomer()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
 
         $payload = new Customer;
 
@@ -30,11 +52,10 @@ class CustomerRequestTest extends Payload_TestCase
         $payload['created'] = 'Mon Nov 07 14:04:28 EST 2011';
         $payload['private'] = 'off';
 
-        $customer = $arin->create($payload, 'PARENTNETHANDLE');
+        $arin->create($payload, 'PARENTNETHANDLE');
 
         $this->assertSame('POST', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/net/PARENTNETHANDLE/customer?apikey=', $client->url);
-        $this->assertEquals($payload, $customer);
     }
 
     /**
@@ -42,7 +63,7 @@ class CustomerRequestTest extends Payload_TestCase
      */
     public function testCreateCustomerWithoutNetHandleFails()
     {
-        $client = $this->getClient('customer');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
         $payload = new Customer;
 
@@ -51,16 +72,13 @@ class CustomerRequestTest extends Payload_TestCase
 
     public function testReadCustomer()
     {
-        $client = $this->getClient('customer');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
-
-        $this->assertFalse($arin->isProduction());
 
         $customer = $arin->read(new Customer('CUST'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/customer/CUST?apikey=', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Customer', $customer);
     }
 
     public function testUpdateCustomer()
@@ -68,47 +86,37 @@ class CustomerRequestTest extends Payload_TestCase
         $client = $this->getClient('customer');
         $arin = new CommonRWS($client);
 
-        $this->assertFalse($arin->isProduction());
-
         $payload = $arin->read(new Customer('CUST'));
+        $payload['private'] = 'off';
 
-        // edit properties here
-
-        $customer = $arin->update($payload);
+        $arin->update($payload);
 
         $this->assertSame('PUT', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/customer/CUST?apikey=', $client->url);
-        $this->assertEquals($payload, $customer);
     }
 
     public function testDeleteCustomer()
     {
-        $client = $this->getClient('customer');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
 
-        $this->assertFalse($arin->isProduction());
-
-        $customer = $arin->delete(new Customer('CUST'));
+        $arin->delete(new Customer('CUST'));
 
         $this->assertSame('DELETE', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/customer/CUST?apikey=', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Customer', $customer);
     }
 
     public function testReadLiveCustomer()
     {
-        $client = $this->getClient('customer');
+        $client = $this->getClient();
         $arin = new CommonRWS($client, [
             'environment' => 'live',
             'password'    => 'my-pass-word',
         ]);
 
-        $this->assertTrue($arin->isProduction());
-
-        $customer = $arin->read(new Customer('CUST'));
+        $arin->read(new Customer('CUST'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.arin.net/rest/customer/CUST?apikey=my-pass-word', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Customer', $customer);
     }
 }

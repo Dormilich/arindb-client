@@ -12,7 +12,7 @@ class TicketRequestTest extends Payload_TestCase
 {
 	public function testServiceDefaultsToTestDatabase()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$this->assertFalse($arin->isProduction());
@@ -20,7 +20,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSetServiceToTestDatabase()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client, ['environment' => 'test']);
 
 		$this->assertFalse($arin->isProduction());
@@ -28,7 +28,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSetServiceToProductionDatabase()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client, ['environment' => 'live']);
 
 		$this->assertTrue($arin->isProduction());
@@ -36,7 +36,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testAsnReportFromString()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report('AS123');
@@ -47,7 +47,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testAsnReportFromElement()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report(Element::createWith('originAS', 'AS123'));
@@ -61,7 +61,7 @@ class TicketRequestTest extends Payload_TestCase
 	 */
 	public function testAsnReportFromInvalidElementFails()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report(Element::createWith('test', 'AS123'));
@@ -69,7 +69,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testAssociationReport()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report();
@@ -80,7 +80,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testNetReportWithIPv4()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report('192.168.2.1');
@@ -91,7 +91,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testNetReportWithIPv6()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report('2001:db8::1428:57ab');
@@ -102,7 +102,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testNetReportWithNetBlock()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$address = new NetBlock;
@@ -117,7 +117,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testReassignmentReport()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->report(new Net('NET-HANDLE'));
@@ -128,7 +128,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testGetTicketSummary()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->summary(new Ticket('12345'));
@@ -139,7 +139,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testGetTicketDetails()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->read(new Ticket('12345'));
@@ -150,7 +150,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testGetTicketDetailsWithRefs()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->read(new Ticket('12345'), true);
@@ -193,7 +193,7 @@ class TicketRequestTest extends Payload_TestCase
 	 */
 	public function testCloseTicketWithoutPrefetchFails()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$ticket = new Ticket('TICKETNO');
@@ -207,7 +207,7 @@ class TicketRequestTest extends Payload_TestCase
 	 */
 	public function testSearchTicketWithoutConstraintsFails()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->search(false, false);
@@ -215,7 +215,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSearchTicketWithType()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->search('ASN_REQUEST', false);
@@ -226,7 +226,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSearchTicketWithStatus()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->search(false, 'ABANDONED');
@@ -237,7 +237,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSearchTicketWithTypeAndStatus()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->search('ASN_REQUEST', 'ABANDONED');
@@ -248,7 +248,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testSearchTicketSummaryWithTypeAndStatus()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$arin->search('ASN_REQUEST', 'ABANDONED', true);
@@ -259,7 +259,7 @@ class TicketRequestTest extends Payload_TestCase
 
 	public function testAddTicketMessage()
 	{
-		$client = $this->getClient(NULL);
+		$client = $this->getClient();
 		$arin = new TicketRWS($client);
 
 		$ticket = new Ticket('TICKETNO');

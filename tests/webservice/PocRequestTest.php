@@ -10,10 +10,8 @@ class PocRequestTest extends Payload_TestCase
 {
     public function testCreatePoc()
     {
-        $client = $this->getClient('poc');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
-
-        $this->assertFalse($arin->isProduction());
 
         $payload = new Poc;
         $phone = new Phone;
@@ -42,11 +40,10 @@ class PocRequestTest extends Payload_TestCase
         $phone['type']['code'] = 'O';
         $payload['phones'] = $phone;
 
-        $poc = $arin->create($payload);
+        $arin->create($payload);
 
         $this->assertSame('POST', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc;makeLink=false?apikey=', $client->url);
-        $this->assertEquals($payload, $poc);
 
         $poc = $arin->create($payload, true);
 
@@ -56,16 +53,13 @@ class PocRequestTest extends Payload_TestCase
 
     public function testReadPoc()
     {
-        $client = $this->getClient('poc');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
 
-        $this->assertFalse($arin->isProduction());
-
-        $poc = $arin->read(new Poc('ARIN-HOSTMASTER'));
+        $arin->read(new Poc('ARIN-HOSTMASTER'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc/ARIN-HOSTMASTER?apikey=', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Poc', $poc);
     }
 
     public function testUpdatePoc()
@@ -73,47 +67,37 @@ class PocRequestTest extends Payload_TestCase
         $client = $this->getClient('poc');
         $arin = new CommonRWS($client);
 
-        $this->assertFalse($arin->isProduction());
-
         $payload = $arin->read(new Poc('ARIN-HOSTMASTER'));
+        $payload['company'] = 'ARIN';
 
-        // edit properties here
-
-        $poc = $arin->update($payload);
+        $arin->update($payload);
 
         $this->assertSame('PUT', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc/ARIN-HOSTMASTER?apikey=', $client->url);
-        $this->assertEquals($payload, $poc);
     }
 
     public function testDeletePoc()
     {
-        $client = $this->getClient('poc');
+        $client = $this->getClient();
         $arin = new CommonRWS($client);
 
-        $this->assertFalse($arin->isProduction());
-
-        $poc = $arin->delete(new Poc('ARIN-HOSTMASTER'));
+        $arin->delete(new Poc('ARIN-HOSTMASTER'));
 
         $this->assertSame('DELETE', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc/ARIN-HOSTMASTER?apikey=', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Poc', $poc);
     }
 
     public function testReadLivePoc()
     {
-        $client = $this->getClient('poc');
+        $client = $this->getClient();
         $arin = new CommonRWS($client, [
             'environment' => 'live',
             'password'    => 'my-pass-word',
         ]);
 
-        $this->assertTrue($arin->isProduction());
-
-        $poc = $arin->read(new Poc('ARIN-HOSTMASTER'));
+        $arin->read(new Poc('ARIN-HOSTMASTER'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.arin.net/rest/poc/ARIN-HOSTMASTER?apikey=my-pass-word', $client->url);
-        $this->assertInstanceOf('Dormilich\WebService\ARIN\Payloads\Poc', $poc);
     }
 }
