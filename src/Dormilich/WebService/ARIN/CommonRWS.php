@@ -69,6 +69,8 @@ class CommonRWS extends WebServiceSetup
 	 * resources (phone, email) are deleted (@see CommonRWS::parseParam()).
 	 * 
 	 * If a Net delete cannot be automatically processed, a Ticket is issued.
+	 * If a Net payload contains a customer handle, it is tried to delete the 
+	 * customer resource first.
 	 * 
 	 * Examples:
 	 *  - Customer              => customer resource
@@ -91,6 +93,12 @@ class CommonRWS extends WebServiceSetup
 	public function delete(Primary $payload, $param = false, $type = false)
 	{
 		$path = $this->getPath($payload);
+
+		if ($payload instanceof Net) {
+			if ($payload['customer']->isValid()) {
+				$this->delete(new Customer($payload['customer']));
+			}
+		}
 
 		if ($param and $payload instanceof Poc) {
 			$path .= $this->parseParam($param);
