@@ -34,7 +34,7 @@ class NetRequestTest extends Payload_TestCase
 
         $block['type']  = 'A';
         $block['start'] = '10.0.0.0';
-        $block['cidr']  = 24;
+        $block['length']  = 24;
         $payload['net'] = $block;
 
         $payload['netName']   = 'NETNAME';
@@ -57,7 +57,7 @@ class NetRequestTest extends Payload_TestCase
 
         $block['type']  = 'A';
         $block['start'] = '10.0.0.0';
-        $block['cidr']  = 24;
+        $block['length']  = 24;
         $payload['net'] = $block;
 
         $payload['netName']   = 'NETNAME';

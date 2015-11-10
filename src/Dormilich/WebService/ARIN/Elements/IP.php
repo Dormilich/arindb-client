@@ -49,7 +49,7 @@ class IP extends Element
 				$this->padding = self::PADDED;
 			}
 			elseif (self::UNPADDED === $args[0]) {
-				$this->padding = false;
+				$this->padding = self::UNPADDED;
 			}
 		}
 	}

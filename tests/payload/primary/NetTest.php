@@ -14,7 +14,7 @@ class NetTest extends Payload_TestCase
 
 		$block['type']  = 'A';
 		$block['start'] = '10.0.0.0';
-		$block['cidr']  = 24;
+		$block['length']  = 24;
 		$payload['net'] = $block;
 
 		$payload['netName']   = 'NETNAME';
@@ -32,7 +32,7 @@ class NetTest extends Payload_TestCase
 		$block['type']  = 'A';
 		$block['start'] = '010.000.000.000';
 		$block['end']   = '010.000.000.255';
-		$block['cidr']  = 24;
+		$block['length']  = 24;
 		$block['description'] = 'DESCRIPTION';
 
 		$payload['version']   = 4;
@@ -59,7 +59,7 @@ class NetTest extends Payload_TestCase
 
 		$block['type']  = 'A';
 		$block['start'] = '10.0.0.0';
-		$block['cidr']  = 24;
+		$block['length']  = 24;
 		$payload['net'] = $block;
 
 		$payload['netName']   = 'NETNAME';

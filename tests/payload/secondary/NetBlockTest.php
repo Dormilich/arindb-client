@@ -152,28 +152,28 @@ class NetBlockTest extends Payload_TestCase
 	{
 		$payload = new NetBlock;
 
-		$this->assertFalse($payload['cidr']->isValid());
-		$this->assertNull($payload['cidr']->getValue());
+		$this->assertFalse($payload['length']->isValid());
+		$this->assertNull($payload['length']->getValue());
 
-		$payload['cidr'] = 29;
+		$payload['length'] = 29;
 
-		$this->assertTrue($payload['cidr']->isValid());
-		$this->assertSame(29, $payload['cidr']->getValue());
+		$this->assertTrue($payload['length']->isValid());
+		$this->assertSame(29, $payload['length']->getValue());
 
-		unset($payload['cidr']);
-		$this->assertFalse($payload['cidr']->isValid());
+		unset($payload['length']);
+		$this->assertFalse($payload['length']->isValid());
 
 		// using name instead of alias
 
 		$payload['cidrLength'] = 18;
 
 		$this->assertSame(18, $payload['cidrLength']->getValue());
-		$this->assertSame(18, $payload['cidr']->getValue());
+		$this->assertSame(18, $payload['length']->getValue());
 
 		// boundaries
 
-		$payload['cidr'] = 0;
-		$payload['cidr'] = 128;
+		$payload['length'] = 0;
+		$payload['length'] = 128;
 	}
 
 	public function invalidPrefixProvider()
@@ -190,7 +190,7 @@ class NetBlockTest extends Payload_TestCase
 	public function testCidrLengthWithInvalidInput($value)
 	{
 		$payload = new NetBlock;
-		$payload['cidr'] = $value;
+		$payload['length'] = $value;
 	}
 
 	public function testGetPayloadAsArray()
@@ -210,7 +210,7 @@ class NetBlockTest extends Payload_TestCase
 
 		$payload['description'] = 'subnet';
 		$payload['type'] = 'FX';
-		$payload['cidr'] = 27;
+		$payload['length'] = 27;
 
 		$this->assertSame([
 			'type' => 'FX', 
@@ -256,7 +256,7 @@ class NetBlockTest extends Payload_TestCase
 		$payload['type'] = 'A';
 		$payload['description'] = 'DESCRIPTION';
 		$payload['start'] = '10.0.0.0';
-		$payload['cidr'] = 24;
+		$payload['length'] = 24;
 
 		$this->assertTrue($payload->isValid());
 
