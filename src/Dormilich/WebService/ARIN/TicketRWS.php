@@ -11,6 +11,10 @@ use Dormilich\WebService\ARIN\Payloads\NetBlock;
 use Dormilich\WebService\ARIN\Payloads\Message;
 use Dormilich\WebService\ARIN\Payloads\Ticket;
 
+/**
+ * Handle anything that is processed through tickets. That concerns ticket 
+ * messages/attachments, reports, and ROA.
+ */
 class TicketRWS extends WebServiceSetup
 {
 	// reports
@@ -23,7 +27,7 @@ class TicketRWS extends WebServiceSetup
 	 *  - ASN report: originAS element (from Net) or string
 	 * 
 	 * @param mixed $param 
-	 * @return Payload
+	 * @return Ticket
 	 */
 	public function report($param = NULL)
 	{
@@ -108,7 +112,7 @@ class TicketRWS extends WebServiceSetup
 
 	/**
 	 * Search for tickets by status and/or type. If the summary parameter is set 
-	 * to TRUE, the tickets are returned without messages.
+	 * to TRUE, the tickets are returned without messages (ticket summaries).
 	 * 
 	 * @param string $type Ticket type.
 	 * @param string $status Ticket status.
@@ -157,7 +161,7 @@ class TicketRWS extends WebServiceSetup
 	 * 
 	 * @param Ticket $ticket 
 	 * @param integer $msgPos Position of the message in the ticket.
-	 * @return type
+	 * @return Ticket
 	 */
 	public function getMessage(Ticket $ticket, $msgPos = 0)
 	{
@@ -174,7 +178,7 @@ class TicketRWS extends WebServiceSetup
 	 * @param Ticket $ticket 
 	 * @param integer $msgPos Position of the message in the ticket.
 	 * @param integer $attPos Position of the attachment in the message.
-	 * @return type
+	 * @return <application/octet-stream>
 	 */
 	public function getAttachment(Ticket $ticket, $msgPos = 0, $attPos = 0)
 	{
