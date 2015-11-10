@@ -13,10 +13,11 @@ use Dormilich\WebService\ARIN\Elements\Selection;
  */
 class PhoneType extends Payload
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'type';
 		$this->init();
+		$this->set('code', $handle);
 	}
 
 	protected function init()
@@ -33,5 +34,10 @@ class PhoneType extends Payload
 	public function toXML()
 	{
 		throw new \LogicException('This Phone Type Payload should not be submitted by itself.');
+	}
+
+	public function __toString()
+	{
+		return (string) $this->get('code');
 	}
 }

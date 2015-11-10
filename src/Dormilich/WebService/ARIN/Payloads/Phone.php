@@ -32,4 +32,9 @@ class Phone extends Payload
 		return  $this->get('type')->isValid()
 			and $this->get('number')->isValid();
 	}
+
+	public function __toString()
+	{
+		return (string) $this->get('number');
+	}
 }

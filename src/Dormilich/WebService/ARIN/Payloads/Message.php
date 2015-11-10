@@ -59,4 +59,9 @@ class Message extends Payload
 
 		return ($subj and $cat and ($text or $att));
 	}
+
+	public function __toString()
+	{
+		return implode(\PHP_EOL, $this->get('text')->getValue());
+	}
 }

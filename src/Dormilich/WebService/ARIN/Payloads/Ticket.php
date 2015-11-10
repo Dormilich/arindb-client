@@ -52,6 +52,14 @@ class Ticket extends Payload
 		$this->create(new Element('webTicketResolution'), 'resolution');
 	}
 
+	/**
+	 * Tickets are pretty much read-only but other requests need its PK.
+	 */
+	public function getHandle()
+	{
+		return $this->get('ticketNo')->getValue();
+	}
+
 	public function isValid()
 	{
 		// only the status may be changed to "closed"

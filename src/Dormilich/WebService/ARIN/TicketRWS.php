@@ -65,7 +65,7 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function read(Ticket $ticket, $refs = false)
 	{
-		$path = 'ticket/' . $ticket['ticketNo'];
+		$path = 'ticket/' . $ticket->getHandle();
 		return $this->submit('GET', $path, [
 			'msgRefs' => $this->bool2string($refs)
 		]);
@@ -79,7 +79,7 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function summary(Ticket $ticket)
 	{
-		$path = sprintf('ticket/%s/summary', $ticket['ticketNo']);
+		$path = sprintf('ticket/%s/summary', $ticket->getHandle());
 		return $this->submit('GET', $path);
 	}
 
@@ -94,7 +94,7 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function update(Ticket $ticket, $refs = false)
 	{
-		$path  = 'ticket/' . $ticket['ticketNo'];
+		$path  = 'ticket/' . $ticket->getHandle();
 		$path .= '?'.  http_build_query([
 			'apikey'  => $this->config['password'], 
 			'msgRefs' => $this->bool2string($refs),
@@ -146,7 +146,7 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function addMessage(Ticket $ticket, Message $message)
 	{
-		$path = sprintf('ticket/%s/message', $ticket['ticketNo']);
+		$path = sprintf('ticket/%s/message', $ticket->getHandle());
 		return $this->submit('PUT', $path, [], $message);
 	}
 
@@ -161,7 +161,7 @@ class TicketRWS extends WebServiceSetup
 	 */
 	public function getMessage(Ticket $ticket, $msgPos = 0)
 	{
-		$path = sprintf('ticket/%s/message/%s', $ticket['ticketNo'], 
+		$path = sprintf('ticket/%s/message/%s', $ticket->getHandle(), 
 			$ticket['messageReferences'][$msgPos]['id']);
 		return $this->submit('GET', $path);
 	}
@@ -181,7 +181,7 @@ class TicketRWS extends WebServiceSetup
 		$message = $ticket['messageReferences'][$msgPos];
 		$attachment = $message['attachmentReferences'][$attPos];
 
-		$path = sprintf('ticket/%s/message/%s/attachment/%s', $ticket['ticketNo'], 
+		$path = sprintf('ticket/%s/message/%s/attachment/%s', $ticket->getHandle(), 
 			$message['id'], $attachment['id']);
 		return $this->submit('GET', $path);
 	}

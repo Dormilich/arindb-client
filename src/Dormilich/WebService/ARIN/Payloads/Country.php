@@ -5,7 +5,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
-
+use Dormilich\WebService\ARIN\Exceptions\ARINException;
 /**
  * The Country Payload identifies a country using two-digit, three-digit, 
  * and/or e164 codes.
@@ -17,10 +17,16 @@ use Dormilich\WebService\ARIN\Elements\LengthElement;
  */
 class Country extends Payload
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'iso3166-1';
 		$this->init();
+
+		try {
+			$this->set('code2', $handle);
+		} catch (ARINException $e) {
+			$this->set('code3', $handle);
+		}
 	}
 
 	protected function init()
@@ -40,5 +46,20 @@ class Country extends Payload
 	public function toXML()
 	{
 		throw new \LogicException('This Country Payload should not be submitted by itself.');
+	}
+
+	public function __toString()
+	{
+		$code2 = $this->get('code2');
+		if ($code2->isValid()) {
+			return $code2->getValue();
+		}
+
+		$code3 = $this->get('code3');
+		if ($code3->isValid()) {
+			return $code3->getValue();
+		}
+
+		return '';
 	}
 }
