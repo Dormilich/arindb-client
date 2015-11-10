@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
@@ -46,7 +47,7 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  * 
  *     Note: Each POC must have at least one Office Phone listed.
  */
-class Poc extends Payload
+class Poc extends Payload implements Primary
 {
 	public function __construct($handle = NULL)
 	{
@@ -74,6 +75,11 @@ class Poc extends Payload
 		$this->create(new ObjectGroup('phones', 'Phone'));
 	}
 
+	public function getHandle()
+	{
+		return $this->get('handle')->getValue();
+	}
+
 	public function isValid()
 	{
 		if ($this->get('type')->getValue() === 'ROLE') {
@@ -83,12 +89,23 @@ class Poc extends Payload
 
 			return $company and $last and !$first;
 		}
-		elseif ($this->get('type')->getValue() === 'PERSON') {
+		if ($this->get('type')->getValue() === 'PERSON') {
 			$first   = $this->get('firstName')->isValid();
 			$last    = $this->get('lastName')->isValid();
 
 			return $first and $last;
 		}
 		return false;
+	}
+
+	public function __toString()
+	{
+		if ($this->get('type')->getValue() === 'ROLE') {
+			return sprintf('%s (%s)', $this->get('lastName'), $this->get('company'));
+		}
+		if ($this->get('type')->getValue() === 'PERSON') {
+			return implode(' ', $this->filter('firstName', 'lastName'));
+		}
+		return (string) $this->get('handle');
 	}
 }

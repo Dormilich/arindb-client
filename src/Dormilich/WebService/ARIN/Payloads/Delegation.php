@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Lists\NamedGroup;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
@@ -13,12 +14,13 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  * The name field is automatically generated after you submit the payload, 
  * and should be left blank.
  */
-class Delegation extends Payload
+class Delegation extends Payload implements Primary
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'delegation';
 		$this->init();
+		$this->set('name', $handle);
 	}
 
 	protected function init()
@@ -28,10 +30,20 @@ class Delegation extends Payload
 		$this->create(new NamedGroup('nameservers', 'nameserver'));
 	}
 
+	public function getHandle()
+	{
+		return $this->get('name')->getValue();
+	}
+
 	// not sue about the keys, though
 	public function isValid()
 	{
 		return   $this->get('nameservers')->isValid()
 			and !$this->get('name')->isValid();
+	}
+
+	public function __toString()
+	{
+		return (string) $this->get('name');
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Boolean;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
@@ -34,7 +35,7 @@ use Dormilich\WebService\ARIN\Lists\MultiLine;
  * value from the original, omit them entirely, or leave them blank, it will 
  * return an error.
  */
-class Customer extends Payload
+class Customer extends Payload implements Primary
 {
 	public function __construct($handle = NULL)
 	{
@@ -58,11 +59,21 @@ class Customer extends Payload
 		$this->create(new Boolean('privateCustomer'), 'private');
 	}
 
+	public function getHandle()
+	{
+		return $this->get('handle')->getValue();
+	}
+
 	// not sure if there are any constraints at all ...
 	public function isValid()
 	{
 		return array_reduce($this->elements, function ($carry, $item) {
 			return $carry or $item->isValid();
 		}, false);
+	}
+
+	public function __toString()
+	{
+		return (string) $this->get('name');
 	}
 }

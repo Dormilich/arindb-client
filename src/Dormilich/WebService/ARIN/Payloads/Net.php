@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -58,7 +59,7 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  * 
  * For information on the pocLinks field, see the POC Link Payload.
  */
-class Net extends Payload
+class Net extends Payload implements Primary
 {
 	public function __construct($handle = NULL)
 	{
@@ -80,6 +81,11 @@ class Net extends Payload
 		$this->create(new Element('netName'), 'name');
 		$this->create(new NamedGroup('originASes', 'originAS'), 'ASN');
 		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');
+	}
+
+	public function getHandle()
+	{
+		return $this->get('handle')->getValue();
 	}
 
 	// this one is quite tricky to figure out
@@ -125,5 +131,10 @@ class Net extends Payload
 		return array_reduce($mod, function ($carry, $item) {
 			return $carry or $item->isValid();
 		}, false);
+	}
+
+	public function __toString()
+	{
+		return (string) $this->get('name');
 	}
 }

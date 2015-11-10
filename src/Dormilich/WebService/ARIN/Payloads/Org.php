@@ -2,6 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -47,7 +48,7 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  *  - ISO-3166-1 is mandatory for all ORGs.
  *  - ISO-3166-2 is required for U.S. and Canada.
  */
-class Org extends Payload
+class Org extends Payload implements Primary
 {
 	public function __construct($handle = NULL)
 	{
@@ -73,6 +74,11 @@ class Org extends Payload
 		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');
 	}
 
+	public function getHandle()
+	{
+		return $this->get('handle')->getValue();
+	}
+
 	public function isValid()
 	{
 		// there’s not much in the docs…
@@ -80,5 +86,10 @@ class Org extends Payload
 		$date   = $this->get('created')->isValid();
 
 		return !($handle xor $date);
+	}
+
+	public function __toString()
+	{
+		return (string) $this->get('orgName');
 	}
 }
