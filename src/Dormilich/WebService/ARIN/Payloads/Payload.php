@@ -13,7 +13,7 @@ use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
 use Dormilich\WebService\ARIN\Exceptions\NotFoundException;
 use Dormilich\WebService\ARIN\Exceptions\ParserException;
 
-abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
+abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \Iterator
 {
 	/**
 	 * @var string REG-RWS XML namespace.
@@ -382,6 +382,14 @@ abstract class Payload implements XMLHandler, \ArrayAccess, \Iterator
 			$payload = new Group($xml->getName());
 		}
 		return $payload->parse($xml);
+	}
+
+	/**
+	 * @see http://php.net/JsonSerializable
+	 */
+	public function jsonSerialize()
+	{
+		return $this->getValue(true);
 	}
 
 	/**

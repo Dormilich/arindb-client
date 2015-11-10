@@ -95,19 +95,13 @@ To configure the web service itself there are four options to set:
 
 ## Working with the web service
 
-Once you have this connection, you then decide which web service object to work with. Since there is no uniform 
-logic in ARIN’s REST URLs they were grouped to offer a sensible implementation. Currently there is:
-- _CommonRWS_ : relates to operations on Customer, Net, Org, and Poc (Point of Contact) resources. 
-(needs to be extended for further Poc handling)
-- _TicketRWS_ : for working with ARIN tickets.
-- _ReportRWS_ : request reports for certain resources 
-- _RoutingRWS_ : for routes, nameservers, and delegations.
-
+There are two web service objects available: _TicketRWS_ for anything that is processed through tickets (tickets, 
+reports, and ROA) and _CommonRWS_ that relates to CRUD operations (such as assigning a network to a customer).
 
 ```php
+use Dormilich\WebService\ARIN\WebService\CommonRWS;
 use Dormilich\WebService\ARIN\Payloads\Customer;
 use Dormilich\WebService\ARIN\Payloads\Net;
-use Dormilich\WebService\ARIN\WebService\CommonRWS;
 
 $client = new MyClient(…);
 $arin = new CommonRWS($client, [
@@ -115,24 +109,41 @@ $arin = new CommonRWS($client, [
     'password'    => 'my-arin-password',
 ]);
 
-$payload = new Customer;
+/* set up customer */
 
-# set up customer object …
+$customer = new Customer;
 
-// don’t ask why customers are assigned to a net
-$customer = $arin->create($payload, 'PARENT-NET-HANDLE');
+# set up customer object…
 
-// assign a net with that customer
+// don’t ask me why customers have to be newly created for every net
+$customer = $arin->create($customer, 'PARENT-NET-HANDLE');
+
+/* set up net with that customer */
 
 $net = new Net;
 
 # assign network properties, among that…
-$net['customer']  = $customer['handle'];
+$net['customer']  = $customer->getHandle();
 $net['parentNet'] = 'PARENT-NET-HANDLE';
 
-// subnets are assigned to customers
-// (or allocated to organisations)
-$net = $arin->assign($net)['net'];
+// don’t ask me why there is a need for a wrapper
+$response = $arin->create($net)['net'];
+
+// mind that a network assignment will result 
+// in a ticket if the automated process failed.
+try {
+    $net = $response['net'];
+}
+catch (Exception $e) {
+    $ticket = $response['ticket'];
+}
+
+// alternately fetch the first element
+$net = $response[0];
+
+if ($net instanceof Net) {
+    # net successfully assigned
+}
 ``` 
 
 ## Error handling
@@ -140,3 +151,11 @@ $net = $arin->assign($net)['net'];
 The error handling depends on how your connection object handles HTTP errors. If the Reg-RWS returns an error 
 payload, you can convert that to an object via `Payload::loadXML()` or you use the object you received from 
 the web service call if your connection didn’t throw an exception.
+
+## Note
+
+All payloads and group elements are iterable and can therefore be used directly in a `foreach()` loop. 
+Additionally, payloads can be serialised into JSON.
+
+All elements can be converted into a string. If there is an XML attribute associated with that element, 
+you can access it as the object’s property.

@@ -14,7 +14,7 @@ use Dormilich\WebService\ARIN\Exceptions\ParserException;
  * This class accepts any serialisable object(s) as its content.
  * The main use of this class is to provide a container for nested payloads.
  */
-class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAccess, \Countable
+class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAccess, \Countable, \IteratorAggregate
 {
 	/**
 	 * @var string $name The element’s tag name.
@@ -352,5 +352,17 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	public function count()
 	{
 		return count($this->value);
+	}
+
+	/**
+	 * Returns an iterator of the contained elements.
+	 * 
+	 * @see http://php.net/IteratorAggregate
+	 * 
+	 * @return ArrayIterator
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->value);
 	}
 }
