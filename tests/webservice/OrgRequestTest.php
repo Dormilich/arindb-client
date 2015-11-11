@@ -69,7 +69,7 @@ class OrgRequestTest extends Payload_TestCase
         $client = $this->getClient();
         $arin = new CommonRWS($client);
 
-        $org = $arin->read(new Org('ARIN'));
+        $arin->read(new Org('ARIN'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/org/ARIN?apikey=', $client->url);
@@ -79,8 +79,6 @@ class OrgRequestTest extends Payload_TestCase
     {
         $client = $this->getClient('org');
         $arin = new CommonRWS($client);
-
-        $this->assertFalse($arin->isProduction());
 
         $payload = $arin->read(new Org('ARIN'));
         $payload['postalCode'] = 90210;
@@ -96,7 +94,7 @@ class OrgRequestTest extends Payload_TestCase
         $client = $this->getClient();
         $arin = new CommonRWS($client);
 
-        $org = $arin->delete(new Org('ARIN'));
+        $arin->delete(new Org('ARIN'));
 
         $this->assertSame('DELETE', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/org/ARIN?apikey=', $client->url);
@@ -110,7 +108,7 @@ class OrgRequestTest extends Payload_TestCase
             'password'    => 'my-pass-word',
         ]);
 
-        $org = $arin->read(new Org('ARIN'));
+        $arin->read(new Org('ARIN'));
 
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.arin.net/rest/org/ARIN?apikey=my-pass-word', $client->url);

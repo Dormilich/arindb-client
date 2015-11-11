@@ -52,7 +52,5 @@ class DelegationTest extends Payload_TestCase
 		], $payload->getValue());
 		$this->assertSame('RSA/SHA-1', $payload['delegationKeys'][0]['algorithm']->name);
 		$this->assertSame('SHA-1',     $payload['delegationKeys'][0]['digestType']->name);
-
-		$this->assertFalse($payload->isValid());
 	}
 }

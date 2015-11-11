@@ -38,8 +38,7 @@ class Delegation extends Payload implements Primary
 	// not sue about the keys, though
 	public function isValid()
 	{
-		return   $this->get('nameservers')->isValid()
-			and !$this->get('name')->isValid();
+		return $this->get('nameservers')->isValid();
 	}
 
 	public function __toString()
