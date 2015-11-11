@@ -120,6 +120,58 @@ class CommonRWS extends WebServiceSetup
 	}
 
 	/**
+	 * Create a Customer, Net, Org, or Poc resource. Depending on the object, 
+	 * you may need to pass additional information.
+	 * 
+	 * Note: Whether a Net is reassigned or reallocated is determined by the 
+	 * existence of a customer or org handle. Additionally, the parent net 
+	 * handle must be set.
+	 * 
+	 * If a Net allocation/assignment cannot be automatically processed, 
+	 * a Ticket is issued.
+	 * 
+	 * Examples:
+	 *  - Net                            => network (via TicketedRequest)
+	 *  - Org                            => org (via Ticket)
+	 *  - Org + Net                      => org for reallocation
+	 *  - Org + 'parent-net-handle'      => org for reallocation
+	 *  - Customer + Net                 => customer for reassignment
+	 *  - Customer + 'parent-net-handle' => customer for reassignment
+	 *  - Poc [ + false ]                => immutable Poc
+	 *  - Poc + true                     => editable Poc
+	 * 
+	 * @param Primary $payload 
+	 * @param mixed $param 
+	 * @return Payload
+	 * @throws RequestException Payload is not a Customer, Net, Org, or Poc.
+	 * @throws RequestException Parent net handle missing for Customer.
+	 */
+	public function create(Primary $payload, $param = NULL)
+	{
+		if ($param instanceof Net) {
+			$param = $param->getHandle();
+		}
+
+		if ($payload instanceof Customer) {
+			return $this->createCustomer($payload, $param);
+		}
+
+		if ($payload instanceof Net) {
+			return $this->createNet($payload);
+		}
+
+		if ($payload instanceof Org) {
+			return $this->createOrg($payload, $param);
+		}
+
+		if ($payload instanceof Poc) {
+			return $this->createPoc($payload, $param);
+		}
+
+		throw new RequestException('Object of type '.$payload->getName().' does not support direct creation.');
+	}
+
+	/**
 	 * Add a phone or email to the poc resource or a nameserver to the 
 	 * delegation resource.
 	 * 
@@ -135,23 +187,12 @@ class CommonRWS extends WebServiceSetup
 	 */
 	public function add(Primary $payload, $param)
 	{
-		$path = $this->getPath($payload);
-
 		if ($payload instanceof Poc) {
-			if ($param instanceof Phone) {
-				$path .= '/phone';
-				return $this->submit('PUT', $path, [], $param);
-			}
-
-			if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
-				$path .= '/email/' . $param;
-				return $this->submit('POST', $path);
-			}
+			return $this->addPocData($payload, $param);
 		}
 
 		if ($payload instanceof Delegation) {
-			$path .= '/nameserver/' . $param;
-			return $this->submit('POST', $path);
+			return $this->addNameserver($payload, $param);
 		}
 
 		throw new RequestException('Invalid input given.');
@@ -188,77 +229,109 @@ class CommonRWS extends WebServiceSetup
 	}
 
 	/**
-	 * Create a Customer, Net, Org, or Poc resource. Depending on the object, 
-	 * you may need to pass additional information.
+	 * Add a phone or email resource.
 	 * 
-	 * Note: Whether a Net is reassigned or reallocated is determined by the 
-	 * existence of a customer or org handle. Additionally, the parent net 
-	 * handle must be set.
-	 * 
-	 * If a Net allocation/assignment cannot be automatically processed, 
-	 * a Ticket is issued.
-	 * 
-	 * Examples:
-	 *  - Net                            => network (via TicketedRequest)
-	 *  - Org                            => org (via Ticket)
-	 *  - Org + Net                      => org for reallocation
-	 *  - Org + 'parent-net-handle'      => org for reallocation
-	 *  - Customer + Net                 => customer for reassignment
-	 *  - Customer + 'parent-net-handle' => customer for reassignment
-	 *  - Poc [ + false ]                => immutable Poc
-	 *  - Poc + true                     => editable Poc
-	 * 
-	 * @param Primary $payload 
-	 * @param mixed $param 
-	 * @return Payload
-	 * @throws RequestException Payload is not a Customer, Net, Org, or Poc.
-	 * @throws RequestException Parent net handle missing for Customer.
+	 * @param Poc $payload Poc payload.
+	 * @param string|Phone $param Phone number or email address.
+	 * @return Poc
 	 */
-	public function create(Primary $payload, $param = NULL)
+	private function addPocData(Poc $payload, $param)
 	{
-		if ($param instanceof Net) {
-			$param = $param->getHandle();
+		$path = $this->getPath($payload);
+
+		if ($param instanceof Phone) {
+			$path .= '/phone';
+			return $this->submit('PUT', $path, [], $param);
 		}
 
-		if ($payload instanceof Customer) {
-			if (!$param) {
-				throw new RequestException('Parent net handle missing.');
-			}
-			$path = sprintf('net/%s/customer', $param);
-			return $this->submit('POST', $path, [], $payload);
+		if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
+			$path .= '/email/' . $param;
+			return $this->submit('POST', $path);
+		}
+	}
+
+	/**
+	 * Add a nameserver.
+	 * 
+	 * @param Delegation $payload Delegation payload.
+	 * @param string $param Nameserver.
+	 * @return Delegation
+	 */
+	private function addNameserver(Delegation $payload, $param)
+	{
+		$path  = $this->getPath($payload);
+		$path .= '/nameserver/' . $param;
+
+		return $this->submit('POST', $path);
+	}
+
+	/**
+	 * Create a customer resource.
+	 * 
+	 * @param Customer $payload Customer payload.
+	 * @param string $param Parent net handle.
+	 * @return Customer
+	 */
+	private function createCustomer(Customer $payload, $param)
+	{
+		if (!$param) {
+			throw new RequestException('Parent net handle missing.');
+		}
+		$path = sprintf('net/%s/customer', $param);
+		return $this->submit('POST', $path, [], $payload);
+	}
+
+	/**
+	 * Create a network resource.
+	 * 
+	 * @param Net $payload Net payload.
+	 * @return TicketedRequest
+	 */
+	private function createNet(Net $payload)
+	{
+		if (!$payload['parentNet']->isValid()) {
+			throw new RequestException('Parent Net handle is not defined.');
 		}
 
-		if ($payload instanceof Net) {
-			if (!$payload['parentNet']->isValid()) {
-				throw new RequestException('Parent Net handle is not defined.');
-			}
-
-			if ($payload['customer']->isValid()) {
-				$path = sprintf('net/%s/reassign', $payload['parentNet']);
-			}
-			elseif ($payload['org']->isValid()) {
-				$path = sprintf('net/%s/reallocate', $payload['parentNet']);
-			}
-			else {
-				throw new RequestException('Customer/Org handle is not defined.');
-			}
-
-			return $this->submit('POST', $path, [], $payload);
+		if ($payload['customer']->isValid()) {
+			$path = sprintf('net/%s/reassign', $payload['parentNet']);
+		}
+		elseif ($payload['org']->isValid()) {
+			$path = sprintf('net/%s/reallocate', $payload['parentNet']);
+		}
+		else {
+			throw new RequestException('Customer/Org handle is not defined.');
 		}
 
-		if ($payload instanceof Org) {
-			$path = 'org';
-			if ($param) {
-				$path = sprintf('net/%s/org', $param);
-			}
-			return $this->submit('POST', $path, [], $payload);
-		}
+		return $this->submit('POST', $path, [], $payload);
+	}
 
-		if ($payload instanceof Poc) {
-			$path = 'poc;makeLink=' . $this->bool2string($param);
-			return $this->submit('POST', $path, [], $payload);
+	/**
+	 * Create an organisation resource.
+	 * 
+	 * @param Org $payload Org payload.
+	 * @param string $param Parent net handle.
+	 * @return Org|Ticket
+	 */
+	private function createOrg(Org $payload, $param)
+	{
+		$path = 'org';
+		if ($param) {
+			$path = sprintf('net/%s/org', $param);
 		}
+		return $this->submit('POST', $path, [], $payload);
+	}
 
-		throw new RequestException('Object of type '.$payload->getName().' does not support direct creation.');
+	/**
+	 * Create a poc resource.
+	 * 
+	 * @param Poc $payload Poc payload.
+	 * @param boolean $param TRUE if the poc should be linked to the account.
+	 * @return Poc
+	 */
+	private function createPoc(Poc $payload, $param)
+	{
+		$path = 'poc;makeLink=' . $this->bool2string($param);
+		return $this->submit('POST', $path, [], $payload);
 	}
 }
