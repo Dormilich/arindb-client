@@ -77,9 +77,8 @@ class CommonRWS extends WebServiceSetup
 	 *  - Net                   => network resource (via TicketedRequest)
 	 *  - Org                   => org resource
 	 *  - Poc                   => poc resource
-	 *  - Poc + Phone           => phone number
+	 *  - Poc + Phone           => phone number with that type
 	 *  - Poc + PhoneType       => all phone numbers with that type
-	 *  - Poc + Phone + 'type'  => phone number with that type
 	 *  - Poc + 'type'          => all phone numbers with that type
 	 *  - Poc + 'phone number'  => phone number
 	 *  - Delegation            => all nameservers
@@ -87,10 +86,9 @@ class CommonRWS extends WebServiceSetup
 	 * 
 	 * @param Primary $payload 
 	 * @param mixed $param 
-	 * @param string $type 
 	 * @return Payload
 	 */
-	public function delete(Primary $payload, $param = false, $type = false)
+	public function delete(Primary $payload, $param = false)
 	{
 		$path = $this->getPath($payload);
 
@@ -102,9 +100,6 @@ class CommonRWS extends WebServiceSetup
 
 		if ($param and $payload instanceof Poc) {
 			$path .= $this->parseParam($param);
-			if (strlen($type) === 1 and strpos($path, '/phone/')) {
-				$path .= ';type=' . strtoupper($type);
-			}
 		}
 
 		if ($payload instanceof Delegation) {
@@ -214,15 +209,15 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		if ($param instanceof Phone) {
-			return '/phone/' . $param['number'];
+			return sprintf('/phone/%s;type=%s', $param['number'], $param['type']);
 		}
 
 		if ($param instanceof PhoneType) {
-			return '/phone/type=' . $param['code'];
+			return '/phone;type=' . $param;
 		}
 
 		if (strlen($param) === 1) {
-			return '/phone/type=' . strtoupper($param);
+			return '/phone;type=' . strtoupper($param);
 		}
 
 		return '/phone/' . $param;

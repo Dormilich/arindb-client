@@ -100,4 +100,83 @@ class PocRequestTest extends Payload_TestCase
         $this->assertSame('GET', $client->method);
         $this->assertSame('https://reg.arin.net/rest/poc/ARIN-HOSTMASTER?apikey=my-pass-word', $client->url);
     }
+
+    public function testPocAddPhone()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $phone = new Phone;
+        $phone['number'] = '+1.234.5678';
+        $phone['type']['code'] = 'M';
+
+        $arin->add(new Poc('POCHANDLE'), $phone);
+
+        $this->assertSame('PUT', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone?apikey=', $client->url);
+    }
+
+    public function testPocDeletePhone()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $phone = new Phone;
+        $phone['number'] = '+1.234.5678';
+        $phone['type']['code'] = 'M';
+
+        $arin->delete(new Poc('POCHANDLE'), $phone);
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone/+1.234.5678;type=M?apikey=', $client->url);
+
+        $arin->delete(new Poc('POCHANDLE'), $phone['type']);
+
+        $this->assertSame('DELETE', $client->method);
+        // that one is an educated guess, as this specific case is not demonstrated
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone;type=M?apikey=', $client->url);
+
+        $arin->delete(new Poc('POCHANDLE'), 'M');
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone;type=M?apikey=', $client->url);
+
+        $arin->delete(new Poc('POCHANDLE'), '+1.234.5678');
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone/+1.234.5678?apikey=', $client->url);
+    }
+
+    public function testPocDeletePhoneReadsInvalidInputAsPhoneNumber()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $arin->delete(new Poc('POCHANDLE'), 'fizz-buzz');
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone/fizz-buzz?apikey=', $client->url);
+    }
+
+    public function testPocAddEmail()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $arin->add(new Poc('POCHANDLE'), 'arin@example.com');
+
+        $this->assertSame('POST', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/email/arin@example.com?apikey=', $client->url);
+    }
+
+    public function testPocDeleteEmail()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $arin->delete(new Poc('POCHANDLE'), 'arin@example.com');
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/email/arin@example.com?apikey=', $client->url);
+    }
 }
