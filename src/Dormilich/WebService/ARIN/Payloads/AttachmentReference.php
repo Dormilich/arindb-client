@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * This payload is contained within a MessagePayload returned during a Get 
@@ -25,7 +26,7 @@ class AttachmentReference extends Payload
 		$this->create(new Element('attachmentId'), 'id');
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Attachment Reference Payload should not be submitted by itself.');
 	}

@@ -165,7 +165,8 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	 */
 	public function fetch($name)
 	{
-		return reset($this->filter($name)) ?: NULL;
+		$elements = $this->filter($name);
+		return reset($elements) ?: NULL;
 	}
 
 	/**

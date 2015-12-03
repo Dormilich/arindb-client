@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Selection;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * This represents a phone type. It is a nested element of Phone Payload and 
@@ -31,7 +32,7 @@ class PhoneType extends Payload
 		return $this->get('code')->isValid();
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Phone Type Payload should not be submitted by itself.');
 	}

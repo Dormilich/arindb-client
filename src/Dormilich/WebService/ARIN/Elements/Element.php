@@ -103,7 +103,8 @@ class Element implements ElementInterface, XMLHandler
 			$this->namespace = $namespace;
         }
         else {
-            $this->name = end(explode(':', $tag));
+        	$names = explode(':', $tag);
+            $this->name = end($names);
         }
 	}
 

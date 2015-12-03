@@ -6,6 +6,7 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\Selection;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * The NET Block Payload contains details on the NET Block of the Network 
@@ -52,7 +53,7 @@ class NetBlock extends Payload
 		return $type and $start and ($end or $cidr);
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Net Block Payload should not be submitted by itself.');
 	}

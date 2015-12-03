@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * The Error Payload is returned when any call encounters errors and it 
@@ -30,7 +31,7 @@ class Error extends Payload
 		return false;
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Error Payload should not be submitted at all.');
 	}

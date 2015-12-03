@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * This payload allows you to add attachments to an existing Ticket as part of 
@@ -24,7 +25,7 @@ class Attachment extends Payload
 		$this->create(new Element('filename'));
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Attachment Payload should not be submitted by itself.');
 	}

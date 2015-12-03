@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * This payload is a nested element of a Ticket Payload returned when a Get 
@@ -32,7 +33,7 @@ class MessageReference extends Payload
 		return $this->get('messageId')->isValid();
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Message Reference Payload should not be submitted by itself.');
 	}

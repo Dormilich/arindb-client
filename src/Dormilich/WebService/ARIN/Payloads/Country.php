@@ -6,6 +6,8 @@ use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Exceptions\ARINException;
+use Dormilich\WebService\ARIN\XMLHandler;
+
 /**
  * The Country Payload identifies a country using two-digit, three-digit, 
  * and/or e164 codes.
@@ -43,7 +45,7 @@ class Country extends Payload
 			or $this->get('code3')->isValid();
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Country Payload should not be submitted by itself.');
 	}

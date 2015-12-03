@@ -5,6 +5,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\Selection;
+use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
  * The Delegation Key Payload is the portion of the Delegation Payload that 
@@ -36,7 +37,7 @@ class DelegationKey extends Payload
 		$this->create(new Element('keyTag'));
 	}
 
-	public function toXML()
+	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)
 	{
 		throw new \LogicException('This Delegation Key Payload should not be submitted by itself.');
 	}

@@ -34,7 +34,8 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 */
 	public function __construct($name)
 	{
-		$this->name = end(explode(':', (string) $name));
+		$names = explode(':', (string) $name);
+		$this->name = end($names);
 	}
 
 	/**
