@@ -90,7 +90,7 @@ class IP extends Element
 	protected function validate($value)
 	{
 		// IPv4
-		if (ip2long($value) !== false) {
+		if (filter_var($this->unpad4($value), \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
 			return $this->transformIP($value, 4);
 		}
 		// IPv6
@@ -147,5 +147,22 @@ class IP extends Element
 	{
 		$hex = bin2hex(inet_pton($ip));
 		return implode(':', str_split($hex, 4));
+	}
+
+	/**
+	 * Unpad any IPv4 address so it can be run through filter_var().
+	 * Handling of padded IPv4 addresses is seemingly dependent on the 
+	 * undelying OS. In contrast to transformIP() the input does not 
+	 * need to be valid.
+	 * 
+	 * @param string $value IPv4 candidate string.
+	 * @return string Unpadded IPv4 or original string.
+	 */
+	protected function unpad4($value)
+	{
+		if (preg_match('~^\d{1,3}(\.\d{1,3}){3}$~', $value)) {
+			return vsprintf('%d.%d.%d.%d', explode('.', $value));
+		}
+		return $value;
 	}
 }
