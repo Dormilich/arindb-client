@@ -121,7 +121,7 @@ class IP extends Element
 			return call_user_func([$this, 'pad'.$version], $value);
 		}
 		if ($this->padding === self::UNPADDED) {
-			return inet_ntop(inet_pton($value));
+			return inet_ntop(inet_pton($this->unpad4($value)));
 		}
 		return $value;
 	}
