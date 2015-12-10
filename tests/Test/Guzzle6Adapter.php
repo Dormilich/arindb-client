@@ -35,12 +35,12 @@ class Guzzle6Adapter implements ClientAdapter
     }
 
     /**
-     * Send a request to the targeted API URI and return the JSON parsed response body.
+     * Send a request to the targeted API URI and return the response body.
      * 
      * @param string $method HTTP method.
      * @param string $path Request path.
      * @param string $body Request body.
-     * @return array JSON parsed response body.
+     * @return string Response body.
      */
     public function request($method, $path, $body = NULL)
     {
