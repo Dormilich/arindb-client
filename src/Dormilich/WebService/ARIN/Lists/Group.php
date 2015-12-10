@@ -216,7 +216,8 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 */
 	public function fetch($name)
 	{
-		return reset($this->filter($name)) ?: NULL;
+		$element = $this->filter($name);
+		return reset($element) ?: NULL;
 	}
 
 	/**

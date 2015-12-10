@@ -154,9 +154,17 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 	// Length
 
-	public function testLengthElementAcceptsInputWithStringLength()
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testLengthElementFailsIfMaxSmallerThanMin()
 	{
-		$length = new LengthElement('test', 3);
+		$length = new LengthElement('test', 4, 2);
+	}
+
+	public function testLengthElementAcceptsInputWithStrictStringLength()
+	{
+		$length = new LengthElement('test', 3, 3);
 
 		$length->setValue('foo');
 		$this->assertSame('foo', $length->getValue());
@@ -165,10 +173,28 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('123', $length->getValue());
 	}
 
+	public function validLengthInputProvider()
+	{
+		return [
+			['foo'], [42], ['quux']
+		];
+	}
+
+	/**
+     * @dataProvider validLengthInputProvider
+	 */
+	public function testLengthElementAcceptsValidInputRanges($value)
+	{
+		$length = new LengthElement('test', 2, 4);
+
+		$length->setValue($value);
+		$this->assertEquals($value, $length->getValue());
+	}
+
 	public function invalidLengthInputProvider()
 	{
 		return [
-			[0], [12345], ['foo']
+			[0], [12345], ['quux']
 		];
 	}
 
@@ -178,27 +204,23 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testLengthElementRejectsInvalidInput($value)
 	{
-		$length = new LengthElement('test', 2);
+		$length = new LengthElement('test', 2, 3);
 
 		$length->setValue($value);
 	}
 
-	public function invalidLengthProvider()
-	{
-		return [
-			[0], [-2], [null], ['foo']
-		];
-	}
-
 	/**
-	 * @dataProvider invalidLengthProvider
+     * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
 	 */
-	public function testLengthElementDefaultsToLength1($value)
+	public function testLengthElementDefaultsToMinLength1()
 	{
-		$length = new LengthElement('test', $value);
+		// need to use namespace to satisfy the required parameter count
+		$length = new LengthElement('ns:test', 'http://example.org/namespace');
 
 		$length->setValue('x');
 		$this->assertSame('x', $length->getValue());
+
+		$length->setValue('');
 	}
 
 	public function testLengthElementWithNamespace()

@@ -58,7 +58,7 @@ class Poc extends Payload implements Primary
 
 	protected function init()
 	{
-		$this->create(new LengthElement('iso3166-2', 2), 'state');
+		$this->create(new LengthElement('iso3166-2', 1, 3), 'state');
 		$this->create(new Country, 'country');
 		$this->create(new NamedGroup('emails', 'email'));
 		$this->create(new MultiLine('streetAddress'), 'address');

@@ -11,16 +11,22 @@ use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 class LengthElement extends Element
 {
 	/**
-	 * @var integer $length Required string length.
+	 * @var integer $length Required string minimum length.
 	 */
-	protected $length = 1;
+	protected $min = 1;
+
+	/**
+	 * @var integer $length Required string maximum length.
+	 */
+	protected $max;
 
 	/**
 	 * Set up the element defining the required content length.
 	 * 
 	 * @param string $name Tag name.
 	 * @param string $ns (optional) Namespace URI.
-	 * @param integer $length Content length. Defaults to 1.
+	 * @param integer $min Content minimum length. 
+	 * @param integer $max Content maximum length. 
 	 * @return self
      * @throws LogicException Namespace prefix missing.
 	 */
@@ -28,26 +34,35 @@ class LengthElement extends Element
 	{
         $this->setNamespace((string) $name, $ns);
 
-		$args = array_slice(func_get_args(), 1, 2);
+		$args = array_slice(func_get_args(), 1);
 
 		if ($this->namespace) {
 			array_shift($args);
 		}
 
-		$this->setLength(end($args));
+		call_user_func_array([$this, 'setLength'], $args);
 	}
 
 	/**
-	 * Set the value#s length constraint. Defaults to 1.
+	 * Set the value’s length constraints. The minimum length is 1
 	 * 
 	 * @param mixed $length 
 	 * @return void
 	 */
-	protected function setLength($length)
+	protected function setLength($min = 1, $max = NULL)
 	{
-		$this->length = filter_var($length, \FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 1, 'default' => 1]
-		]);
+		$iMin = filter_var($min, \FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+		$iMax = filter_var($max, \FILTER_VALIDATE_INT, ['options' => ['min_range' => max(1, $iMin)]]);
+
+		if (NULL !== $min and false === $iMin) {
+			throw new \LogicException('The setting for the minimum length must be an integer > 0 or NULL');
+		}
+		if (NULL !== $max and false === $iMax) {
+			throw new \LogicException('The setting for the maximum length must be an integer > 0 or NULL');
+		}
+
+		$this->min = $iMin;
+		$this->max = $iMax;
 	}
 
 	/**
@@ -71,10 +86,25 @@ class LengthElement extends Element
 	 */
 	protected function validate($value)
 	{
-		if (strlen($value) !== $this->length) {
-			$msg = 'Value "%s" does not match the expected length of %d for the [%s] element.';
-			throw new ConstraintException(sprintf($msg, $value, $this->length, $this->getName()));
+		$options = [];
+
+		if ($this->min) {
+			$options['min_range'] = $this->min;
 		}
-		return $value;
+		if ($this->max) {
+			$options['max_range'] = $this->max;
+		}
+
+		// no length restriction
+		if (count($options) === 0) {
+			return $value;
+		}
+
+		if (filter_var(strlen($value), \FILTER_VALIDATE_INT, ['options' => $options])) {
+			return $value;
+		}
+
+		$msg = 'Value "%s" does not match the expected length range of {%s,%s} for the [%s] element.';
+		throw new ConstraintException(sprintf($msg, $value, $this->min, $this->max, $this->getName()));
 	}
 }

@@ -62,7 +62,7 @@ class Org extends Payload implements Primary
 		$this->create(new Country, 'country');
 		$this->create(new MultiLine('streetAddress'), 'address');
 		$this->create(new Element('city'));
-		$this->create(new LengthElement('iso3166-2', 2), 'state');
+		$this->create(new LengthElement('iso3166-2', 1, 3), 'state');
 		$this->create(new Element('postalCode'));
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('registrationDate'), 'created');

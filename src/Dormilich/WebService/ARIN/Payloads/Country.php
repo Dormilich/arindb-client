@@ -34,8 +34,8 @@ class Country extends Payload
 	protected function init()
 	{
 		$this->create(new Element('name'));
-		$this->create(new LengthElement('code2', 2));
-		$this->create(new LengthElement('code3', 3));
+		$this->create(new LengthElement('code2', 2, 2));
+		$this->create(new LengthElement('code3', 3, 3));
 		$this->create(new Integer('e164', 1, 999));
 	}
 
