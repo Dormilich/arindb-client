@@ -76,15 +76,18 @@ abstract class WebServiceSetup
      */
     protected function submit($method, $path, array $query = array(), Payload $body = NULL)
     {
+        $headers = ['Accept' => 'application/xml'];
+
         if ($body) {
             $body = $body->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
+            $headers['Content-Type'] = 'application/xml';
         }
 
         $apikey = ['apikey' => rawurlencode($this->config['password'])];
 
         $path .= '?' . http_build_query($apikey + $query, '', '&', \PHP_QUERY_RFC3986);
 
-        $xml = $this->client->request($method, $path, $body);
+        $xml = $this->client->request($method, $path, $headers, $body);
 
         return Payload::loadXML($xml);
     }    

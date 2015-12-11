@@ -42,7 +42,7 @@ class Guzzle6Adapter implements ClientAdapter
      * @param string $body Request body.
      * @return string Response body.
      */
-    public function request($method, $path, $body = NULL)
+    public function request($method, $path, array $headers = NULL, $body = NULL)
     {
         $options = ['base_uri' => $this->baseUri];
 
@@ -50,6 +50,6 @@ class Guzzle6Adapter implements ClientAdapter
             $options['body'] = $body;
         }
 
-        return $this->client->request($method, $path, $options)->getBody();
+        return $this->client->request($method, $path, $headers, $options)->getBody();
     }
 }

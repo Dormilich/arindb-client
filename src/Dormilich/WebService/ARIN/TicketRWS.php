@@ -104,8 +104,14 @@ class TicketRWS extends WebServiceSetup
 			'msgRefs' => $this->bool2string($refs),
 		], '', '&', \PHP_QUERY_RFC3986);
 
+		$headers = [
+			'Content-Type' => 'application/xml',
+			'Accept' => 'application/xml',
+		];
+
         $body = $ticket->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
-		$xml = $this->client->request('PUT', $path, $body);
+
+		$xml = $this->client->request('PUT', $path, $headers, $body);
 
 		return Payload::loadXML($xml);
 	}
