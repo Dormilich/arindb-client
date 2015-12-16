@@ -43,7 +43,7 @@ class NetRequestTest extends Payload_TestCase
 
         $arin->create($payload);
 
-        $this->assertSame('POST', $client->method);
+        $this->assertSame('PUT', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/net/PARENTNETHANDLE/reassign?apikey=', $client->url);
     }
 
@@ -66,7 +66,7 @@ class NetRequestTest extends Payload_TestCase
 
         $request = $arin->create($payload);
 
-        $this->assertSame('POST', $client->method);
+        $this->assertSame('PUT', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/net/PARENTNETHANDLE/reallocate?apikey=', $client->url);
         $this->assertEquals($request, Payload::loadXML($client->body));
     }

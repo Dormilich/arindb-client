@@ -298,7 +298,7 @@ class CommonRWS extends WebServiceSetup
 			throw new RequestException('Customer/Org handle is not defined.');
 		}
 
-		return $this->submit('POST', $path, [], $payload);
+		return $this->submit('PUT', $path, [], $payload);
 	}
 
 	/**
