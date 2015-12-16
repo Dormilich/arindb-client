@@ -6,6 +6,7 @@ namespace Dormilich\WebService\ARIN;
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Exceptions\RequestException;
 use Dormilich\WebService\ARIN\Payloads\Payload;
+use Dormilich\WebService\ARIN\Payloads\Collection;
 use Dormilich\WebService\ARIN\Payloads\Customer;
 use Dormilich\WebService\ARIN\Payloads\Delegation;
 use Dormilich\WebService\ARIN\Payloads\Net;
@@ -72,6 +73,9 @@ class CommonRWS extends WebServiceSetup
 	 * If a Net payload contains a customer handle, it is tried to delete the 
 	 * customer resource first.
 	 * 
+	 * If a Net contains a customer, the customer is removed as well. In that 
+	 * case a Collection holding the Net and Customer objects is returned.
+	 * 
 	 * Examples:
 	 *  - Customer              => customer resource
 	 *  - Net                   => network resource (via TicketedRequest)
@@ -90,13 +94,11 @@ class CommonRWS extends WebServiceSetup
 	 */
 	public function delete(Primary $payload, $param = false)
 	{
-		$path = $this->getPath($payload);
-
 		if ($payload instanceof Net) {
-			if ($payload['customer']->isValid()) {
-				$this->delete(new Customer($payload['customer']));
-			}
+			return $this->deleteNet($payload);
 		}
+
+		$path = $this->getPath($payload);
 
 		if ($param and $payload instanceof Poc) {
 			$path .= $this->parseParam($param);
@@ -112,6 +114,37 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		return $this->submit('DELETE', $path);
+	}
+
+	/**
+	 * Delete a Net resource. Also delete the Customer resource, if any. 
+	 * This method returns an ObjectGroup object containing either a Ticket, 
+	 * a Net, or a Net and its Customer.
+	 * 
+	 * @param Net $payload 
+	 * @return TicketedRequest|Collection
+	 */
+	private function deleteNet(Net $payload)
+	{
+		$request = $this->submit('DELETE', $this->getPath($payload));
+		$net = $request->fetch('net');
+
+		if (!$net) {
+			return $request;
+		}
+		if (!$net['customer']->isValid()) {
+			return $request;
+		}
+
+		$customer = $this->delete(new Customer($net['customer']));
+
+		// cannot add a Customer to a TicketedRequest, 
+		// so using the only other Payload that is an ObjectGroup 
+		$wrapper = new Collection;
+		$wrapper->addValue($net);
+		$wrapper->addValue($customer);
+
+		return $wrapper;
 	}
 
 	/**
