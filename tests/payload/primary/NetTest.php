@@ -100,7 +100,11 @@ class NetTest extends Payload_TestCase
 			'originASes' => [
 				'AS102'
 			],
-			'pocLinks' => [],
+			'pocLinks' => [[
+				'description' => 'Admin',
+				'handle'      => 'ARIN-HOSTMASTER',
+				'function'    => 'AD',
+			]],
 		], $payload->getValue());
 	}
 }

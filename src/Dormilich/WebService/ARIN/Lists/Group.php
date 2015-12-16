@@ -56,6 +56,13 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	public function getValue()
 	{
 		$defined_only = func_get_arg(0);
+		$array = $this->value;
+
+		if ($defined_only) {
+			$array = array_filter($this->value, function ($e) {
+				return $e->isDefined();
+			});
+		}
 
 		return array_map(function ($e) use ($defined_only) {
 			return $e->getValue($defined_only);
@@ -168,13 +175,15 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	}
 
 	/**
-	 * Check if there are members in the collection. 
+	 * Check if the members (if any) have a value.
 	 * 
 	 * @return boolean
 	 */
 	public function isDefined()
 	{
-		return count($this->value) > 0;
+		return array_reduce($this->value, function ($carry, $item) {
+			return $carry or $item->isDefined();
+		}, false);
 	}
 
 	/**

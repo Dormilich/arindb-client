@@ -23,8 +23,7 @@
             <originAS>AS102</originAS>
         </originASes>
         <pocLinks>
-            <pocLinkRef>
-            </pocLinkRef>
+            <pocLinkRef></pocLinkRef>
         </pocLinks>
     </net>
 </ticketedRequest>

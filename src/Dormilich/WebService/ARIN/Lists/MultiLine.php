@@ -56,6 +56,16 @@ class MultiLine extends Group
 	}
 
 	/**
+	 * Check if there are members in the collection. 
+	 * 
+	 * @return boolean
+	 */
+	public function isDefined()
+	{
+		return count($this->value) > 0;
+	}
+
+	/**
 	 * Createa multi-line payload using the defined tag name.
 	 * 
 	 * @param DOMDocument $doc 

@@ -21,4 +21,7 @@
     <originASes>
         <originAS>AS102</originAS>
     </originASes>
+    <pocLinks>
+        <pocLinkRef description="Admin" handle="ARIN-HOSTMASTER" function="AD"></pocLinkRef>
+    </pocLinks>
 </net>

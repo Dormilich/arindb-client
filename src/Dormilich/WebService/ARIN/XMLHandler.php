@@ -33,7 +33,7 @@ interface XMLHandler
 	 * Determines if an element is valid. The XML serialiser may 
 	 * choose to omit empty elements in the serialisation process.
 	 * 
-	 * @return boolean TRUE if the element scontains (sufficient) data.
+	 * @return boolean TRUE if the element contains (sufficient) data.
 	 */
 	public function isValid();
 

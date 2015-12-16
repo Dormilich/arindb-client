@@ -16,10 +16,18 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  * an embedded Ticket Payload representing the Ticket that was created for 
  * your request. See NET Reassign and NET Reallocate for more details.
  */
-class TicketedRequest extends ObjectGroup
+class TicketedRequest extends ObjectGroup implements \JsonSerializable
 {
 	public function __construct()
 	{
-        parent::__construct('ticketedRequest', ['Ticket', 'Net']);
+		parent::__construct('ticketedRequest', ['Ticket', 'Net']);
+	}
+
+	/**
+	 * @see http://php.net/JsonSerializable
+	 */
+	public function jsonSerialize()
+	{
+		return $this->getValue(true);
 	}
 }

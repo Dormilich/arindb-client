@@ -86,10 +86,10 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	}
 
 	/**
-	 * Fallback if a payload’s value is accessed as if it were an element. 
-	 * Can also be used to convert the payload into an array.
+	 * Check if an element is empty. This is used to select and display only 
+	 * elements with a defined value.
 	 * 
-	 * @return array
+	 * @return boolean
 	 */
 	public function isDefined()
 	{
@@ -306,7 +306,7 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	}
 
 	/**
-	 * Transform the child element and append them to the given node.
+	 * Transform the child elements and append them to the given node.
 	 * 
 	 * @param DOMDocument $doc 
 	 * @param DOMElement $node Node to append elements to and return.
