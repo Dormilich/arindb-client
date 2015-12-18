@@ -20,4 +20,9 @@
     <dbaName>DBANAME</dbaName>
     <taxId>TAXID</taxId>
     <orgUrl>ORGURL</orgUrl>
+    <pocLinks>
+        <pocLinkRef handle="ADMIN-ARIN" function="AD"/>
+        <pocLinkRef handle="ABUSE-ARIN" function="AB"/>
+        <pocLinkRef handle="TECH-ARIN" function="T"/>
+    </pocLinks>
 </org>

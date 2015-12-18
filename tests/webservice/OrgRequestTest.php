@@ -9,7 +9,7 @@ class OrgRequestTest extends Payload_TestCase
     public function testCreateOrgDirectly()
     {
         $client = $this->getClient();
-        $arin = new CommonRWS($client);
+        $arin = new CommonRWS($client, ['strict' => false]);
 
         $payload = new Org;
 
@@ -38,7 +38,7 @@ class OrgRequestTest extends Payload_TestCase
     public function testCreateOrgFromNet()
     {
         $client = $this->getClient();
-        $arin = new CommonRWS($client);
+        $arin = new CommonRWS($client, ['strict' => false]);
 
         $payload = new Org;
 
@@ -78,7 +78,7 @@ class OrgRequestTest extends Payload_TestCase
     public function testUpdateOrg()
     {
         $client = $this->getClient('org');
-        $arin = new CommonRWS($client);
+        $arin = new CommonRWS($client, ['strict' => false]);
 
         $payload = $arin->read(new Org('ARIN'));
         $payload['postalCode'] = 90210;

@@ -1,10 +1,23 @@
 <?php
 
 use Dormilich\WebService\ARIN\Payloads\Org;
+use Dormilich\WebService\ARIN\Payloads\PocLinkRef;
 use Test\Payload_TestCase;
 
 class OrgTest extends Payload_TestCase
 {
+	private function getPocLinks()
+	{
+		$ref1 = new PocLinkRef;
+		$ref1->set('function', 'AD')->set('handle', 'ADMIN-ARIN');
+		$ref2 = new PocLinkRef;
+		$ref2->set('function', 'AB')->set('handle', 'ABUSE-ARIN');
+		$ref3 = new PocLinkRef;
+		$ref3->set('function', 'T')->set('handle', 'TECH-ARIN');
+
+		return [$ref1, $ref2, $ref3];
+	}
+
 	public function testSerialise()
 	{
 		$payload = new Org;
@@ -24,6 +37,7 @@ class OrgTest extends Payload_TestCase
 		$payload['dbaName'] = 'DBANAME';
 		$payload['taxId'] = 'TAXID';
 		$payload['orgUrl'] = 'ORGURL';
+		$payload['poc'] = $this->getPocLinks();
 
 		$this->assertTrue($payload->isValid());
 
@@ -56,7 +70,19 @@ class OrgTest extends Payload_TestCase
 			'dbaName' => 'DBANAME',
 			'taxId'   => 'TAXID',
 			'orgUrl'  => 'ORGURL',
-			'pocLinks' => [],
+			'pocLinks' => [[
+				'description' => null,
+				'handle' => 'ADMIN-ARIN',
+				'function' => 'AD',
+			], [
+				'description' => null,
+				'handle' => 'ABUSE-ARIN',
+				'function' => 'AB',
+			], [
+				'description' => null,
+				'handle' => 'TECH-ARIN',
+				'function' => 'T',
+			]],
 		], $payload->getValue());
 	}
 }

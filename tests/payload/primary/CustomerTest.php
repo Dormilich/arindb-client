@@ -5,19 +5,11 @@ use Test\Payload_TestCase;
 
 class CustomerTest extends Payload_TestCase
 {
-	public function testValidity()
+	public function testSerialise()
 	{
 		$payload = new Customer;
 
 		$this->assertFalse($payload->isValid());
-
-		$payload['handle'] = 'CUSTOMERHANDLE';
-		$this->assertTrue($payload->isValid());
-	}
-
-	public function testSerialise()
-	{
-		$payload = new Customer;
 
 		$payload['name']    = 'CUSTOMERNAME';
 		$payload['country']['name']  = 'UNITED STATES';
