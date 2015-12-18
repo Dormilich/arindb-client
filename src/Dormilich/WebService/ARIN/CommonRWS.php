@@ -351,7 +351,9 @@ class CommonRWS extends WebServiceSetup
 	}
 
 	/**
-	 * Create a poc resource.
+	 * Create a poc resource. If the parameter is not a boolean (i.e. not 
+	 * explicitly set) the makeLink value of the Poc object is used, which 
+	 * defaults to TRUE (link to account). 
 	 * 
 	 * @param Poc $payload Poc payload.
 	 * @param boolean $param TRUE if the poc should be linked to the account.
@@ -359,6 +361,9 @@ class CommonRWS extends WebServiceSetup
 	 */
 	private function createPoc(Poc $payload, $param)
 	{
+		if (!is_bool($param)) {
+			$param = $payload->makeLink();
+		}
 		$path = 'poc;makeLink=' . $this->bool2string($param);
 		return $this->submit('POST', $path, [], $payload);
 	}

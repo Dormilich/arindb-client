@@ -40,7 +40,7 @@ class PocRequestTest extends Payload_TestCase
         $phone['type']['code'] = 'O';
         $payload['phones'] = $phone;
 
-        $arin->create($payload);
+        $arin->create($payload, false);
 
         $this->assertSame('POST', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc;makeLink=false?apikey=', $client->url);
@@ -49,6 +49,19 @@ class PocRequestTest extends Payload_TestCase
 
         $this->assertSame('POST', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/poc;makeLink=true?apikey=', $client->url);
+
+        $poc = $arin->create($payload);
+
+        $this->assertTrue($payload->makeLink());
+        $this->assertSame('POST', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc;makeLink=true?apikey=', $client->url);
+
+        $payload->makeLink(false);
+        $poc = $arin->create($payload);
+
+        $this->assertFalse($payload->makeLink());
+        $this->assertSame('POST', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc;makeLink=false?apikey=', $client->url);
     }
 
     public function testReadPoc()
