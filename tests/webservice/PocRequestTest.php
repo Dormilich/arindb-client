@@ -134,12 +134,12 @@ class PocRequestTest extends Payload_TestCase
 
         $this->assertSame('DELETE', $client->method);
         // that one is an educated guess, as this specific case is not demonstrated
-        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone;type=M?apikey=', $client->url);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone/;type=M?apikey=', $client->url);
 
         $arin->delete(new Poc('POCHANDLE'), 'M');
 
         $this->assertSame('DELETE', $client->method);
-        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone;type=M?apikey=', $client->url);
+        $this->assertSame('https://reg.ote.arin.net/rest/poc/POCHANDLE/phone/;type=M?apikey=', $client->url);
 
         $arin->delete(new Poc('POCHANDLE'), '+1.234.5678');
 

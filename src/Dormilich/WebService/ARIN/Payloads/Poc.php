@@ -82,7 +82,7 @@ class Poc extends Payload implements Primary
 
 	public function isValid()
 	{
-		$elements = $this->fetch('contactType', 'country', 'streetAddress', 'city', 'emails', 'phones');
+		$elements = $this->filter('contactType', 'country', 'streetAddress', 'city', 'emails', 'phones');
 		$required = array_reduce($elements, function ($carry, $item) {
 			return $carry and $item->isValid();
 		}, true);
