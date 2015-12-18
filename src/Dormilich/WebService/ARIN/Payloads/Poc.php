@@ -49,6 +49,8 @@ use Dormilich\WebService\ARIN\Lists\ObjectGroup;
  */
 class Poc extends Payload implements Primary
 {
+	private $linked = true;
+
 	public function __construct($handle = NULL)
 	{
 		$this->name = 'poc';
@@ -112,5 +114,21 @@ class Poc extends Payload implements Primary
 			return implode(' ', $this->filter('firstName', 'lastName'));
 		}
 		return (string) $this->get('handle');
+	}
+
+	/**
+	 * Get the boolean value for the API request’s makeLink option. 
+	 * If a parameter is passed to the function, this method is used as setter.
+	 * 
+	 * The default value is TRUE (link Poc to account).
+	 * 
+	 * @return boolean
+	 */
+	public function makeLink()
+	{
+		if (func_num_args() === 1) {
+			$this->linked = filter_var(func_get_arg(0), \FILTER_VALIDATE_BOOLEAN);
+		}
+		return $this->linked;
 	}
 }
