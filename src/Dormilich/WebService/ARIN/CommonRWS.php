@@ -246,11 +246,11 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		if ($param instanceof PhoneType) {
-			return '/phone;type=' . $param;
+			return '/phone/;type=' . $param;
 		}
 
 		if (strlen($param) === 1) {
-			return '/phone;type=' . strtoupper($param);
+			return '/phone/;type=' . strtoupper($param);
 		}
 
 		return '/phone/' . $param;
@@ -261,7 +261,7 @@ class CommonRWS extends WebServiceSetup
 	 * 
 	 * @param Poc $payload Poc payload.
 	 * @param string|Phone $param Phone number or email address.
-	 * @return Poc
+	 * @return mixed
 	 */
 	private function addPocData(Poc $payload, $param)
 	{
