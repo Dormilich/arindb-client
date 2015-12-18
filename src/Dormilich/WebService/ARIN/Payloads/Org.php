@@ -81,11 +81,10 @@ class Org extends Payload implements Primary
 
 	public function isValid()
 	{
-		// there’s not much in the docs…
-		$handle = $this->get('handle')->isValid();
-		$date   = $this->get('created')->isValid();
-
-		return !($handle xor $date);
+		$elements = $this->filter('streetAddress', 'orgName', 'country', 'city', 'postalCode', 'pocLinks'); 
+		return array_reduce($elements, function ($carry, $item) {
+			return $carry and $item->isValid();
+		}, true);
 	}
 
 	public function __toString()

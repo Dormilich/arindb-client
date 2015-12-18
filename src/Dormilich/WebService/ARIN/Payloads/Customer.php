@@ -64,12 +64,13 @@ class Customer extends Payload implements Primary
 		return $this->get('handle')->getValue();
 	}
 
-	// not sure if there are any constraints at all ...
+	// constraints based on test runs
 	public function isValid()
 	{
-		return array_reduce($this->elements, function ($carry, $item) {
-			return $carry or $item->isValid();
-		}, false);
+		$elements = $this->filter('streetAddress', 'customerName', 'country', 'city', 'postalCode'); 
+		return array_reduce($elements, function ($carry, $item) {
+			return $carry and $item->isValid();
+		}, true);
 	}
 
 	public function __toString()

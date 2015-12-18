@@ -82,17 +82,22 @@ class Poc extends Payload implements Primary
 
 	public function isValid()
 	{
-		if ($this->get('type')->getValue() === 'ROLE') {
-			$company = $this->get('company')->isValid();
-			$first   = $this->get('firstName')->isValid();
-			$last    = $this->get('lastName')->isValid();
+		$elements = $this->fetch('contactType', 'country', 'streetAddress', 'city', 'emails', 'phones');
+		$required = array_reduce($elements, function ($carry, $item) {
+			return $carry and $item->isValid();
+		}, true);
 
-			return $company and $last and !$first;
+		if (!$required) {
+			return false;
+		}
+
+		$first = $this->get('firstName')->isValid();
+		$last  = $this->get('lastName')->isValid();
+
+		if ($this->get('type')->getValue() === 'ROLE') {
+			return $last and !$first and $this->get('company')->isValid();
 		}
 		if ($this->get('type')->getValue() === 'PERSON') {
-			$first   = $this->get('firstName')->isValid();
-			$last    = $this->get('lastName')->isValid();
-
 			return $first and $last;
 		}
 		return false;
