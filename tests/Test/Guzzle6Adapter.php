@@ -39,17 +39,21 @@ class Guzzle6Adapter implements ClientAdapter
      * 
      * @param string $method HTTP method.
      * @param string $path Request path.
+     * @param array $headers Request headers.
      * @param string $body Request body.
      * @return string Response body.
      */
     public function request($method, $path, array $headers = NULL, $body = NULL)
     {
-        $options = ['base_uri' => $this->baseUri];
+        $options = [
+            'base_uri' => $this->baseUri,
+            'headers'  => $headers,
+        ];
 
         if (is_string($body)) {
             $options['body'] = $body;
         }
 
-        return $this->client->request($method, $path, $headers, $options)->getBody();
+        return $this->client->request($method, $path, $options)->getBody();
     }
 }
