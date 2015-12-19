@@ -2,6 +2,7 @@
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Boolean;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
@@ -36,6 +37,10 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$fixed = new Selection('test', [1]);
 		$this->assertInstanceOf(
 			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
+
+		$bool = new Generated('test');
+		$this->assertInstanceOf(
+			'Dormilich\WebService\ARIN\Elements\Element', $bool);
 	}
 
 	// Element
@@ -57,6 +62,30 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$elem->setValue('validation callback test');
 
 		$this->assertTrue($elem->isValid());
+	}
+
+	// Generated
+
+	/**
+     * @expectedException 
+	 */
+	public function testGeneratedCanBeSetOnce()
+	{
+		$elem = new Generated('test');
+		$elem->setValue(1);
+
+		$this->assertTrue($elem->isValid());
+		$this->assertEquals(1, $elem->getValue());
+
+		// need to capture the exception to test the value’s integrity
+		try {
+			$elem->setValue(2);
+			$this->assertTrue(false, 'Failed to issue a PHP warning or converting it to an Exception');
+		}
+		catch (PHPUnit_Framework_Error_Warning $w) {
+			$this->assertTrue(true);
+		}
+		$this->assertEquals(1, $elem->getValue());
 	}
 
 	// Boolean

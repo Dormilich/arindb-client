@@ -16,9 +16,11 @@ class AttachmentReferenceTest extends Payload_TestCase
 
 		$this->assertTrue($payload['id']->isValid());
 		$this->assertSame('paperwork', $payload['id']->getValue());
+	}
 
-		unset($payload['id']);
-		$this->assertFalse($payload['id']->isValid());
+	public function testIdPropertyWithOriginalName()
+	{
+		$payload = new AttachmentReference;
 
 		$payload['attachmentId'] = 'legacy';
 
@@ -82,7 +84,6 @@ class AttachmentReferenceTest extends Payload_TestCase
 		$payload['id'] = 'paperwork';
 		$this->assertFalse($payload->isValid());
 
-		$payload['id'] = 'paperwork';
 		$payload['filename'] = 'test.exe';
 		$this->assertTrue($payload->isValid());
 	}

@@ -17,11 +17,14 @@ class MessageReferenceTest extends Payload_TestCase
 
 		$this->assertTrue($payload['id']->isValid());
 		$this->assertSame('qzufqn', $payload['id']->getValue());
+	}
 
-		unset($payload['id']);
+	public function testIdPropertyWithOriginalName()
+	{
+		$payload = new MessageReference;
+
 		$this->assertFalse($payload['id']->isValid());
-
-		// using name instead of alias
+		$this->assertNull($payload['id']->getValue());
 
 		$payload['messageId'] = 'zenzezgeen';
 
