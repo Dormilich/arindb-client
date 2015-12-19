@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -67,13 +68,13 @@ class Poc extends Payload implements Primary
 		$this->create(new Element('city'));
 		$this->create(new Element('postalCode'));
 		$this->create(new MultiLine('comment'));
-		$this->create(new Element('registrationDate'), 'created');
-		$this->create(new Element('handle'));
+		$this->create(new Generated('registrationDate'), 'created');
+		$this->create(new Generated('handle'));
 		$this->create(new Selection('contactType', ['PERSON', 'ROLE']), 'type');
 		$this->create(new Element('companyName'), 'company');
-		$this->create(new Element('firstName'));
-		$this->create(new Element('middleName'));
-		$this->create(new Element('lastName'));
+		$this->create(new Generated('firstName'));
+		$this->create(new Generated('middleName'));
+		$this->create(new Generated('lastName'));
 		$this->create(new ObjectGroup('phones', 'Phone'));
 	}
 

@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Boolean;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
 /**
@@ -40,16 +41,16 @@ class Ticket extends Payload
 
 		$this->create(new ObjectGroup('messages', 'Message'));
 		$this->create(new ObjectGroup('messageReferences', 'MessageReference'));
-		$this->create(new Element('ticketNo'));
+		$this->create(new Generated('ticketNo'));
 		$this->create(new Boolean('ns4:shared', $uri));
 		$this->create(new Element('ns4:orgHandle', $uri));
-		$this->create(new Element('createdDate'), 'created');
-		$this->create(new Element('resolvedDate'), 'resolved');
-		$this->create(new Element('closedDate'), 'closed');
-		$this->create(new Element('updatedDate'), 'updated');
-		$this->create(new Element('webTicketType'), 'type');
+		$this->create(new Generated('createdDate'), 'created');
+		$this->create(new Generated('resolvedDate'), 'resolved');
+		$this->create(new Generated('closedDate'), 'closed');
+		$this->create(new Generated('updatedDate'), 'updated');
+		$this->create(new Generated('webTicketType'), 'type');
 		$this->create(new Element('webTicketStatus'), 'status');
-		$this->create(new Element('webTicketResolution'), 'resolution');
+		$this->create(new Generated('webTicketResolution'), 'resolution');
 	}
 
 	/**

@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\XMLHandler;
 
 /**
@@ -23,7 +24,7 @@ class AttachmentReference extends Payload
 	protected function init()
 	{
 		$this->create(new Element('attachmentFilename'), 'filename');
-		$this->create(new Element('attachmentId'), 'id');
+		$this->create(new Generated('attachmentId'), 'id');
 	}
 
 	public function toXML($encoding = 'UTF-8', $validate = XMLHandler::VALIDATE)

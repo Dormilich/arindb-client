@@ -5,6 +5,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Boolean;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 
@@ -48,14 +49,14 @@ class Customer extends Payload implements Primary
 	{
 		$this->create(new Element('customerName'), 'name');
 		$this->create(new Country, 'country');
-		$this->create(new Element('handle'));
+		$this->create(new Generated('handle'));
 		$this->create(new MultiLine('streetAddress'), 'address');
 		$this->create(new Element('city'));
 		$this->create(new LengthElement('iso3166-2', 1, 3), 'state');
 		$this->create(new Element('postalCode'));
 		$this->create(new MultiLine('comment'));
 		$this->create(new Element('parentOrgHandle'), 'org');
-		$this->create(new Element('registrationDate'), 'created');
+		$this->create(new Generated('registrationDate'), 'created');
 		$this->create(new Boolean('privateCustomer'), 'private');
 	}
 

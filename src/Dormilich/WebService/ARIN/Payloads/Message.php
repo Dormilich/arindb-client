@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
@@ -30,9 +31,9 @@ class Message extends Payload
 	{
 		$uri = 'http://www.arin.net/regrws/messages/v1';
 		// response only
-		$this->create(new Element('ns2:messageId', $uri), 'id');
+		$this->create(new Generated('ns2:messageId', $uri), 'id');
 		// response only
-		$this->create(new Element('ns2:createdDate', $uri), 'created');
+		$this->create(new Generated('ns2:createdDate', $uri), 'created');
 		$this->create(new Element('subject'));
 		$this->create(new MultiLine('text'));
 		$this->create(new Selection('category', ['NONE', 'JUSTIFICATION']));

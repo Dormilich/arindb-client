@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\Selection;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 use Dormilich\WebService\ARIN\Lists\NamedGroup;
@@ -72,12 +73,12 @@ class Net extends Payload implements Primary
 	{
 		$this->create(new Selection('version', [4, 6]));
 		$this->create(new MultiLine('comment'));
-		$this->create(new Element('registrationDate'), 'created');
-		$this->create(new Element('orgHandle'), 'org');
-		$this->create(new Element('handle'));
+		$this->create(new Generated('registrationDate'), 'created');
+		$this->create(new Generated('orgHandle'), 'org');
+		$this->create(new Generated('handle'));
 		$this->create(new ObjectGroup('netBlocks', 'NetBlock'), 'net');
-		$this->create(new Element('customerHandle'), 'customer');
-		$this->create(new Element('parentNetHandle'), 'parentNet');
+		$this->create(new Generated('customerHandle'), 'customer');
+		$this->create(new Generated('parentNetHandle'), 'parentNet');
 		$this->create(new Element('netName'), 'name');
 		$this->create(new NamedGroup('originASes', 'originAS'), 'ASN');
 		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');

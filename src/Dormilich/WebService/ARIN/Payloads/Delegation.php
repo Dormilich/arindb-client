@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Lists\NamedGroup;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 
@@ -25,7 +26,7 @@ class Delegation extends Payload implements Primary
 
 	protected function init()
 	{
-		$this->create(new Element('name'));
+		$this->create(new Generated('name'));
 		$this->create(new ObjectGroup('delegationKeys', 'DelegationKey'));
 		$this->create(new NamedGroup('nameservers', 'nameserver'));
 	}

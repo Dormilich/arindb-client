@@ -2,7 +2,7 @@
 
 namespace Dormilich\WebService\ARIN\Payloads;
 
-use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
 use Dormilich\WebService\ARIN\XMLHandler;
 
@@ -25,7 +25,7 @@ class MessageReference extends Payload
 	protected function init()
 	{
 		$this->create(new ObjectGroup('attachmentReferences', 'AttachmentReference'));
-		$this->create(new Element('messageId'), 'id');
+		$this->create(new Generated('messageId'), 'id');
 	}
 
 	public function isValid()

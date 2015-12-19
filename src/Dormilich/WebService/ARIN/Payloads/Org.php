@@ -4,6 +4,7 @@ namespace Dormilich\WebService\ARIN\Payloads;
 
 use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\Elements\Element;
+use Dormilich\WebService\ARIN\Elements\Generated;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Lists\MultiLine;
 use Dormilich\WebService\ARIN\Lists\ObjectGroup;
@@ -65,10 +66,10 @@ class Org extends Payload implements Primary
 		$this->create(new LengthElement('iso3166-2', 1, 3), 'state');
 		$this->create(new Element('postalCode'));
 		$this->create(new MultiLine('comment'));
-		$this->create(new Element('registrationDate'), 'created');
-		$this->create(new Element('handle'));
-		$this->create(new Element('orgName'));
-		$this->create(new Element('dbaName'));
+		$this->create(new Generated('registrationDate'), 'created');
+		$this->create(new Generated('handle'));
+		$this->create(new Generated('orgName'));
+		$this->create(new Generated('dbaName'));
 		$this->create(new Element('taxId'));
 		$this->create(new Element('orgUrl'));
 		$this->create(new ObjectGroup('pocLinks', 'PocLinkRef'), 'poc');
