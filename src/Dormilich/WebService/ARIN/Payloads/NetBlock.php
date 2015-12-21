@@ -20,6 +20,34 @@ use Dormilich\WebService\ARIN\XMLHandler;
  * 
  * The description field will be determined by the type you specify, and may 
  * be left blank.
+ * 
+ * Net types:
+ *      A  - Reallocation
+ *      S  - Reassignment
+ *      DA - Direct Allocation
+ *      DS - Direct Assignment
+ *  ARIN
+ *      AR - allocated
+ *      AV - early reservation
+ *  AFRINIC
+ *      AF - allocated
+ *      FX - transferred
+ *  APNIC
+ *      AP - allocated
+ *      PX - early registration
+ *      PV - early reservation
+ *  IANA
+ *      IR - reserved
+ *      IU - special use
+ *  LACNIC
+ *      LN - allocated
+ *      LX - transferred
+ *  RIPE
+ *      RN - allocated
+ *      RV - early reservation
+ *  RIPE NCC
+ *      RD - allocated
+ *      RX - transferred
  */
 class NetBlock extends Payload
 {
