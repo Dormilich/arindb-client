@@ -12,6 +12,7 @@ use Dormilich\WebService\ARIN\Payloads\Delegation;
 use Dormilich\WebService\ARIN\Payloads\Net;
 use Dormilich\WebService\ARIN\Payloads\Org;
 use Dormilich\WebService\ARIN\Payloads\Poc;
+use Dormilich\WebService\ARIN\Payloads\PocLinkRef;
 use Dormilich\WebService\ARIN\Payloads\Phone;
 use Dormilich\WebService\ARIN\Payloads\PhoneType;
 
@@ -104,6 +105,10 @@ class CommonRWS extends WebServiceSetup
 			$path .= $this->parseParam($param);
 		}
 
+		if ($payload instanceof Org and $param instanceof PocLinkRef) {
+			$path .= sprintf('/poc/%s;pocFunction=%s', $param['handle'], $param['function']);
+		}
+
 		if ($payload instanceof Delegation) {
 			if ($param) {
 				$path .= '/nameserver/' . $param;
@@ -145,6 +150,36 @@ class CommonRWS extends WebServiceSetup
 		$wrapper->addValue($customer);
 
 		return $wrapper;
+	}
+
+	/**
+	 * Parse the delete() param when determining the path for deleting an email 
+	 * or phone from a Poc. Returns an email path if the param is an email 
+	 * address, phone type path for a PhoneType payload or s single character, 
+	 * and a phone number path for a Phone payload or anything else.
+	 * 
+	 * @param mixed $param 
+	 * @return string
+	 */
+	private function parseParam($param)
+	{
+		if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
+			return '/email/' . $param;
+		}
+
+		if ($param instanceof Phone) {
+			return sprintf('/phone/%s;type=%s', $param['number'], $param['type']);
+		}
+
+		if ($param instanceof PhoneType) {
+			return '/phone/;type=' . $param;
+		}
+
+		if (strlen($param) === 1) {
+			return '/phone/;type=' . strtoupper($param);
+		}
+
+		return '/phone/' . $param;
 	}
 
 	/**
@@ -197,100 +232,6 @@ class CommonRWS extends WebServiceSetup
 		}
 
 		throw new RequestException('Object of type '.$payload->getName().' does not support direct creation.');
-	}
-
-	/**
-	 * Add a phone or email to the poc resource or a nameserver to the 
-	 * delegation resource.
-	 * 
-	 * Examples:
-	 *  - Poc + Phone               => phone
-	 *  - Poc + 'email'             => email
-	 *  - Delegation + 'server'     => nameserver
-	 * 
-	 * @param Primary $payload A Poc or delegation payload.
-	 * @param mixed $param Phone payload or email address.
-	 * @return Payload A Phone (phone) or Poc (email) payload.
-	 * @throws RequestException Invalid input.
-	 */
-	public function add(Primary $payload, $param)
-	{
-		if ($payload instanceof Poc) {
-			return $this->addPocData($payload, $param);
-		}
-
-		if ($payload instanceof Delegation) {
-			return $this->addNameserver($payload, $param);
-		}
-
-		throw new RequestException('Invalid input given.');
-	}
-
-	/**
-	 * Parse the delete() param when determining the path for deleting an email 
-	 * or phone from a Poc. Returns an email path if the param is an email 
-	 * address, phone type path for a PhoneType payload or s single character, 
-	 * and a phone number path for a Phone payload or anything else.
-	 * 
-	 * @param mixed $param 
-	 * @return string
-	 */
-	private function parseParam($param)
-	{
-		if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
-			return '/email/' . $param;
-		}
-
-		if ($param instanceof Phone) {
-			return sprintf('/phone/%s;type=%s', $param['number'], $param['type']);
-		}
-
-		if ($param instanceof PhoneType) {
-			return '/phone/;type=' . $param;
-		}
-
-		if (strlen($param) === 1) {
-			return '/phone/;type=' . strtoupper($param);
-		}
-
-		return '/phone/' . $param;
-	}
-
-	/**
-	 * Add a phone or email resource.
-	 * 
-	 * @param Poc $payload Poc payload.
-	 * @param string|Phone $param Phone number or email address.
-	 * @return mixed
-	 */
-	private function addPocData(Poc $payload, $param)
-	{
-		$path = $this->getPath($payload);
-
-		if ($param instanceof Phone) {
-			$path .= '/phone';
-			return $this->submit('PUT', $path, [], $param);
-		}
-
-		if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
-			$path .= '/email/' . $param;
-			return $this->submit('POST', $path);
-		}
-	}
-
-	/**
-	 * Add a nameserver.
-	 * 
-	 * @param Delegation $payload Delegation payload.
-	 * @param string $param Nameserver.
-	 * @return Delegation
-	 */
-	private function addNameserver(Delegation $payload, $param)
-	{
-		$path  = $this->getPath($payload);
-		$path .= '/nameserver/' . $param;
-
-		return $this->submit('POST', $path);
 	}
 
 	/**
@@ -366,5 +307,89 @@ class CommonRWS extends WebServiceSetup
 		}
 		$path = 'poc;makeLink=' . $this->bool2string($param);
 		return $this->submit('POST', $path, [], $payload);
+	}
+
+	/**
+	 * Add a phone or email to the poc resource or a nameserver to the 
+	 * delegation resource.
+	 * 
+	 * Examples:
+	 *  - Poc + Phone               => phone (Phone)
+	 *  - Poc + 'email'             => email (Poc)
+	 *  - Delegation + 'server'     => nameserver (Delegation)
+	 *  - Org + PocLinkRef          => poc link (Org)
+	 * 
+	 * @param Primary $payload An Org, Poc, or Delegation payload.
+	 * @param mixed $param Phone or PocLinkRef payload, email address, or nameserver.
+	 * @return Payload 
+	 * @throws RequestException Invalid input.
+	 */
+	public function add(Primary $payload, $param)
+	{
+		if ($payload instanceof Poc) {
+			return $this->addPocData($payload, $param);
+		}
+
+		if ($payload instanceof Delegation) {
+			return $this->addNameserver($payload, $param);
+		}
+
+		if ($payload instanceof Org and $param instanceof PocLinkRef) {
+			return $this->addPocRef($payload, $param);
+		}
+
+		throw new RequestException('Invalid input given.');
+	}
+
+	/**
+	 * Add a phone or email resource. Only the Poc’s handle is required.
+	 * 
+	 * @param Poc $payload Poc payload.
+	 * @param string|Phone $param Phone number or email address.
+	 * @return Poc|Phone
+	 */
+	private function addPocData(Poc $payload, $param)
+	{
+		$path = $this->getPath($payload);
+
+		if ($param instanceof Phone) {
+			$path .= '/phone';
+			return $this->submit('PUT', $path, [], $param);
+		}
+
+		if (filter_var($param, \FILTER_VALIDATE_EMAIL)) {
+			$path .= '/email/' . $param;
+			return $this->submit('POST', $path);
+		}
+	}
+
+	/**
+	 * Add a PocLinkRef to an Org. Only the Org’s handle is required.
+	 * 
+	 * @param Org $org Org payload.
+	 * @param PocLinkRef $ref PocLinkRef payload
+	 * @return Org
+	 */
+	private function addPocRef(Org $org, PocLinkRef $ref)
+	{
+		$path  = $this->getPath($org);
+		$path .= sprintf('/poc/%s;pocFunction=%s', $ref['handle'], $ref['function']);
+
+		return $this->submit('PUT', $path);
+	}
+
+	/**
+	 * Add a nameserver. Only the Delegation’s handle is required.
+	 * 
+	 * @param Delegation $payload Delegation payload.
+	 * @param string $param Nameserver.
+	 * @return Delegation
+	 */
+	private function addNameserver(Delegation $payload, $param)
+	{
+		$path  = $this->getPath($payload);
+		$path .= '/nameserver/' . $param;
+
+		return $this->submit('POST', $path);
 	}
 }
