@@ -17,10 +17,11 @@ use Dormilich\WebService\ARIN\Exceptions\ParserException;
  */
 class PocLinkRef extends Payload
 {
-	public function __construct()
+	public function __construct($handle = NULL)
 	{
 		$this->name = 'pocLinkRef';
 		$this->init();
+		$this->set('handle', $handle);
 	}
 
 	protected function init()
@@ -32,7 +33,8 @@ class PocLinkRef extends Payload
 
 	public function isValid()
 	{
-		return $this->get('function')->isValid();
+		return $this->get('function')->isValid()
+		   and $this->get('handle')->isValid();
 	}
 
 	/**
@@ -43,7 +45,7 @@ class PocLinkRef extends Payload
 	 */
 	public function isDefined()
 	{
-		return $this->get('handle')->isValid();
+		return $this->isValid();
 	}
 
 	/**
