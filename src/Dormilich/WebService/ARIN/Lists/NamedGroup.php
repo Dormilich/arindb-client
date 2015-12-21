@@ -3,11 +3,16 @@
 namespace Dormilich\WebService\ARIN\Lists;
 
 use Dormilich\WebService\ARIN\XMLHandler;
+use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 
 /**
  * This class accepts any serialisable object(s) as its content that match the 
  * predefined tag names.
+ * 
+ * In the current ARIN API there is no case where a tag has child tags of 
+ * variable names, which are not payloads. So the multiple name constraint is 
+ * just for extensibility.
  */
 class NamedGroup extends Group
 {
@@ -65,7 +70,7 @@ class NamedGroup extends Group
 	{
 		// objects must implement XMLHandler
 		$value = parent::convert($value);
-		// check if it's one of the allowed classes
+		// check if it has one of the allowed names
 		if ($this->supports($value)) {
 			return $value;
 		}
@@ -82,5 +87,36 @@ class NamedGroup extends Group
 	public function supports(XMLHandler $value)
 	{
 		return in_array($value->getName(), $this->nameList, true);
+	}
+
+	/**
+	 * Providing a shortcut to add an element to the group. Named groups are 
+	 * usually used only with Elements since they’re created on-the-fly. 
+	 * 
+	 * If there is only one name registered the name parameter may be omitted.
+	 * 
+	 * @param string $name (optional) Element name. 
+	 * @param mixed $value Element value.
+	 * @return self
+	 */
+	public function addElement($input)
+	{
+		if (func_num_args() === 2) {
+			$value = func_get_arg(1);
+			$this->addValue(Element::createWith($input, $value));
+
+			return $this;
+		}
+
+		if (count($this->nameList) > 1) {
+			$msg = 'Could not determine the name to instantiate the element with.';
+			trigger_error($msg, \E_USER_WARNING);
+		}
+		elseif (func_num_args() === 1) {
+			$name = $this->nameList[0];
+			$this->addValue(Element::createWith($name, $input));
+		}
+
+		return $this;
 	}
 }
