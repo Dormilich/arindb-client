@@ -82,7 +82,7 @@ class Org extends Payload implements Primary
 
 	public function isValid()
 	{
-		$elements = $this->filter('streetAddress', 'orgName', 'country', 'city', 'postalCode', 'pocLinks'); 
+		$elements = $this->filter('streetAddress', 'orgName', 'country', 'city', 'pocLinks'); 
 		return array_reduce($elements, function ($carry, $item) {
 			return $carry and $item->isValid();
 		}, true);

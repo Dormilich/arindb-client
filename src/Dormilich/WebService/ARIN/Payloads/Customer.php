@@ -68,7 +68,7 @@ class Customer extends Payload implements Primary
 	// constraints based on test runs
 	public function isValid()
 	{
-		$elements = $this->filter('streetAddress', 'customerName', 'country', 'city', 'postalCode'); 
+		$elements = $this->filter('streetAddress', 'customerName', 'country', 'city'); 
 		return array_reduce($elements, function ($carry, $item) {
 			return $carry and $item->isValid();
 		}, true);
