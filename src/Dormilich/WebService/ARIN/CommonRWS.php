@@ -81,6 +81,7 @@ class CommonRWS extends WebServiceSetup
 	 *  - Customer              => customer resource
 	 *  - Net                   => network resource (via TicketedRequest)
 	 *  - Org                   => org resource
+	 *  - Org + PocLinkRef		=> poc link
 	 *  - Poc                   => poc resource
 	 *  - Poc + Phone           => phone number with that type
 	 *  - Poc + PhoneType       => all phone numbers with that type

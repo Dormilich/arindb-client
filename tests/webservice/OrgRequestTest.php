@@ -2,6 +2,7 @@
 
 use Dormilich\WebService\ARIN\CommonRWS;
 use Dormilich\WebService\ARIN\Payloads\Org;
+use Dormilich\WebService\ARIN\Payloads\PocLinkRef;
 use Test\Payload_TestCase;
 
 class OrgRequestTest extends Payload_TestCase
@@ -98,6 +99,36 @@ class OrgRequestTest extends Payload_TestCase
 
         $this->assertSame('DELETE', $client->method);
         $this->assertSame('https://reg.ote.arin.net/rest/org/ARIN?apikey=', $client->url);
+    }
+
+    public function testAddPocLinkToOrg()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $org = new Org('ARIN');
+        $ref = new PocLinkRef('MASTER-ARIN');
+        $ref->set('function', 'AB');
+
+        $arin->add($org, $ref);
+
+        $this->assertSame('PUT', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/org/ARIN/poc/MASTER-ARIN;pocFunction=AB?apikey=', $client->url);
+    }
+
+    public function testDeletePocLinkFromOrg()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $org = new Org('ARIN');
+        $ref = new PocLinkRef('MASTER-ARIN');
+        $ref->set('function', 'AB');
+
+        $arin->delete($org, $ref);
+
+        $this->assertSame('DELETE', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/org/ARIN/poc/MASTER-ARIN;pocFunction=AB?apikey=', $client->url);
     }
 
     public function testReadLiveOrg()
