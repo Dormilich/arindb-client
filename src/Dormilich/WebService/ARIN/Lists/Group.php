@@ -55,7 +55,11 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 */
 	public function getValue()
 	{
-		$defined_only = func_get_arg(0);
+		$defined_only = false;
+		if (func_num_args() > 0) {
+			$defined_only = func_get_arg(0);
+		}
+
 		$array = $this->value;
 
 		if ($defined_only) {
