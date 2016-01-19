@@ -32,7 +32,7 @@ class NetRequestTest extends Payload_TestCase
         $payload = new Net;
         $block = new NetBlock;
 
-        $block['type']  = 'A';
+        $block['type']  = 'S';
         $block['start'] = '10.0.0.0';
         $block['length']  = 24;
         $payload['net'] = $block;

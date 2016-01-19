@@ -263,14 +263,18 @@ class CommonRWS extends WebServiceSetup
 			throw new RequestException('Parent Net handle is not defined.');
 		}
 
-		if ($payload['customer']->isValid()) {
+		if (count($payload['net']) === 0) {
+			throw new RequestException('NetBlock is not defined.');
+		}
+
+		if ($payload['net'][0]['type']->getValue() === 'S') {
 			$path = sprintf('net/%s/reassign', $payload['parentNet']);
 		}
-		elseif ($payload['org']->isValid()) {
+		elseif ($payload['net'][0]['type']->getValue() === 'A') {
 			$path = sprintf('net/%s/reallocate', $payload['parentNet']);
 		}
 		else {
-			throw new RequestException('Customer/Org handle is not defined.');
+			throw new RequestException('Unexpected Net type found: '.$payload['net'][0]['type']);
 		}
 
 		return $this->submit('PUT', $path, [], $payload);
