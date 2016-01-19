@@ -24,7 +24,7 @@ class NetRequestTest extends Payload_TestCase
         $arin->create($payload);
     }
 
-    public function testAssignNet()
+    public function testAssignNetWithCustomer()
     {
         $client = $this->getClient();
         $arin = new CommonRWS($client);
@@ -40,6 +40,29 @@ class NetRequestTest extends Payload_TestCase
         $payload['netName']   = 'NETNAME';
         $payload['parentNet'] = 'PARENTNETHANDLE';
         $payload['customer']  = 'C12341234';
+
+        $arin->create($payload);
+
+        $this->assertSame('PUT', $client->method);
+        $this->assertSame('https://reg.ote.arin.net/rest/net/PARENTNETHANDLE/reassign?apikey=', $client->url);
+    }
+
+    public function testAssignNetWithOrg()
+    {
+        $client = $this->getClient();
+        $arin = new CommonRWS($client);
+
+        $payload = new Net;
+        $block = new NetBlock;
+
+        $block['type']  = 'S';
+        $block['start'] = '10.0.0.0';
+        $block['length']  = 24;
+        $payload['net'] = $block;
+
+        $payload['netName']   = 'NETNAME';
+        $payload['parentNet'] = 'PARENTNETHANDLE';
+        $payload['org']       = 'TEST-123';
 
         $arin->create($payload);
 
