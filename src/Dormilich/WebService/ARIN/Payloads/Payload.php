@@ -306,6 +306,7 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	 * 
 	 * @param string $name 
 	 * @return XMLHandler
+	 * @throws ParserException Invalid Payload setup.
 	 */
 	private function getEmptyElement($name)
 	{
@@ -315,15 +316,15 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 			return $elem;
 		}
 
-		$elem = reset(array_filter($this->filter($name), function ($item) {
+		$empty = array_filter($this->filter($name), function ($item) {
 			return !$item->isValid();
-		}));
+		});
 
-		if (!$elem) {
+		if (count($empty) === 0) {
 			throw new ParserException('Payload setup and XML structure mismatch.');
 		}
 
-		return $elem;
+		return reset($empty);
 	}
 
 	/**
