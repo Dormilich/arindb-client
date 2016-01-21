@@ -216,6 +216,24 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertSame(['list', 'comment'], array_keys($filtered));
     }
 
+    public function testFilterSupportsAlias()
+    {
+        $d = new Dummy;
+        $filtered = $d->filter('foo');
+
+        $this->assertCount(1, $filtered);
+        $this->assertSame(['foo'], array_keys($filtered));
+    }
+
+    public function testFilterSupportsName()
+    {
+        $d = new Dummy;
+        $filtered = $d->filter('bar');
+
+        $this->assertCount(1, $filtered);
+        $this->assertSame(['foo'], array_keys($filtered));
+    }
+
     /**
      * @expectedException Dormilich\WebService\ARIN\Exceptions\ParserException
      */

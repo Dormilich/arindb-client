@@ -143,6 +143,27 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	}
 
 	/**
+	 * Polyfill for the third parameter to array_filter() (as of PHP 5.6).
+	 * 
+	 * @param array $array The array to filter.
+	 * @param callable $callback The callback function
+	 * @return array The filtered array.
+	 */
+	private function filterArray(array $array, callable $callback)
+	{
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			return array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH);
+		}
+		$result = [];
+		foreach ($array as $key => $value) {
+			if (call_user_func($callback, $value, $key)) {
+				$result[$key] = $value;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Get all elements whose tag name matches the given value(s).
 	 * 
 	 * @param mixed $name Tag name.
@@ -151,8 +172,8 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	public function filter($name)
 	{
 		$list = func_get_args();
-		return array_filter($this->elements, function ($item) use ($list) {
-			return in_array($item->getName(), $list, true);
+		return $this->filterArray($this->elements, function ($item, $alias) use ($list) {
+			return in_array($alias, $list, true) or in_array($item->getName(), $list, true);
 		});
 	}
 
