@@ -335,10 +335,16 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	protected function createElement(\DOMDocument $doc)
 	{
-		if (!$this->prefix) {
-			return $doc->createElement($this->name, $this->value);
+		if ($this->prefix) {
+			$name = $this->prefix . ':' . $this->name;
+			$node = $doc->createElementNS($this->namespace, $name);
 		}
-		$name = $this->prefix . ':' . $this->name;
-		return $doc->createElementNS($this->namespace, $name, $this->value);
+		else {
+			$node = $doc->createElement($this->name);
+		}
+
+		$node->textContent = $this->value;
+
+		return $node;
 	}
 }

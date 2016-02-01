@@ -76,7 +76,8 @@ class MultiLine extends Group
 		$node = $doc->createElement($this->getName());
 
 		foreach ($this->value as $index => $value) {
-			$child = $doc->createElement('line', $value);
+			$child = $doc->createElement('line');
+			$child->textContent = $value;
 			$child->setAttribute('number', ++$index);
 			$node->appendChild($child);
 		}
