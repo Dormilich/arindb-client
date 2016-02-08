@@ -87,6 +87,7 @@ class CommonRWS extends WebServiceSetup
 	 *  - Poc + PhoneType       => all phone numbers with that type
 	 *  - Poc + 'type'          => all phone numbers with that type
 	 *  - Poc + 'phone number'  => phone number
+	 *  - Poc + 'email'         => email
 	 *  - Delegation            => all nameservers
 	 *  - Delegation + 'server' => nameserver
 	 * 
