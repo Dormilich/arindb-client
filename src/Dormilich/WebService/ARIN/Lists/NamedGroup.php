@@ -60,14 +60,20 @@ class NamedGroup extends Group
 	}
 
 	/**
-	 * Check if the value is a serialisable element and matches the defined tag names.
+	 * Check if the value is a serialisable element and matches the defined tag names. 
+	 * If there is only a single name registered, convert scalar values (strings, 
+	 * numbers) into an Element with that name.
 	 * 
-	 * @param object $value 
+	 * @param object|scalar $value 
 	 * @return XMLHandler
 	 * @throws ConstraintException Value has an invalid tag name.
 	 */
 	protected function convert($value)
 	{
+		// auto-wrap primitives for single-named lists
+		if (is_scalar($value) and count($this->nameList) === 1) {
+			$value = Element::createWith(reset($this->nameList), $value);
+		}
 		// objects must implement XMLHandler
 		$value = parent::convert($value);
 		// check if it has one of the allowed names

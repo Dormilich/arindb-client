@@ -219,6 +219,18 @@ class ArrayElementsTest extends PHPUnit_Framework_TestCase
         $this->assertCount(3, $g);
     }
 
+    public function testNamedGroupAcceptsPrimitiveInputForSingleName()
+    {
+        $g = new NamedGroup('test', 'only');
+        $g->addValue(1);
+        $g[] = 'foo';
+
+        $this->assertCount(2, $g);
+        // make sure the input is converted to an element
+        $this->assertSame('1', $g[0]->getValue());
+        $this->assertSame('foo', $g[1]->getValue());
+    }
+
     /**
      * @expectedException Dormilich\WebService\ARIN\Exceptions\ConstraintException
      */
