@@ -353,7 +353,7 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	 */
 	public function toDOM(\DOMDocument $doc)
 	{
-		$node = $doc->createElement($this->name);
+		$node = $doc->createElement($this->getName());
 
 		return $this->addXMLElements($doc, $node);
 	}

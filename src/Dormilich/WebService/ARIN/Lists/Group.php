@@ -169,12 +169,8 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	 */
 	public function isValid()
 	{
-		$bool = array_map(function ($item) {
-			return $item->isValid();
-		}, $this->value);
-
-		return array_reduce($bool, function ($carry, $item) {
-			return $carry or $item;
+		return array_reduce($this->value, function ($carry, $item) {
+			return $carry or $item->isValid();
 		}, false);
 	}
 
