@@ -109,7 +109,7 @@ class TicketRWS extends WebServiceSetup
 			'Accept' => 'application/xml',
 		];
 
-        $body = $ticket->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
+		$body = $ticket->toXML($this->config['encoding'], $this->config['strict'])->saveXML();
 
 		$xml = $this->client->request('PUT', $path, $headers, $body);
 

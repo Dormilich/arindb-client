@@ -94,18 +94,18 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	protected function setNamespace($tag, $namespace)
 	{
-        if (filter_var($namespace, \FILTER_VALIDATE_URL)) {
+		if (filter_var($namespace, \FILTER_VALIDATE_URL)) {
 			if (strpos($tag, ':') === false) {
 				throw new \LogicException('Namespace prefix missing.');
 			}
 			list($this->prefix, $this->name) = explode(':', $tag);
 
 			$this->namespace = $namespace;
-        }
-        else {
-        	$names = explode(':', $tag);
-            $this->name = end($names);
-        }
+		}
+		else {
+			$names = explode(':', $tag);
+			$this->name = end($names);
+		}
 	}
 
 	/**
@@ -193,6 +193,17 @@ class Element implements ElementInterface, XMLHandler
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Helper method for checking the element’s value. 
+	 * 
+	 * @param mixed $value 
+	 * @return boolean
+	 */
+	public function hasValue($value)
+	{
+		return $this->getValue() === $value;
 	}
 
 	/**

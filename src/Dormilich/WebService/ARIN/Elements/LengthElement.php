@@ -32,7 +32,7 @@ class LengthElement extends Element
 	 */
 	public function __construct($name, $ns)
 	{
-        $this->setNamespace((string) $name, $ns);
+		$this->setNamespace((string) $name, $ns);
 
 		$args = array_slice(func_get_args(), 1);
 

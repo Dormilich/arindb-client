@@ -266,22 +266,22 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 		return $this;
 	}
 
-    /**
-     * Read the namespace info from the XML object and configure the Element 
-     * object accordingly.
-     * 
-     * @param SimpleXMLElement $sxe 
-     * @return Element
-     */
-    protected function createElement(\SimpleXMLElement $sxe)
-    {
-        $ns = $sxe->getNamespaces();
+	/**
+	 * Read the namespace info from the XML object and configure the Element 
+	 * object accordingly.
+	 * 
+	 * @param SimpleXMLElement $sxe 
+	 * @return Element
+	 */
+	protected function createElement(\SimpleXMLElement $sxe)
+	{
+		$ns = $sxe->getNamespaces();
 
-        if (key($ns)) {
-            return new Element(key($ns).':'.$sxe->getName(), current($ns));
-        }
-        return new Element($sxe->getName());
-    }
+		if (key($ns)) {
+			return new Element(key($ns).':'.$sxe->getName(), current($ns));
+		}
+		return new Element($sxe->getName());
+	}
 
 	/**
 	 * Check if the requested index or an element with that name exists.
