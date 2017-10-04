@@ -6,7 +6,6 @@ use Dormilich\WebService\ARIN\Elements\Integer;
 use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Elements\Selection;
-use Test\Stringer;
 
 class SerialiseTest extends PHPUnit_Framework_TestCase
 {

@@ -1,7 +1,8 @@
 <?php
 
+use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Elements\Element;
-use Test\Stringer;
 
 class ElementTest extends PHPUnit_Framework_TestCase
 {
@@ -9,10 +10,8 @@ class ElementTest extends PHPUnit_Framework_TestCase
 	{
 		$elem = new Element('test');
 
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\ElementInterface', $elem);
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\XMLHandler', $elem);
+		$this->assertInstanceOf(ElementInterface::class, $elem);
+		$this->assertInstanceOf(XMLHandler::class, $elem);
 	}
 
 	public function testElementHasCorrectTagNameWithoutNamespace()
@@ -66,8 +65,10 @@ class ElementTest extends PHPUnit_Framework_TestCase
 
 	public function testElementsAcceptsStringObject()
 	{
+		$obj = $this->getMock('Exception');
+		$obj->method('__toString')->willReturn('foo');
+
 		$elem = new Element('test');
-		$obj = new Stringer('foo');
 		$elem->setValue($obj);
 
 		$this->assertSame('foo', $elem->getValue());

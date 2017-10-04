@@ -9,7 +9,6 @@ use Dormilich\WebService\ARIN\Elements\IP;
 use Dormilich\WebService\ARIN\Elements\LengthElement;
 use Dormilich\WebService\ARIN\Elements\RegExp;
 use Dormilich\WebService\ARIN\Elements\Selection;
-use Test\Stringer;
 
 class SimpleElementsTest extends PHPUnit_Framework_TestCase
 {
@@ -58,6 +57,19 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($elem->isValid());
 	}
 
+	public function testCloneElement()
+	{
+		$elem = new Element('test');
+		$elem->setValue('foo');
+		$elem->function = 'A';
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+		$this->assertSame($elem->function, $copy->function);
+	}
+
 	// Generated
 
 	/**
@@ -80,6 +92,19 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 			$this->assertTrue(true);
 		}
 		$this->assertEquals(1, $elem->getValue());
+	}
+
+	public function testCloneGeneratedUnsetsValues()
+	{
+		$elem = new Generated('test');
+		$elem->setValue('foo');
+		$elem->function = 'A';
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertFalse($copy->isDefined());
+		$this->assertNull($copy->function);
 	}
 
 	// Boolean
@@ -108,6 +133,17 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($test, $bool->getValue());
 	}
 
+	public function testCloneBoolean()
+	{
+		$elem = new Boolean('test');
+		$elem->setValue(true);
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+	}
+
 	// Selection
 
 	public function testSelectionAllowsDefinedValues()
@@ -133,8 +169,10 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 	public function testSelectionConvertsInputToString()
 	{
+		$bar = $this->getMock('Exception');
+		$bar->method('__toString')->willReturn('bar');
+
 		$fixed = new Selection('test', ['foo', 'bar']);
-		$bar = new Stringer('bar');
 
 		$fixed->setValue($bar);
 		$this->assertSame('bar', $fixed->getValue());
@@ -142,8 +180,11 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 
 	public function testSelectionConvertsDefinitionsToString()	
 	{
+		$bar = $this->getMock('Exception');
+		$bar->method('__toString')->willReturn('bar');
+
 		// main use is on numbers but their test is less explicit
-		$fixed = new Selection('test', [new Stringer('bar')]);
+		$fixed = new Selection('test', [$bar]);
 
 		$fixed->setValue('bar');
 		$this->assertSame('bar', $fixed->getValue());
@@ -173,6 +214,18 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	public function testSelectionWithNamespaceRequiresPrefix()
 	{
 		$fixed = new Selection('test', 'http://example.org/ex', []);
+	}
+
+	public function testCloneSelection()
+	{
+		$elem = new Selection('test', ['foo', 'bar']);
+		$elem->setValue('bar');
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+		$this->assertSame($elem->getAllowed(), $copy->getAllowed());
 	}
 
 	// Length
@@ -264,10 +317,25 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$length = new LengthElement('test', 'http://example.org/ex');
 	}
 
+	public function testCloneLengthElement()
+	{
+		$elem = new LengthElement('test', 2);
+		$elem->setValue('EU');
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+		$this->assertSame($elem->getLength(), $copy->getLength());
+	}
+
 	// Integer
 
 	public function testIntegerAcceptsNumericInput()
 	{
+		$obj = $this->getMock('Exception');
+		$obj->method('__toString')->willReturn('13');
+
 		$int = new Integer('test');
 
 		$int->setValue(17);
@@ -282,7 +350,7 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$int->setValue(' -5 ');
 		$this->assertSame(-5, $int->getValue());
 
-		$int->setValue(new Stringer(13));
+		$int->setValue($obj);
 		$this->assertSame(13, $int->getValue());
 
 		$int->setValue(true);
@@ -384,7 +452,19 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testIntegerWithNamespaceRequiresPrefix()
 	{
-		$fixed = new Selection('test', 'http://example.org/ex');
+		$fixed = new Integer('test', 'http://example.org/ex');
+	}
+
+	public function testCloneInteger()
+	{
+		$elem = new Integer('test', -1, 1);
+		$elem->setValue(0);
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+		$this->assertSame($elem->getLimits(), $copy->getLimits());
 	}
 
 	// IP
@@ -448,6 +528,17 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('192.168.17.2', $ip->getValue());
 	}
 
+	public function testCloneIP()
+	{
+		$elem = new IP('test');
+		$elem->setValue('127.0.0.1');
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+	}
+
 	// RegExp
 
 	public function testRegExpWithValidInput()
@@ -473,5 +564,17 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	public function testRegExpWithInvalidPattern()
 	{
 		$re = new RegExp('test', 'foo');
+	}
+
+	public function testCloneRegExp()
+	{
+		$elem = new RegExp('test', '/\d+/');
+		$elem->setValue(true);
+
+		$copy = clone $elem;
+
+		$this->assertSame($elem->getName(), $copy->getName());
+		$this->assertSame($elem->getValue(), $copy->getValue());
+		$this->assertSame($elem->getPattern(), $copy->getPattern());
 	}
 }

@@ -20,7 +20,7 @@ class RegExp extends Element
 	 * 
 	 * @param string $name Tag name.
 	 * @param string $ns (optional) Namespace URI.
-	 * @param array(string) $allowed Allowed values.
+	 * @param string $pattern Regular expression for validation.
 	 * @return self
 	 * @throws LogicException Namespace prefix missing.
 	 * @throws LogicException Pattern definition missing.

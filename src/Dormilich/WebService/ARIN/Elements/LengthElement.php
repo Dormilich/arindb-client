@@ -68,11 +68,11 @@ class LengthElement extends Element
 	/**
 	 * Get the length constraint.
 	 * 
-	 * @return integer
+	 * @return array(integer)
 	 */
 	public function getLength()
 	{
-		return $this->length;
+		return [$this->min, $this->max];
 	}
 
 	/**
