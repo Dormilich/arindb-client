@@ -30,7 +30,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $x = new Dummy;
         $elem = $x['foo'];
 
-        $this->assertInstanceof('Dormilich\WebService\ARIN\Elements\Element', $elem);
+        $this->assertInstanceof(Element::class, $elem);
     }
 
     public function testGetExistingElementByName()
@@ -38,7 +38,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $x = new Dummy;
         $elem = $x['bar'];
 
-        $this->assertInstanceof('Dormilich\WebService\ARIN\Elements\Element', $elem);
+        $this->assertInstanceof(Element::class, $elem);
     }
 
     /**
@@ -85,8 +85,9 @@ class PayloadTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException PHPUnit_Framework_Error
+     * @expectedExceptionMessage Value of type [Dormilich\WebService\ARIN\Elements\Element] cannot overwrite a <dummy> Payload.
      */
-    public function testReplaceExistingPayloadWithElementFailsSilently()
+    public function testReplaceExistingPayloadWithElementFailsWithNotice()
     {
         $p = new SetPayloadDummy;
         $p['dummy'] = new Element('abc');
@@ -130,6 +131,18 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         unset($x['quux']);
 
         $this->assertSame('123', $x['foo']->getValue());
+    }
+
+    public function testUnsetExistingPayload()
+    {
+        $p = new SetPayloadDummy;
+        $p['dummy']['foo'] = 1;
+
+        $this->assertTrue($p['dummy']->isValid());
+
+        unset($p['dummy']);
+
+        $this->assertFalse($p['dummy']->isValid());
     }
 
     public function testForeachGetsNameAndElement()

@@ -232,10 +232,16 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 		// elements are either Payloads or Elements
 		$elem = $this->get($name);
 
-		// if target is a payload
+		// swap payloads
 		if (($elem instanceof Payload) and ($value instanceof $elem)) {
 			$key = array_search($elem, $this->elements, true);
 			$this->elements[$key] = $value;
+		}
+		// reset payload
+		elseif (($elem instanceof Payload) and ($value === NULL)) {
+			$key = array_search($elem, $this->elements, true);
+			$class = get_class($elem);
+			$this->elements[$key] = new $class;
 		}
 		// if target is an element/group
 		elseif ($elem instanceof ElementInterface) {
