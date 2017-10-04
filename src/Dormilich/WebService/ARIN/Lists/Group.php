@@ -39,16 +39,6 @@ class Group implements ElementInterface, FilterInterface, XMLHandler, \ArrayAcce
 	}
 
 	/**
-	 * Reset the element’s contents on cloning.
-	 * 
-	 * @return void
-	 */
-	public function __clone()
-	{
-		$this->setValue(NULL);
-	}
-
-	/**
 	 * Get the collection elements of the array element.
 	 * 
 	 * @return array

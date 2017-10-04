@@ -109,17 +109,6 @@ class Element implements ElementInterface, XMLHandler
 	}
 
 	/**
-	 * Reset the element’s contents on cloning.
-	 * 
-	 * @return void
-	 */
-	public function __clone()
-	{
-		$this->setValue(NULL);
-		$this->attributes = [];
-	}
-
-	/**
 	 * Getter for an attribute.
 	 * 
 	 * @param string $name XML attribute name.

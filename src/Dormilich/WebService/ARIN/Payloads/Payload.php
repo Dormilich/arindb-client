@@ -474,10 +474,7 @@ abstract class Payload implements XMLHandler, \JsonSerializable, \ArrayAccess, \
 	public function offsetUnset($offset)
 	{
 		try {
-			$elem = $this->get($offset);
-			$key = array_search($elem, $this->elements, true);
-
-			$this->elements[$key] = clone $elem;
+			$this->set($offset, NULL);
 		}
 		catch (ARINException $e) {
 			# unsetting a non-existing element should do no harm

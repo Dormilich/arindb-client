@@ -174,6 +174,8 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         ], $x->getValue(true));
     }
 
+/*
+    // cloning is something different than resetting
     public function testResetPayload()
     {
         $x = new Dummy;
@@ -189,6 +191,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($y['foo']->isValid());
         $this->assertFalse($y['list']->isValid());
     }
+*/
 
     public function testPayloadValidity()
     {

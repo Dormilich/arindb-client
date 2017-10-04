@@ -34,18 +34,18 @@ class SerialiseGroupsTest extends PHPUnit_Framework_TestCase
     public function testSerialiseGroup()
     {
         $doc = new DOMDocument;
-        $item = new Element('item');
         $test = new Group('test');
         $group = new Group('list');
 
-        $item->setValue(1);
-        $group->addValue($item);
+        $item1 = new Element('item');
+        $item1->setValue(1);
+        $group->addValue($item1);
 
-        $item2 = clone $item;
+        $item2 = new Element('item');
         $item2->setValue('abc');
         $group->addValue($item2);
 
-        $item3 = clone $item;
+        $item3 = new Element('item');
         $item3->name = 'bar';
         $test->addValue($item3);
         $group->addValue($test);
