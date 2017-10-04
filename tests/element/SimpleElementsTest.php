@@ -1,5 +1,6 @@
 <?php
 
+use Dormilich\WebService\ARIN\ElementInterface;
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Elements\Boolean;
 use Dormilich\WebService\ARIN\Elements\Generated;
@@ -15,32 +16,25 @@ class SimpleElementsTest extends PHPUnit_Framework_TestCase
 	public function testElementsInheritElement()
 	{
 		$bool = new Boolean('test');
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $bool);
+		$this->assertInstanceOf(ElementInterface::class, $bool);
 
 		$length = new Integer('test');
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $length);
+		$this->assertInstanceOf(ElementInterface::class, $length);
 
 		$length = new IP('test');
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $length);
+		$this->assertInstanceOf(ElementInterface::class, $length);
 
 		$length = new LengthElement('test', 1);
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $length);
+		$this->assertInstanceOf(ElementInterface::class, $length);
 
 		$fixed = new RegExp('test', '/./');
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
+		$this->assertInstanceOf(ElementInterface::class, $fixed);
 
 		$fixed = new Selection('test', [1]);
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $fixed);
+		$this->assertInstanceOf(ElementInterface::class, $fixed);
 
 		$bool = new Generated('test');
-		$this->assertInstanceOf(
-			'Dormilich\WebService\ARIN\Elements\Element', $bool);
+		$this->assertInstanceOf(ElementInterface::class, $bool);
 	}
 
 	// Element

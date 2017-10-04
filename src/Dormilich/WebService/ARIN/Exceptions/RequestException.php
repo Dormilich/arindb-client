@@ -3,8 +3,7 @@
 namespace Dormilich\WebService\ARIN\Exceptions;
 
 /**
- * Used for indicating invalid data types while processing. Usually due to 
- * invalid input (e.g. setting an array where a string is expected).
+ * Indicates that a condition for making a specific API request failed. 
  */
 class RequestException 
     extends     \BadMethodCallException 
