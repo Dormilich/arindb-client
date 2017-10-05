@@ -3,6 +3,7 @@
 namespace Dormilich\WebService\ARIN\Elements;
 
 use Dormilich\WebService\ARIN\ElementInterface;
+use Dormilich\WebService\ARIN\Primary;
 use Dormilich\WebService\ARIN\XMLHandler;
 use Dormilich\WebService\ARIN\Exceptions\ConstraintException;
 use Dormilich\WebService\ARIN\Exceptions\DataTypeException;
@@ -218,6 +219,10 @@ class Element implements ElementInterface, XMLHandler
 	 */
 	protected function convert($value)
 	{
+		if ($value instanceof Primary) {
+			$value = $value->getHandle();
+		}
+
 		if (is_object($value) and method_exists($value, '__toString')) {
 			$value = (string) $value;
 		}
