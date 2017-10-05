@@ -1,5 +1,6 @@
 <?php
 
+use Dormilich\WebService\ARIN\Payloads\Net;
 use Dormilich\WebService\ARIN\Payloads\Org;
 use Dormilich\WebService\ARIN\Payloads\PocLinkRef;
 use Test\Payload_TestCase;
@@ -84,5 +85,13 @@ class OrgTest extends Payload_TestCase
 				'function' => 'T',
 			]],
 		], $payload->getValue());
+	}
+
+	public function testPassOrgReference()
+	{
+		$net = new Net;
+		$net['org'] = new Org('ORG-TEST-1');
+
+		$this->assertSame('ORG-TEST-1', $net->get('org')->getValue());
 	}
 }

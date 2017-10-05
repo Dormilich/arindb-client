@@ -107,4 +107,12 @@ class NetTest extends Payload_TestCase
 			]],
 		], $payload->getValue());
 	}
+
+	public function testPassNetReference()
+	{
+		$net = new Net;
+		$net['parentNet'] = new Net('NET-10-0-0-0-1');
+
+		$this->assertSame('NET-10-0-0-0-1', $net->get('parentNet')->getValue());
+	}
 }

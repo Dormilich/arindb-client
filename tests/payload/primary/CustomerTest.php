@@ -1,5 +1,6 @@
 <?php
 
+use Dormilich\WebService\ARIN\Payloads\Net;
 use Dormilich\WebService\ARIN\Payloads\Customer;
 use Test\Payload_TestCase;
 
@@ -57,5 +58,13 @@ class CustomerTest extends Payload_TestCase
 			'registrationDate' => 'Mon Nov 07 14:04:28 EST 2011', 
 			'privateCustomer' => false, 
 		], $payload->getValue());
+	}
+
+	public function testPassCustomerReference()
+	{
+		$net = new Net;
+		$net['customer'] = new Customer('C3156240');
+
+		$this->assertSame('C3156240', $net->get('customer')->getValue());
 	}
 }

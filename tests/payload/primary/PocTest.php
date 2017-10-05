@@ -2,6 +2,7 @@
 
 use Dormilich\WebService\ARIN\Elements\Element;
 use Dormilich\WebService\ARIN\Payloads\Poc;
+use Dormilich\WebService\ARIN\Payloads\PocLinkRef;
 use Dormilich\WebService\ARIN\Payloads\Phone;
 use Test\Payload_TestCase;
 
@@ -84,5 +85,13 @@ class PocTest extends Payload_TestCase
 				'extension' => '101',
 			]],
 		], $payload->getValue());
+	}
+
+	public function testPassPocReference()
+	{
+		$poc = new Poc('TEST-ARIN');
+		$ref = new PocLinkRef($poc);
+
+		$this->assertSame('TEST-ARIN', $ref->get('handle')->getValue());
 	}
 }
