@@ -20,6 +20,7 @@
     <dbaName>DBANAME</dbaName>
     <taxId>TAXID</taxId>
     <orgUrl>ORGURL</orgUrl>
+    <acceptReassignments>true</acceptReassignments>
     <pocLinks>
         <pocLinkRef handle="ADMIN-ARIN" function="AD"/>
         <pocLinkRef handle="ABUSE-ARIN" function="AB"/>

@@ -38,6 +38,7 @@ class OrgTest extends Payload_TestCase
 		$payload['dbaName'] = 'DBANAME';
 		$payload['taxId'] = 'TAXID';
 		$payload['orgUrl'] = 'ORGURL';
+        $payload['acceptReassignments'] = true;
 		$payload['poc'] = $this->getPocLinks();
 
 		$this->assertTrue($payload->isValid());
@@ -71,6 +72,7 @@ class OrgTest extends Payload_TestCase
 			'dbaName' => 'DBANAME',
 			'taxId'   => 'TAXID',
 			'orgUrl'  => 'ORGURL',
+            'acceptReassignments' => true,
 			'pocLinks' => [[
 				'description' => null,
 				'handle' => 'ADMIN-ARIN',
